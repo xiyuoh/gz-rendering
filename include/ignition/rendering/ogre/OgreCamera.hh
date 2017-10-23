@@ -63,6 +63,8 @@ namespace ignition
 
       public: virtual math::Matrix4d ViewMatrix() const;
 
+      public: virtual void HACKSetMaterialScheme() override;
+
       protected: virtual RenderTargetPtr RenderTarget() const;
 
       protected: virtual void Init();

@@ -207,6 +207,8 @@ namespace ignition
       /// \brief Copy properties from given Material
       /// \param[in] _material Source Material to be copied from
       public: virtual void CopyFrom(const common::Material &_material) = 0;
+
+      public: virtual void HACKSetShader() {};
     };
   }
 }

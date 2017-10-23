@@ -64,6 +64,8 @@ namespace ignition
 
       public: virtual void Destroy() = 0;
 
+      public: void HACKSetMaterialScheme();
+
       protected: virtual Ogre::RenderTarget *RenderTarget() const = 0;
 
       protected: virtual void UpdateBackgroundColor();
@@ -93,6 +95,7 @@ namespace ignition
       public: virtual ~OgreRenderTexture();
 
       public: virtual void Destroy();
+
 
       protected: virtual Ogre::RenderTarget *RenderTarget() const;
 

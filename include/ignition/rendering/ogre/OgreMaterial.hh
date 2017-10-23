@@ -100,6 +100,8 @@ namespace ignition
 
       public: virtual Ogre::MaterialPtr Material() const;
 
+      public: virtual void HACKSetShader() override;
+
       protected: virtual void LoadImage(const std::string &_name,
                      Ogre::Image &_image);
 

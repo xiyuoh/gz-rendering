@@ -253,6 +253,52 @@ enum ShaderType OgreMaterial::ShaderType() const
 }
 
 //////////////////////////////////////////////////
+void OgreMaterial::HACKSetShader()
+{
+  Ogre::HighLevelGpuProgramPtr vertexShader =
+    Ogre::HighLevelGpuProgramManager::getSingletonPtr()->createProgram(
+        "HACKSetShaderVertex",
+        Ogre::ResourceGroupManager::DEFAULT_RESOURCE_GROUP_NAME,
+        "glsl", Ogre::GpuProgramType::GPT_VERTEX_PROGRAM);
+
+  vertexShader->setSource(""
+      "varying vec4 point;"
+      "void main()"
+      "{"
+      "  gl_Position = ftransform();"
+      "  // Vertex in world space"
+      "   point = gl_ModelViewMatrix * gl_Vertex;"
+      "}");
+
+  Ogre::HighLevelGpuProgramPtr fragmentShader =
+    Ogre::HighLevelGpuProgramManager::getSingletonPtr()->createProgram(
+        "HACKSetShaderFragment",
+        Ogre::ResourceGroupManager::DEFAULT_RESOURCE_GROUP_NAME,
+        "glsl", Ogre::GpuProgramType::GPT_FRAGMENT_PROGRAM);
+
+  fragmentShader->setSource(""
+     "uniform float retro;"
+     "uniform float near;"
+     "uniform float far;"
+     "varying vec4 point;"
+     "void main()"
+     "{"
+     "  float l = length(point.xyz);"
+     "  if (l>far)"
+     "    l = far;"
+     "  gl_FragColor = vec4(l, retro, 0, 1.0);"
+     "}");
+
+  Ogre::Technique *depthTechnique = this->ogreMaterial->createTechnique();
+  depthTechnique->setSchemeName("HACKDepthScheme");
+
+  Ogre::Pass *pass = depthTechnique->createPass();
+  pass->setLightingEnabled( false );
+  pass->setVertexProgram(vertexShader->getName());
+  pass->setFragmentProgram(fragmentShader->getName());
+}
+
+//////////////////////////////////////////////////
 void OgreMaterial::SetShaderType(enum ShaderType _type)
 {
   this->shaderType = (ShaderUtil::IsValid(_type)) ? _type : ST_PIXEL;

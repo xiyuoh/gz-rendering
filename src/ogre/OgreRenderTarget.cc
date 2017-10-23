@@ -66,6 +66,13 @@ void OgreRenderTarget::Copy(Image &_image) const
 }
 
 //////////////////////////////////////////////////
+void OgreRenderTarget::HACKSetMaterialScheme()
+{
+  Ogre::Viewport *vp = this->RenderTarget()->getViewport(0);
+  vp->setMaterialScheme("HACKDepthScheme");
+}
+
+//////////////////////////////////////////////////
 Ogre::Camera *OgreRenderTarget::Camera() const
 {
   return this->ogreCamera;

@@ -151,6 +151,12 @@ RenderWindowPtr OgreCamera::CreateRenderWindow()
 }
 
 //////////////////////////////////////////////////
+void OgreCamera::HACKSetMaterialScheme()
+{
+  this->renderTexture->HACKSetMaterialScheme();
+}
+
+//////////////////////////////////////////////////
 math::Matrix4d OgreCamera::ProjectionMatrix() const
 {
   return OgreConversions::Convert(this->ogreCamera->getProjectionMatrix());

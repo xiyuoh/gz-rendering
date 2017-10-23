@@ -181,6 +181,8 @@ namespace ignition
       /// \brief Get the view matrix for this camera
       /// \return Camera view matrix
       public: virtual math::Matrix4d ViewMatrix() const = 0;
+
+      public: virtual void HACKSetMaterialScheme() {};
     };
   }
 }

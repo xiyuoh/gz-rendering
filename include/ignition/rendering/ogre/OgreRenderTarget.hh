@@ -64,8 +64,6 @@ namespace ignition
 
       public: virtual void Destroy() = 0;
 
-      public: void HACKSetMaterialScheme();
-
       protected: virtual Ogre::RenderTarget *RenderTarget() const = 0;
 
       protected: virtual void UpdateBackgroundColor();
@@ -85,6 +83,8 @@ namespace ignition
       protected: bool colorDirty = true;
 
       protected: unsigned int antiAliasing = 4;
+
+      private: friend class OgreCamera;
     };
 
     class IGNITION_VISIBLE OgreRenderTexture :

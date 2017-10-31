@@ -16,6 +16,8 @@
 */
 #include <ignition/rendering.hh>
 
+#include "build_config.hh"
+
 void BuildScene(ignition::rendering::ScenePtr _scene);
 
 void PresentImage(ignition::rendering::ImagePtr _image);
@@ -25,6 +27,9 @@ void PresentImage(ignition::rendering::ImagePtr _image);
 const double width = 16;
 const double height = 1;
 const int bytes_per_pixel = 3;
+
+const std::string vertex_shader_path = CMAKE_SOURCE_DIR "/vertex_shader.glsl";
+const std::string fragment_shader_path = CMAKE_SOURCE_DIR "/fragment_shader.glsl";
 
 
 //////////////////////////////////////////////////
@@ -55,7 +60,6 @@ int main()
   ignition::rendering::VisualPtr root = scene->RootVisual();
   root->AddChild(camera);
 
-
   // Render to an in-memory image
   ignition::rendering::ImagePtr image;
   image = std::make_shared<ignition::rendering::Image>(camera->CreateImage());
@@ -65,14 +69,14 @@ int main()
   PresentImage(image);
 
   std::cout << "With hacky shader\n";
-  camera->Scene()->PreRender();
 
-  // TODO Call some hacky stuff to set a custom shader on all materials
-  camera->HACKSetMaterialScheme();
+  //Call some stuff to set a custom shader on all materials
+  // ignition::rendering::MaterialPtr depthMat = scene->CreateMaterial();
+  // depthMat->SetVertexShader(vertex_shader_path);
+  // depthMat->SetFragmentShader(fragment_shader_path);
+  // camera->SetGlobalMaterial(depthMat);
 
-  camera->Render();
-  camera->PostRender();
-  camera->Copy(*image);
+  camera->Capture(*image);
   PresentImage(image);
 
   return 0;
@@ -85,8 +89,8 @@ void PresentImage(ignition::rendering::ImagePtr _image)
   unsigned char *data = _image->Data<unsigned char>();
   for (int i = 0; i < bytes_per_pixel * width * height; i += bytes_per_pixel)
   {
-    unsigned long comp2 = data[i + 2] << 16;
-    unsigned long comp1 = data[i + 1] << 8;
+    unsigned long comp2 = data[i + 2] * 100.0 * 100.0;
+    unsigned long comp1 = data[i + 1] * 100.0;
     unsigned long comp0 = data[i];
     const double distance = comp2 + comp1 + comp0;
     std::cout << distance << ", ";
@@ -123,7 +127,6 @@ void BuildScene(ignition::rendering::ScenePtr _scene)
   green->SetSpecular(0.5, 0.5, 0.5);
   green->SetShininess(50);
   green->SetReflectivity(0);
-  green->HACKSetShader();
 
   // create center visual
   ignition::rendering::VisualPtr center = _scene->CreateVisual();
@@ -140,7 +143,6 @@ void BuildScene(ignition::rendering::ScenePtr _scene)
   red->SetSpecular(0.5, 0.5, 0.5);
   red->SetShininess(50);
   red->SetReflectivity(0);
-  red->HACKSetShader();
 
   // create sphere visual
   ignition::rendering::VisualPtr sphere = _scene->CreateVisual();
@@ -159,7 +161,6 @@ void BuildScene(ignition::rendering::ScenePtr _scene)
   blue->SetSpecular(0.5, 0.5, 0.5);
   blue->SetShininess(50);
   blue->SetReflectivity(0);
-  blue->HACKSetShader();
 
   // create box visual
   ignition::rendering::VisualPtr box = _scene->CreateVisual();
@@ -173,11 +174,12 @@ void BuildScene(ignition::rendering::ScenePtr _scene)
 
   // create white material
   ignition::rendering::MaterialPtr white = _scene->CreateMaterial();
-  white->SetAmbient(0.5, 0.5, 0.5);
-  white->SetDiffuse(0.8, 0.8, 0.8);
-  white->SetReceiveShadows(true);
-  white->SetReflectivity(0);
-  white->HACKSetShader();
+  // white->SetAmbient(0.5, 0.5, 0.5);
+  // white->SetDiffuse(0.8, 0.8, 0.8);
+  // white->SetReceiveShadows(true);
+  // white->SetReflectivity(0);
+  white->SetVertexShader(vertex_shader_path);
+  white->SetFragmentShader(fragment_shader_path);
 
   // create sphere visual
   ignition::rendering::VisualPtr plane = _scene->CreateVisual();

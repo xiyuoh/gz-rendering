@@ -182,7 +182,9 @@ namespace ignition
       /// \return Camera view matrix
       public: virtual math::Matrix4d ViewMatrix() const = 0;
 
-      public: virtual void HACKSetMaterialScheme() {};
+      /// \brief Set a material that the camera should see on all objects
+      /// \param[in] _material a material instance
+      public: virtual void SetGlobalMaterial(const MaterialPtr &_material) = 0;
     };
   }
 }

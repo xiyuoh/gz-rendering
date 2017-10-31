@@ -15,6 +15,8 @@
  *
  */
 
+#include <fstream>
+
 #include <ignition/common/Console.hh>
 
 #include "ignition/rendering/ogre/OgreMaterial.hh"
@@ -253,49 +255,59 @@ enum ShaderType OgreMaterial::ShaderType() const
 }
 
 //////////////////////////////////////////////////
-void OgreMaterial::HACKSetShader()
+void OgreMaterial::SetVertexShader(const std::string &_path)
 {
-  Ogre::HighLevelGpuProgramPtr vertexShader =
-    Ogre::HighLevelGpuProgramManager::getSingletonPtr()->createProgram(
-        "HACKSetShaderVertex",
-        Ogre::ResourceGroupManager::DEFAULT_RESOURCE_GROUP_NAME,
-        "glsl", Ogre::GpuProgramType::GPT_VERTEX_PROGRAM);
+  // The shader has a setSourceFile() method, but it fails to find a shader
+  // when given an absolute path. Easier to just load the file directly.
+  std::ifstream fin(_path, std::ifstream::in);
+  if (fin)
+  {
+    std::string source;
+    fin >> source;
 
-  vertexShader->setSource(""
-      "varying vec4 point;"
-      "void main()"
-      "{"
-      "  gl_Position = ftransform();"
-      "  // Vertex in world space"
-      "   point = gl_ModelViewMatrix * gl_Vertex;"
-      "}");
+    Ogre::HighLevelGpuProgramPtr vertexShader =
+      Ogre::HighLevelGpuProgramManager::getSingletonPtr()->createProgram(
+          "__ignition_rendering_vertex__" + _path,
+          this->ogreGroup,
+          "glsl", Ogre::GpuProgramType::GPT_VERTEX_PROGRAM);
 
-  Ogre::HighLevelGpuProgramPtr fragmentShader =
-    Ogre::HighLevelGpuProgramManager::getSingletonPtr()->createProgram(
-        "HACKSetShaderFragment",
-        Ogre::ResourceGroupManager::DEFAULT_RESOURCE_GROUP_NAME,
-        "glsl", Ogre::GpuProgramType::GPT_FRAGMENT_PROGRAM);
+    vertexShader->setSource(source);
+    vertexShader->load();
 
-  fragmentShader->setSource(""
-     "uniform float retro;"
-     "uniform float near;"
-     "uniform float far;"
-     "varying vec4 point;"
-     "void main()"
-     "{"
-     "  float l = length(point.xyz);"
-     "  if (l>far)"
-     "    l = far;"
-     "  gl_FragColor = vec4(l, retro, 0, 1.0);"
-     "}");
+    assert(vertexShader->isLoaded());
+    assert(!(vertexShader->hasCompileError()));
+    assert(vertexShader->isSupported());
 
-  Ogre::Technique *depthTechnique = this->ogreMaterial->createTechnique();
-  depthTechnique->setSchemeName("HACKDepthScheme");
+    this->ogrePass->setVertexProgram(vertexShader->getName());
+  }
+  assert(this->ogrePass->isProgrammable());
+}
 
-  Ogre::Pass *pass = depthTechnique->createPass();
-  pass->setLightingEnabled( false );
-  pass->setVertexProgram(vertexShader->getName());
-  pass->setFragmentProgram(fragmentShader->getName());
+//////////////////////////////////////////////////
+void OgreMaterial::SetFragmentShader(const std::string &_path)
+{
+  std::ifstream fin(_path, std::ifstream::in);
+  if (fin)
+  {
+    std::string source;
+    fin >> source;
+
+    Ogre::HighLevelGpuProgramPtr fragmentShader =
+      Ogre::HighLevelGpuProgramManager::getSingletonPtr()->createProgram(
+          "__ignition_rendering_fragment__" + _path,
+          this->ogreGroup,
+          "glsl", Ogre::GpuProgramType::GPT_FRAGMENT_PROGRAM);
+
+    fragmentShader->setSource(source);
+    fragmentShader->load();
+
+    assert(fragmentShader->isLoaded());
+    assert(!(fragmentShader->hasCompileError()));
+    assert(fragmentShader->isSupported());
+
+    this->ogrePass->setFragmentProgram(fragmentShader->getName());
+  }
+  assert(this->ogrePass->isProgrammable());
 }
 
 //////////////////////////////////////////////////

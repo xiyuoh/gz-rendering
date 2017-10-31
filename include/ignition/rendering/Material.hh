@@ -208,7 +208,13 @@ namespace ignition
       /// \param[in] _material Source Material to be copied from
       public: virtual void CopyFrom(const common::Material &_material) = 0;
 
-      public: virtual void HACKSetShader() {};
+      /// \brief Set the vertex shader
+      /// \param[in] _path path to a file containing a glsl shader
+      public: virtual void SetVertexShader(const std::string &_path) = 0;
+
+      /// \brief Set the fragment shader
+      /// \param[in] _path path to a file containing a glsl shader
+      public: virtual void SetFragmentShader(const std::string &_path) = 0;
     };
   }
 }

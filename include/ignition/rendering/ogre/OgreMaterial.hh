@@ -27,6 +27,8 @@ namespace ignition
 {
   namespace rendering
   {
+    class OgreCamera;
+
     class IGNITION_VISIBLE OgreMaterial :
       public BaseMaterial<OgreObject>
     {
@@ -100,7 +102,9 @@ namespace ignition
 
       public: virtual Ogre::MaterialPtr Material() const;
 
-      public: virtual void HACKSetShader() override;
+      public: virtual void SetVertexShader(const std::string &_path) override;
+
+      public: virtual void SetFragmentShader(const std::string &_path) override;
 
       protected: virtual void LoadImage(const std::string &_name,
                      Ogre::Image &_image);
@@ -150,6 +154,8 @@ namespace ignition
       protected: enum ShaderType shaderType = ST_PIXEL;
 
       private: friend class OgreScene;
+
+      private: friend class OgreCamera;
     };
   }
 }

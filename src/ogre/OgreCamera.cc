@@ -18,6 +18,7 @@
 #include "ignition/rendering/ogre/OgreCamera.hh"
 #include "ignition/rendering/ogre/OgreConversions.hh"
 #include "ignition/rendering/ogre/OgreIncludes.hh"
+#include "ignition/rendering/ogre/OgreMaterial.hh"
 #include "ignition/rendering/ogre/OgreRenderTarget.hh"
 #include "ignition/rendering/ogre/OgreScene.hh"
 
@@ -82,10 +83,70 @@ void OgreCamera::SetBackgroundColor(const math::Color &_color)
 }
 
 //////////////////////////////////////////////////
+void OgreCamera::SetGlobalMaterial(const MaterialPtr &_material)
+{
+  this->globalMaterial = _material->Clone();
+
+  if (this->globalMaterial)
+  {
+    OgreMaterialPtr ogreMaterial= std::dynamic_pointer_cast<OgreMaterial>(
+        this->globalMaterial);
+    Ogre::MaterialPtr material = ogreMaterial->Material();
+    material->load();
+  }
+}
+
+//////////////////////////////////////////////////
 void OgreCamera::Render()
 {
-  this->renderTexture->Render();
+  if (this->globalMaterial)
+  {
+    OgreMaterialPtr ogreMaterial= std::dynamic_pointer_cast<OgreMaterial>(
+        this->globalMaterial);
+    Ogre::MaterialPtr material = ogreMaterial->Material();
+    Ogre::SceneManager *sceneMgr = this->scene->OgreSceneManager();
+    Ogre::RenderSystem *renderSys = sceneMgr->getDestinationRenderSystem();
+    Ogre::RenderTarget *target = this->renderTexture->RenderTarget();
+    Ogre::Viewport *vp = target->getViewport(0);
+    Ogre::Technique *technique = material->getBestTechnique();
+
+    for (int i = 0; i < technique->getNumPasses() ; ++i)
+    {
+      Ogre::Pass *pass = technique->getPass(i);
+      sceneMgr->_setPass(pass, true, false);
+
+      Ogre::AutoParamDataSource autoParamDataSource;
+      autoParamDataSource.setCurrentPass(pass);
+      autoParamDataSource.setCurrentViewport(vp);
+      autoParamDataSource.setCurrentRenderTarget(target);
+      autoParamDataSource.setCurrentSceneManager(sceneMgr);
+      autoParamDataSource.setCurrentCamera(this->ogreCamera, true);
+
+      renderSys->setLightingEnabled(false);
+      renderSys->_setFog(Ogre::FOG_NONE);
+
+      pass->_updateAutoParams(&autoParamDataSource, 1);
+
+      if (pass->hasVertexProgram())
+      {
+        const Ogre::GpuProgramPtr &vertexShader = pass->getVertexProgram();
+        renderSys->bindGpuProgram(vertexShader->_getBindingDelegate());
+      }
+      if (pass->hasFragmentProgram())
+      {
+        const Ogre::GpuProgramPtr &fragmentShader = pass->getFragmentProgram();
+        renderSys->bindGpuProgram(fragmentShader->_getBindingDelegate());
+      }
+
+      this->renderTexture->Render();
+    }
+  }
+  else
+  {
+    this->renderTexture->Render();
+  }
 }
+
 
 //////////////////////////////////////////////////
 RenderTargetPtr OgreCamera::RenderTarget() const
@@ -148,12 +209,6 @@ RenderWindowPtr OgreCamera::CreateRenderWindow()
 
   this->renderTexture = renderWindow;
   return base;
-}
-
-//////////////////////////////////////////////////
-void OgreCamera::HACKSetMaterialScheme()
-{
-  this->renderTexture->HACKSetMaterialScheme();
 }
 
 //////////////////////////////////////////////////

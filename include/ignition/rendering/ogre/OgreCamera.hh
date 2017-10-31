@@ -63,7 +63,8 @@ namespace ignition
 
       public: virtual math::Matrix4d ViewMatrix() const;
 
-      public: virtual void HACKSetMaterialScheme() override;
+      public: virtual void SetGlobalMaterial(
+                  const MaterialPtr &_material) override;
 
       protected: virtual RenderTargetPtr RenderTarget() const;
 
@@ -78,6 +79,8 @@ namespace ignition
       protected: OgreRenderTargetPtr renderTexture;
 
       protected: math::Color backgroundColor;
+
+      protected: MaterialPtr globalMaterial = nullptr;
 
       private: friend class OgreScene;
       private: friend class OgreRayQuery;

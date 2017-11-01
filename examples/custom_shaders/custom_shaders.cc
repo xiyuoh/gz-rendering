@@ -14,6 +14,7 @@
  * limitations under the License.
  *
 */
+#include <ignition/common/Image.hh>
 #include <ignition/rendering.hh>
 
 #include "build_config.hh"
@@ -24,8 +25,8 @@ void PresentImage(ignition::rendering::ImagePtr _image);
 
 
 // Global constants due to laziness
-const double width = 16;
-const double height = 1;
+const double width = 512;
+const double height = 512;
 const int bytes_per_pixel = 3;
 
 const std::string vertex_shader_path = CMAKE_SOURCE_DIR "/vertex_shader.glsl";
@@ -64,9 +65,9 @@ int main()
   ignition::rendering::ImagePtr image;
   image = std::make_shared<ignition::rendering::Image>(camera->CreateImage());
 
-  std::cout << "Without hacky shader\n";
-  camera->Capture(*image);
-  PresentImage(image);
+  // std::cout << "Without hacky shader\n";
+  // camera->Capture(*image);
+  // PresentImage(image);
 
   std::cout << "With hacky shader\n";
 
@@ -76,6 +77,14 @@ int main()
   // depthMat->SetFragmentShader(fragment_shader_path);
   // camera->SetGlobalMaterial(depthMat);
 
+  camera->Capture(*image);
+  camera->Capture(*image);
+  camera->Capture(*image);
+  camera->Capture(*image);
+  camera->Capture(*image);
+  camera->Capture(*image);
+  camera->Capture(*image);
+  camera->Capture(*image);
   camera->Capture(*image);
   PresentImage(image);
 
@@ -87,15 +96,20 @@ void PresentImage(ignition::rendering::ImagePtr _image)
 {
   // Present the data
   unsigned char *data = _image->Data<unsigned char>();
-  for (int i = 0; i < bytes_per_pixel * width * height; i += bytes_per_pixel)
-  {
-    unsigned long comp2 = data[i + 2] * 100.0 * 100.0;
-    unsigned long comp1 = data[i + 1] * 100.0;
-    unsigned long comp0 = data[i];
-    const double distance = comp2 + comp1 + comp0;
-    std::cout << distance << ", ";
-  }
-  std::cout << "\n";
+  // for (int i = 0; i < bytes_per_pixel * width * height; i += bytes_per_pixel)
+  // {
+  //   unsigned long comp2 = data[i + 2] * 100.0 * 100.0;
+  //   unsigned long comp1 = data[i + 1] * 100.0;
+  //   unsigned long comp0 = data[i];
+  //   const double distance = comp2 + comp1 + comp0;
+  //   std::cout << distance << ", ";
+  // }
+  // std::cout << "\n";
+
+  ignition::common::Image image;
+  image.SetFromData(data, width, height, ignition::common::Image::RGB_INT8);
+
+  image.SavePNG("asdf.png");
 }
 
 //////////////////////////////////////////////////
@@ -174,7 +188,7 @@ void BuildScene(ignition::rendering::ScenePtr _scene)
 
   // create white material
   ignition::rendering::MaterialPtr white = _scene->CreateMaterial();
-  // white->SetAmbient(0.5, 0.5, 0.5);
+  // white->SetAmbient(0.5, 1.0, 0.5);
   // white->SetDiffuse(0.8, 0.8, 0.8);
   // white->SetReceiveShadows(true);
   // white->SetReflectivity(0);

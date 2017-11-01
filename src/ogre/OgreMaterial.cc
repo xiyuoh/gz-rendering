@@ -16,6 +16,7 @@
  */
 
 #include <fstream>
+#include <sstream>
 
 #include <ignition/common/Console.hh>
 
@@ -23,6 +24,7 @@
 #include "ignition/rendering/ogre/OgreConversions.hh"
 #include "ignition/rendering/ogre/OgreRenderEngine.hh"
 #include "ignition/rendering/ogre/OgreScene.hh"
+#include "ignition/rendering/ogre/OgreRTShaderSystem.hh"
 
 using namespace ignition;
 using namespace rendering;
@@ -263,51 +265,79 @@ void OgreMaterial::SetVertexShader(const std::string &_path)
   if (fin)
   {
     std::string source;
-    fin >> source;
+    std::string line;
+    while(std::getline(fin, line))
+    {
+      source += line + "\n";
+    }
+    std::cerr << source << std::endl;
 
     Ogre::HighLevelGpuProgramPtr vertexShader =
       Ogre::HighLevelGpuProgramManager::getSingletonPtr()->createProgram(
-          "__ignition_rendering_vertex__" + _path,
+          "__ignition_rendering_vertex__" ,
           this->ogreGroup,
           "glsl", Ogre::GpuProgramType::GPT_VERTEX_PROGRAM);
 
     vertexShader->setSource(source);
     vertexShader->load();
 
+    Ogre::GpuProgramParametersSharedPtr params = vertexShader->getDefaultParameters();
+    params->setIgnoreMissingParams(true);
+
+    // params->setNamedAutoConstant("worldMatrix", Ogre::GpuProgramParameters::ACT_WORLD_MATRIX);
+    // params->setNamedAutoConstant("viewProjMatrix", Ogre::GpuProgramParameters::ACT_VIEWPROJ_MATRIX);
+
     assert(vertexShader->isLoaded());
     assert(!(vertexShader->hasCompileError()));
     assert(vertexShader->isSupported());
 
+    std::cerr << "vertexshader name " << vertexShader->getName() << std::endl;
     this->ogrePass->setVertexProgram(vertexShader->getName());
   }
-  assert(this->ogrePass->isProgrammable());
+  // assert(this->ogrePass->isProgrammable());
+//  this->ogreMaterial->compile();
 }
 
 //////////////////////////////////////////////////
 void OgreMaterial::SetFragmentShader(const std::string &_path)
 {
+  Ogre::ResourceGroupManager::getSingleton().addResourceLocation(_path,
+  "FileSystem", "General", true);
   std::ifstream fin(_path, std::ifstream::in);
   if (fin)
   {
     std::string source;
-    fin >> source;
+    std::string line;
+    while(std::getline(fin, line))
+    {
+      source += line + "\n";
+    }
+    std::cerr << source << std::endl;
 
     Ogre::HighLevelGpuProgramPtr fragmentShader =
-      Ogre::HighLevelGpuProgramManager::getSingletonPtr()->createProgram(
-          "__ignition_rendering_fragment__" + _path,
+      Ogre::HighLevelGpuProgramManager::getSingleton().createProgram(
+          "__ignition_rendering_fragment__",
           this->ogreGroup,
           "glsl", Ogre::GpuProgramType::GPT_FRAGMENT_PROGRAM);
 
-    fragmentShader->setSource(source);
+//    fragmentShader->setSource(source);
+    fragmentShader->setSourceFile(_path);
     fragmentShader->load();
+
+
+  Ogre::GpuProgramParametersSharedPtr params = fragmentShader->getDefaultParameters();
+  params->setIgnoreMissingParams(true);
 
     assert(fragmentShader->isLoaded());
     assert(!(fragmentShader->hasCompileError()));
     assert(fragmentShader->isSupported());
 
+    std::cerr << "frag name " << fragmentShader->getName() << std::endl;
     this->ogrePass->setFragmentProgram(fragmentShader->getName());
   }
-  assert(this->ogrePass->isProgrammable());
+
+//  this->ogreMaterial->compile();
+  this->ogreMaterial->reload();
 }
 
 //////////////////////////////////////////////////
@@ -451,9 +481,11 @@ void OgreMaterial::Init()
   this->ogreMaterial = matManager.create(this->name, this->ogreGroup);
   this->ogreTechnique = this->ogreMaterial->getTechnique(0);
   this->ogrePass = this->ogreTechnique->getPass(0);
+  this->ogreTechnique->removeAllPasses();
+  this->ogrePass =  this->ogreTechnique->createPass();
   this->ogreTexState = this->ogrePass->createTextureUnitState();
   this->ogreTexState->setBlank();
-  this->Reset();
+//  this->Reset();
 
   // TODO: provide function interface
   this->ogreMaterial->setTextureAnisotropy(8);

@@ -1,8 +1,8 @@
-uniform float retro;
+//uniform float retro;
 //uniform float near;
 //uniform float far;
 //
-varying vec4 point;
+//varying vec4 point;
 
 void main()
 {
@@ -13,5 +13,7 @@ void main()
   //  l = far;
 
   //gl_FragColor = vec4(l, retro, 0, 1.0);
-  gl_FragColor = vec4(0.0, 0.0, 0.0, 1.0);
-}
+  gl_FragColor = vec4(1.0, 0.0, 0.0, 1.0);
+  osijfoejifeso:w
+
+//}

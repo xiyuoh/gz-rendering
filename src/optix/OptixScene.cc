@@ -17,6 +17,7 @@
 
 #include "ignition/rendering/optix/OptixGrid.hh"
 #include "ignition/rendering/optix/OptixScene.hh"
+#include "ignition/rendering/optix/OptixCamera.hh"
 #include "ignition/rendering/optix/optix.hh"
 
 using namespace ignition;

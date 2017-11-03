@@ -259,6 +259,10 @@ enum ShaderType OgreMaterial::ShaderType() const
 //////////////////////////////////////////////////
 void OgreMaterial::SetVertexShader(const std::string &_path)
 {
+  return;
+  Ogre::ResourceGroupManager::getSingleton().addResourceLocation(_path,
+  "FileSystem", "General", true);
+
   // The shader has a setSourceFile() method, but it fails to find a shader
   // when given an absolute path. Easier to just load the file directly.
   std::ifstream fin(_path, std::ifstream::in);
@@ -301,7 +305,7 @@ void OgreMaterial::SetVertexShader(const std::string &_path)
 //////////////////////////////////////////////////
 void OgreMaterial::SetFragmentShader(const std::string &_path)
 {
-  Ogre::ResourceGroupManager::getSingleton().addResourceLocation(_path,
+/*  Ogre::ResourceGroupManager::getSingleton().addResourceLocation(_path,
   "FileSystem", "General", true);
   std::ifstream fin(_path, std::ifstream::in);
   if (fin)
@@ -337,7 +341,30 @@ void OgreMaterial::SetFragmentShader(const std::string &_path)
   }
 
 //  this->ogreMaterial->compile();
-  this->ogreMaterial->reload();
+  this->ogreMaterial->setLightingEnabled(false);
+*/
+  std::string p = _path.substr(0, _path.rfind('/')) + "/test.material";
+//  Ogre::ResourceGroupManager::getSingleton().addResourceLocation(p,
+//  "FileSystem", "General", true);
+  std::string d = _path.substr(0, _path.rfind('/'));
+  Ogre::ResourceGroupManager::getSingleton().addResourceLocation(d,
+  "FileSystem", "General", true);
+
+  Ogre::DataStreamPtr stream =
+    Ogre::ResourceGroupManager::getSingleton().openResource(
+       p, "General");
+  Ogre::MaterialManager::getSingleton().parseScript(
+      stream, "General");
+
+  this->ogreMaterial =
+    Ogre::MaterialManager::getSingleton().getByName("ign/test_shader");
+
+
+
+//  Ogre::MaterialManager &matManager = Ogre::MaterialManager::getSingleton();
+//  this->ogreMaterial = matManager.getByName("ign/test_shader");
+  this->ogreMaterial->compile();
+  this->ogreMaterial->load();
 }
 
 //////////////////////////////////////////////////
@@ -481,8 +508,8 @@ void OgreMaterial::Init()
   this->ogreMaterial = matManager.create(this->name, this->ogreGroup);
   this->ogreTechnique = this->ogreMaterial->getTechnique(0);
   this->ogrePass = this->ogreTechnique->getPass(0);
-  this->ogreTechnique->removeAllPasses();
-  this->ogrePass =  this->ogreTechnique->createPass();
+//  this->ogreTechnique->removeAllPasses();
+//  this->ogrePass =  this->ogreTechnique->createPass();
   this->ogreTexState = this->ogrePass->createTextureUnitState();
   this->ogreTexState->setBlank();
 //  this->Reset();

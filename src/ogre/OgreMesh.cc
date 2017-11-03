@@ -101,7 +101,8 @@ void OgreSubMesh::SetMaterialImpl(OgreMaterialPtr _material)
 {
   std::string materialName = _material->Name();
   Ogre::MaterialPtr ogreMaterial = _material->Material();
-  this->ogreSubEntity->setMaterialName(materialName);
+//  this->ogreSubEntity->setMaterialName(materialName);
+  this->ogreSubEntity->setMaterialName("ign/test_shader");
   this->material = _material;
 }
 
@@ -109,7 +110,7 @@ void OgreSubMesh::SetMaterialImpl(OgreMaterialPtr _material)
 void OgreSubMesh::Init()
 {
   BaseSubMesh::Init();
-  OgreRTShaderSystem::Instance()->AttachEntity(this);
+//  OgreRTShaderSystem::Instance()->AttachEntity(this);
 }
 
 //////////////////////////////////////////////////

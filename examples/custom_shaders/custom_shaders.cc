@@ -77,11 +77,8 @@ int main()
   // depthMat->SetFragmentShader(fragment_shader_path);
   // camera->SetGlobalMaterial(depthMat);
 
-//  for (unsigned int i = 0; i < 10000 ;++i)
-   {
-    camera->Capture(*image);
-    PresentImage(image);
-   }
+   camera->Capture(*image);
+   PresentImage(image);
 
   return 0;
 }
@@ -123,13 +120,11 @@ void BuildScene(ignition::rendering::ScenePtr _scene)
   root->AddChild(light0);
 
   // create white material
-  ignition::rendering::MaterialPtr white = _scene->CreateMaterial();
-  // white->SetAmbient(0.5, 1.0, 0.5);
-  // white->SetDiffuse(0.8, 0.8, 0.8);
-  // white->SetReceiveShadows(true);
-  // white->SetReflectivity(0);
-  white->SetVertexShader(vertex_shader_path);
-  white->SetFragmentShader(fragment_shader_path);
+  ignition::rendering::MaterialPtr grey = _scene->CreateMaterial();
+  grey->SetAmbient(0.5, 0.5, 0.5);
+  grey->SetDiffuse(0.8, 0.8, 0.8);
+  grey->SetReceiveShadows(true);
+  grey->SetReflectivity(0);
 
   // create sphere visual
   ignition::rendering::VisualPtr plane = _scene->CreateVisual();
@@ -137,8 +132,15 @@ void BuildScene(ignition::rendering::ScenePtr _scene)
   plane->AddGeometry(geom);
   plane->SetLocalScale(5, 8, 1);
   plane->SetLocalPosition(3, 0, -0.5);
-  geom->SetMaterial(white, false);
+  plane->SetMaterial(grey);
   root->AddChild(plane);
+
+  // create shader material
+  ignition::rendering::MaterialPtr shader = _scene->CreateMaterial();
+  shader->SetVertexShader(vertex_shader_path);
+  shader->SetFragmentShader(fragment_shader_path);
+  std::cerr << "vs " << vertex_shader_path << std::endl;
+  std::cerr << "fs " << fragment_shader_path << std::endl;
 
  // create box visual
   ignition::rendering::VisualPtr box = _scene->CreateVisual();
@@ -147,8 +149,6 @@ void BuildScene(ignition::rendering::ScenePtr _scene)
   box->SetLocalPosition(3, 0, 0);
   box->SetLocalRotation(M_PI / 4, 0, M_PI / 3);
   box->SetLocalScale(1, 2.5, 1);
-  box->SetMaterial(white, false);
+  box->SetMaterial(shader, false);
   root->AddChild(box);
-
-
 }

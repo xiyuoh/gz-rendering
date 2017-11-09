@@ -77,16 +77,8 @@ int main()
   // depthMat->SetFragmentShader(fragment_shader_path);
   // camera->SetGlobalMaterial(depthMat);
 
-  camera->Capture(*image);
-  camera->Capture(*image);
-  camera->Capture(*image);
-  camera->Capture(*image);
-  camera->Capture(*image);
-  camera->Capture(*image);
-  camera->Capture(*image);
-  camera->Capture(*image);
-  camera->Capture(*image);
-  PresentImage(image);
+   camera->Capture(*image);
+   PresentImage(image);
 
   return 0;
 }
@@ -127,79 +119,34 @@ void BuildScene(ignition::rendering::ScenePtr _scene)
   light0->SetSpecularColor(0.5, 0.5, 0.5);
   root->AddChild(light0);
 
-  // create point light
-  ignition::rendering::PointLightPtr light2 = _scene->CreatePointLight();
-  light2->SetDiffuseColor(0.5, 0.5, 0.5);
-  light2->SetSpecularColor(0.5, 0.5, 0.5);
-  light2->SetLocalPosition(3, 5, 5);
-  root->AddChild(light2);
-
-  // create green material
-  ignition::rendering::MaterialPtr green = _scene->CreateMaterial();
-  green->SetAmbient(0.0, 0.5, 0.0);
-  green->SetDiffuse(0.0, 0.7, 0.0);
-  green->SetSpecular(0.5, 0.5, 0.5);
-  green->SetShininess(50);
-  green->SetReflectivity(0);
-
-  // create center visual
-  ignition::rendering::VisualPtr center = _scene->CreateVisual();
-  center->AddGeometry(_scene->CreateSphere());
-  center->SetLocalPosition(3, 0, 0);
-  center->SetLocalScale(0.1, 0.1, 0.1);
-  center->SetMaterial(green);
-  root->AddChild(center);
-
-  // create red material
-  ignition::rendering::MaterialPtr red = _scene->CreateMaterial();
-  red->SetAmbient(0.5, 0.0, 0.0);
-  red->SetDiffuse(1.0, 0.0, 0.0);
-  red->SetSpecular(0.5, 0.5, 0.5);
-  red->SetShininess(50);
-  red->SetReflectivity(0);
+  // create white material
+  ignition::rendering::MaterialPtr grey = _scene->CreateMaterial();
+  grey->SetAmbient(0.5, 0.5, 0.5);
+  grey->SetDiffuse(0.8, 0.8, 0.8);
+  grey->SetReceiveShadows(true);
+  grey->SetReflectivity(0);
 
   // create sphere visual
-  ignition::rendering::VisualPtr sphere = _scene->CreateVisual();
-  sphere->AddGeometry(_scene->CreateSphere());
-  sphere->SetOrigin(0.0, -0.5, 0.0);
-  sphere->SetLocalPosition(3, 0, 0);
-  sphere->SetLocalRotation(0, 0, 0);
-  sphere->SetLocalScale(1, 2.5, 1);
-  sphere->SetMaterial(red);
-  root->AddChild(sphere);
+  ignition::rendering::VisualPtr plane = _scene->CreateVisual();
+  auto geom = _scene->CreatePlane();
+  plane->AddGeometry(geom);
+  plane->SetLocalScale(5, 8, 1);
+  plane->SetLocalPosition(3, 0, -0.5);
+  plane->SetMaterial(grey);
+  root->AddChild(plane);
 
-  // create blue material
-  ignition::rendering::MaterialPtr blue = _scene->CreateMaterial();
-  blue->SetAmbient(0.0, 0.0, 0.3);
-  blue->SetDiffuse(0.0, 0.0, 0.8);
-  blue->SetSpecular(0.5, 0.5, 0.5);
-  blue->SetShininess(50);
-  blue->SetReflectivity(0);
+  // create shader material
+  ignition::rendering::MaterialPtr shader = _scene->CreateMaterial();
+  shader->SetVertexShader(vertex_shader_path);
+  shader->SetFragmentShader(fragment_shader_path);
 
-  // create box visual
+ // create box visual
   ignition::rendering::VisualPtr box = _scene->CreateVisual();
   box->AddGeometry(_scene->CreateBox());
   box->SetOrigin(0.0, 0.5, 0.0);
   box->SetLocalPosition(3, 0, 0);
   box->SetLocalRotation(M_PI / 4, 0, M_PI / 3);
   box->SetLocalScale(1, 2.5, 1);
-  box->SetMaterial(blue);
+  box->SetMaterial(shader);
   root->AddChild(box);
-
-  // create white material
-  ignition::rendering::MaterialPtr white = _scene->CreateMaterial();
-  // white->SetAmbient(0.5, 1.0, 0.5);
-  // white->SetDiffuse(0.8, 0.8, 0.8);
-  // white->SetReceiveShadows(true);
-  // white->SetReflectivity(0);
-  white->SetVertexShader(vertex_shader_path);
-  white->SetFragmentShader(fragment_shader_path);
-
-  // create sphere visual
-  ignition::rendering::VisualPtr plane = _scene->CreateVisual();
-  plane->AddGeometry(_scene->CreatePlane());
-  plane->SetLocalScale(5, 8, 1);
-  plane->SetLocalPosition(3, 0, -0.5);
-  plane->SetMaterial(white);
-  root->AddChild(plane);
 }

@@ -12,8 +12,5 @@ void main()
   //if (l>far)
   //  l = far;
 
-  //gl_FragColor = vec4(l, retro, 0, 1.0);
-  gl_FragColor = vec4(1.0, 0.0, 0.0, 1.0);
-  osijfoejifeso:w
-
-//}
+  gl_FragColor = vec4(0.0, 1.0, 0.0, 1.0);
+}

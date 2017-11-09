@@ -100,6 +100,8 @@ namespace ignition
 
       public: virtual math::Matrix4d ViewMatrix() const;
 
+      public: virtual void SetGlobalMaterial(const MaterialPtr &_material);
+
       protected: virtual void *CreateImageBuffer() const;
 
       protected: virtual void Load();
@@ -428,6 +430,14 @@ namespace ignition
     void BaseCamera<T>::SetNearClipPlane(const double _near)
     {
       this->nearClip = _near;
+    }
+
+    //////////////////////////////////////////////////
+    template <class T>
+    void BaseCamera<T>::SetGlobalMaterial(const MaterialPtr &/*_material*/)
+    {
+      std::cerr << "SetGlobalMaterial not implemented for current render"
+          << " engine" << std::endl;
     }
   }
 }

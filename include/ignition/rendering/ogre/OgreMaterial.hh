@@ -102,12 +102,16 @@ namespace ignition
 
       public: virtual Ogre::MaterialPtr Material() const;
 
+      // Documenation inherited.
       public: virtual void SetVertexShader(const std::string &_path) override;
 
+      // Documenation inherited.
       public: virtual std::string VertexShader() const;
 
+      // Documenation inherited.
       public: virtual void SetFragmentShader(const std::string &_path) override;
 
+      // Documenation inherited.
       public: virtual std::string FragmentShader() const;
 
       protected: virtual void LoadImage(const std::string &_name,
@@ -157,10 +161,10 @@ namespace ignition
 
       protected: enum ShaderType shaderType = ST_PIXEL;
 
-      /// \brief Path to vertex shader file.
+      /// \brief Path to vertex shader program.
       protected: std::string vertexShaderPath;
 
-      /// \brief Path to fragment shader file.
+      /// \brief Path to fragment shader program.
       protected: std::string fragmentShaderPath;
 
       private: friend class OgreScene;

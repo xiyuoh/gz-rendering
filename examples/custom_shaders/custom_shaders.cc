@@ -139,8 +139,6 @@ void BuildScene(ignition::rendering::ScenePtr _scene)
   ignition::rendering::MaterialPtr shader = _scene->CreateMaterial();
   shader->SetVertexShader(vertex_shader_path);
   shader->SetFragmentShader(fragment_shader_path);
-  std::cerr << "vs " << vertex_shader_path << std::endl;
-  std::cerr << "fs " << fragment_shader_path << std::endl;
 
  // create box visual
   ignition::rendering::VisualPtr box = _scene->CreateVisual();
@@ -149,6 +147,6 @@ void BuildScene(ignition::rendering::ScenePtr _scene)
   box->SetLocalPosition(3, 0, 0);
   box->SetLocalRotation(M_PI / 4, 0, M_PI / 3);
   box->SetLocalScale(1, 2.5, 1);
-  box->SetMaterial(shader, false);
+  box->SetMaterial(shader);
   root->AddChild(box);
 }

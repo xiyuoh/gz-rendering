@@ -369,7 +369,6 @@ namespace ignition
     {
       unsigned int count = this->GeometryCount();
       _material = (_unique && count > 0) ? _material->Clone() : _material;
-      std::cerr << " BaseVisual SetGeometryMaterial " << _material->Name() << " " << _unique << std::endl;
 
       for (unsigned int i = 0; i < count; ++i)
       {

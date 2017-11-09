@@ -141,7 +141,7 @@ namespace ignition
 
     //////////////////////////////////////////////////
     template <class T>
-    void BaseMaterial<T>::SetVertexShader(const std::string &_path)
+    void BaseMaterial<T>::SetVertexShader(const std::string &/*_path*/)
     {
       ignerr << "Vertex shader is not supported by the current render engine"
           << std::endl;
@@ -156,7 +156,7 @@ namespace ignition
 
     //////////////////////////////////////////////////
     template <class T>
-    void BaseMaterial<T>::SetFragmentShader(const std::string &_path)
+    void BaseMaterial<T>::SetFragmentShader(const std::string &/*_path*/)
     {
       ignerr << "Fragment shader is not supported by the current render engine"
           << std::endl;

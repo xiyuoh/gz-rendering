@@ -110,7 +110,7 @@ void OgreSubMesh::SetMaterialImpl(OgreMaterialPtr _material)
 void OgreSubMesh::Init()
 {
   BaseSubMesh::Init();
-//  OgreRTShaderSystem::Instance()->AttachEntity(this);
+  OgreRTShaderSystem::Instance()->AttachEntity(this);
 }
 
 //////////////////////////////////////////////////

@@ -22,6 +22,7 @@ set (headers
   OgreScene.hh
   OgreSensor.hh
   OgreStorage.hh
+  OgreUniformMaterialApplicator.hh
   OgreVisual.hh
 )
 

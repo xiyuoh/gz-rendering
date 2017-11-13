@@ -29,6 +29,7 @@ set (sources
   OgreRTShaderSystem.cc
   OgreScene.cc
   OgreSensor.cc
+  OgreUniformMaterialApplicator.cc
   OgreVisual.cc
 )
 

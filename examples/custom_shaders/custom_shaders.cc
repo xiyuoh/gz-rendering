@@ -31,6 +31,8 @@ const int bytes_per_pixel = 3;
 
 const std::string vertex_shader_path = CMAKE_SOURCE_DIR "/vertex_shader.glsl";
 const std::string fragment_shader_path = CMAKE_SOURCE_DIR "/fragment_shader.glsl";
+const std::string depth_vertex_shader_path = CMAKE_SOURCE_DIR "/depth_vertex_shader.glsl";
+const std::string depth_fragment_shader_path = CMAKE_SOURCE_DIR "/depth_fragment_shader.glsl";
 
 
 //////////////////////////////////////////////////
@@ -65,20 +67,14 @@ int main()
   ignition::rendering::ImagePtr image;
   image = std::make_shared<ignition::rendering::Image>(camera->CreateImage());
 
-  // std::cout << "Without hacky shader\n";
-  // camera->Capture(*image);
-  // PresentImage(image);
-
-  std::cout << "With hacky shader\n";
-
   //Call some stuff to set a custom shader on all materials
-  // ignition::rendering::MaterialPtr depthMat = scene->CreateMaterial();
-  // depthMat->SetVertexShader(vertex_shader_path);
-  // depthMat->SetFragmentShader(fragment_shader_path);
-  // camera->SetGlobalMaterial(depthMat);
+  ignition::rendering::MaterialPtr depthMat = scene->CreateMaterial();
+  depthMat->SetVertexShader(depth_vertex_shader_path);
+  depthMat->SetFragmentShader(depth_fragment_shader_path);
+  camera->SetGlobalMaterial(depthMat);
 
-   camera->Capture(*image);
-   PresentImage(image);
+  camera->Capture(*image);
+  PresentImage(image);
 
   return 0;
 }
@@ -126,7 +122,7 @@ void BuildScene(ignition::rendering::ScenePtr _scene)
   grey->SetReceiveShadows(true);
   grey->SetReflectivity(0);
 
-  // create sphere visual
+  // create plane visual
   ignition::rendering::VisualPtr plane = _scene->CreateVisual();
   auto geom = _scene->CreatePlane();
   plane->AddGeometry(geom);
@@ -140,7 +136,7 @@ void BuildScene(ignition::rendering::ScenePtr _scene)
   shader->SetVertexShader(vertex_shader_path);
   shader->SetFragmentShader(fragment_shader_path);
 
- // create box visual
+  // create box visual
   ignition::rendering::VisualPtr box = _scene->CreateVisual();
   box->AddGeometry(_scene->CreateBox());
   box->SetOrigin(0.0, 0.5, 0.0);

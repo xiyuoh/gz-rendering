@@ -24,6 +24,7 @@
 #include "ignition/rendering/ogre/OgreRenderTypes.hh"
 #include "ignition/rendering/ogre/OgreIncludes.hh"
 #include "ignition/rendering/ogre/OgreObject.hh"
+#include "ignition/rendering/ogre/OgreUniformMaterialApplicator.hh"
 
 namespace Ogre
 {
@@ -64,6 +65,9 @@ namespace ignition
 
       public: virtual void Destroy() = 0;
 
+      // Set a material to render on every object
+      public: void SetGlobalMaterial(MaterialPtr _material);
+
       protected: virtual Ogre::RenderTarget *RenderTarget() const = 0;
 
       protected: virtual void UpdateBackgroundColor();
@@ -74,11 +78,17 @@ namespace ignition
 
       protected: virtual void RebuildViewport();
 
+      protected: void RebuildApplicator();
+
       protected: Ogre::Camera *ogreCamera = nullptr;
 
       protected: Ogre::Viewport *ogreViewport = nullptr;
 
       protected: Ogre::ColourValue ogreBackgroundColor;
+
+      protected: MaterialPtr globalMaterial;
+
+      protected: OgreUniformMaterialApplicatorPtr globalApplicator;
 
       protected: bool colorDirty = true;
 

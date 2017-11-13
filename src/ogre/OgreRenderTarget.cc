@@ -19,9 +19,12 @@
 
 #include "ignition/rendering/ogre/OgreRenderTarget.hh"
 
+#include "ignition/rendering/Material.hh"
+#include "ignition/rendering/ogre/OgreMaterial.hh"
 #include "ignition/rendering/ogre/OgreRenderEngine.hh"
 #include "ignition/rendering/ogre/OgreConversions.hh"
 #include "ignition/rendering/ogre/OgreRTShaderSystem.hh"
+#include "ignition/rendering/ogre/OgreScene.hh"
 #include "ignition/rendering/ogre/OgreIncludes.hh"
 
 using namespace ignition;
@@ -132,6 +135,7 @@ void OgreRenderTarget::RebuildImpl()
 {
   this->RebuildTarget();
   this->RebuildViewport();
+  this->RebuildApplicator();
 }
 
 //////////////////////////////////////////////////
@@ -139,6 +143,11 @@ void OgreRenderTarget::RebuildViewport()
 {
   Ogre::RenderTarget *ogreRenderTarget = this->RenderTarget();
   ogreRenderTarget->removeAllViewports();
+
+  Ogre::SceneManager *sceneMgr = this->scene->OgreSceneManager();
+  Ogre::RenderTarget *target = this->RenderTarget();
+  this->globalApplicator = std::make_shared<OgreUniformMaterialApplicator>(
+      sceneMgr, target, nullptr);
 
   this->ogreViewport = ogreRenderTarget->addViewport(this->ogreCamera);
   this->ogreViewport->setBackgroundColour(this->ogreBackgroundColor);
@@ -148,6 +157,32 @@ void OgreRenderTarget::RebuildViewport()
 
   OgreRTShaderSystem::Instance()->AttachViewport(this->ogreViewport,
       this->scene);
+}
+
+//////////////////////////////////////////////////
+void OgreRenderTarget::SetGlobalMaterial(MaterialPtr _material)
+{
+  // TODO all of this in RenderTarget
+  this->globalMaterial = _material->Clone();
+
+  // Have to rebuild the target so there is something to apply the applicator to
+  this->targetDirty = true;
+}
+
+//////////////////////////////////////////////////
+void OgreRenderTarget::RebuildApplicator()
+{
+  if (this->globalMaterial)
+  {
+    OgreMaterial *material = dynamic_cast<OgreMaterial*>(
+        this->globalMaterial.get());
+    Ogre::MaterialPtr matPtr = material->Material();
+
+    Ogre::SceneManager *sceneMgr = this->scene->OgreSceneManager();
+    Ogre::RenderTarget *target = this->RenderTarget();
+    this->globalApplicator.reset(new OgreUniformMaterialApplicator(
+        sceneMgr, target, matPtr.get()));
+  }
 }
 
 //////////////////////////////////////////////////

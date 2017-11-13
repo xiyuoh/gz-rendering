@@ -80,8 +80,6 @@ namespace ignition
 
       protected: math::Color backgroundColor;
 
-      protected: MaterialPtr globalMaterial = nullptr;
-
       private: friend class OgreScene;
       private: friend class OgreRayQuery;
     };

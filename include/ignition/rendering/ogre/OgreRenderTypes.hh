@@ -46,6 +46,7 @@ namespace ignition
     class OgreSensor;
     class OgreSpotLight;
     class OgreSubMesh;
+    class OgreUniformMaterialApplicator;
     class OgreVisual;
 
     typedef BaseSceneStore<OgreScene>       OgreSceneStore;
@@ -89,6 +90,8 @@ namespace ignition
     typedef shared_ptr<OgreGeometryStore>        OgreGeometryStorePtr;
     typedef shared_ptr<OgreSubMeshStore>         OgreSubMeshStorePtr;
     typedef shared_ptr<OgreMaterialMap>          OgreMaterialMapPtr;
+    typedef shared_ptr<OgreUniformMaterialApplicator>
+      OgreUniformMaterialApplicatorPtr;
   }
 }
 #endif

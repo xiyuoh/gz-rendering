@@ -1,16 +1,25 @@
-//uniform float retro;
-//uniform float near;
-//uniform float far;
-//
-//varying vec4 point;
+varying vec4 point;
 
 void main()
 {
-  //vec3 p = vec3(point.x, point.y, point.z - near);
-  //float l = length(point.xyz);
+  float l = length(point.xyz);
 
-  //if (l>far)
-  //  l = far;
+  float r = 0.0;
+  float g = 0.0;
+  float b = 0.0;
+  float a = 1.0;
 
-  gl_FragColor = vec4(1.0, 0.0, 0.0, 1.0);
+  float maxRange = 10.0;
+  if (l > maxRange)
+  {
+    l = maxRange;
+  }
+
+  r = l / maxRange;
+  g = l / 2.0 / maxRange;
+  b = l / 4.0 / maxRange;
+  // Currently no pixel format that grants access to alpha
+  a = l / 8.0 / maxRange;
+
+  gl_FragColor = vec4(b, g, r, a);
 }

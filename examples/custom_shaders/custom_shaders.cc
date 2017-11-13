@@ -21,7 +21,8 @@
 
 void BuildScene(ignition::rendering::ScenePtr _scene);
 
-void PresentImage(ignition::rendering::ImagePtr _image);
+void PresentImage(ignition::rendering::ImagePtr _image,
+    const std::string &_name);
 
 
 // Global constants due to laziness
@@ -49,6 +50,8 @@ int main()
   ignition::rendering::ScenePtr scene = engine->CreateScene("scene");
   BuildScene(scene);
 
+  ignition::rendering::VisualPtr root = scene->RootVisual();
+
   /// Create a camera
   ignition::rendering::CameraPtr camera;
   camera = scene->CreateCamera("example_custom_shaders");
@@ -58,46 +61,51 @@ int main()
   camera->SetAntiAliasing(2);
   camera->SetAspectRatio(width / height);
   camera->SetImageFormat(ignition::rendering::PF_R8G8B8);
-
-  // Add the camera to the scene
-  ignition::rendering::VisualPtr root = scene->RootVisual();
   root->AddChild(camera);
 
-  // Render to an in-memory image
-  ignition::rendering::ImagePtr image;
-  image = std::make_shared<ignition::rendering::Image>(camera->CreateImage());
+  /// Create a camera for depth image
+  ignition::rendering::CameraPtr depthCamera;
+  depthCamera = scene->CreateCamera("example_custom_shaders_depth");
+  depthCamera->SetImageWidth(width);
+  depthCamera->SetImageHeight(height);
+  depthCamera->SetHFOV(1.05);
+  depthCamera->SetAntiAliasing(2);
+  depthCamera->SetAspectRatio(width / height);
+  depthCamera->SetImageFormat(ignition::rendering::PF_R8G8B8);
+  root->AddChild(depthCamera);
 
-  //Call some stuff to set a custom shader on all materials
+  // Render to an in-memory image
+
+  //Call set a custom shader on all objects viewed through depthCamera
   ignition::rendering::MaterialPtr depthMat = scene->CreateMaterial();
   depthMat->SetVertexShader(depth_vertex_shader_path);
   depthMat->SetFragmentShader(depth_fragment_shader_path);
-  camera->SetGlobalMaterial(depthMat);
+  depthCamera->SetGlobalMaterial(depthMat);
 
+  ignition::rendering::ImagePtr image =
+    std::make_shared<ignition::rendering::Image>(camera->CreateImage());
+  ignition::rendering::ImagePtr depthImage =
+    std::make_shared<ignition::rendering::Image>(depthCamera->CreateImage());
+
+  depthCamera->Capture(*depthImage);
+  PresentImage(depthImage, "depth.png");
   camera->Capture(*image);
-  PresentImage(image);
+  PresentImage(image, "regular.png");
 
   return 0;
 }
 
 //////////////////////////////////////////////////
-void PresentImage(ignition::rendering::ImagePtr _image)
+void PresentImage(ignition::rendering::ImagePtr _image,
+    const std::string &_name)
 {
   // Present the data
   unsigned char *data = _image->Data<unsigned char>();
-  // for (int i = 0; i < bytes_per_pixel * width * height; i += bytes_per_pixel)
-  // {
-  //   unsigned long comp2 = data[i + 2] * 100.0 * 100.0;
-  //   unsigned long comp1 = data[i + 1] * 100.0;
-  //   unsigned long comp0 = data[i];
-  //   const double distance = comp2 + comp1 + comp0;
-  //   std::cout << distance << ", ";
-  // }
-  // std::cout << "\n";
 
   ignition::common::Image image;
   image.SetFromData(data, width, height, ignition::common::Image::RGB_INT8);
 
-  image.SavePNG("asdf.png");
+  image.SavePNG(_name);
 }
 
 //////////////////////////////////////////////////

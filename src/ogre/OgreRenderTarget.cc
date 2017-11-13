@@ -144,11 +144,6 @@ void OgreRenderTarget::RebuildViewport()
   Ogre::RenderTarget *ogreRenderTarget = this->RenderTarget();
   ogreRenderTarget->removeAllViewports();
 
-  Ogre::SceneManager *sceneMgr = this->scene->OgreSceneManager();
-  Ogre::RenderTarget *target = this->RenderTarget();
-  this->globalApplicator = std::make_shared<OgreUniformMaterialApplicator>(
-      sceneMgr, target, nullptr);
-
   this->ogreViewport = ogreRenderTarget->addViewport(this->ogreCamera);
   this->ogreViewport->setBackgroundColour(this->ogreBackgroundColor);
   this->ogreViewport->setClearEveryFrame(true);
@@ -162,7 +157,6 @@ void OgreRenderTarget::RebuildViewport()
 //////////////////////////////////////////////////
 void OgreRenderTarget::SetGlobalMaterial(MaterialPtr _material)
 {
-  // TODO all of this in RenderTarget
   this->globalMaterial = _material->Clone();
 
   // Have to rebuild the target so there is something to apply the applicator to

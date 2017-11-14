@@ -18,8 +18,8 @@ void main()
   r = l / maxRange;
   g = l / 2.0 / maxRange;
   b = l / 4.0 / maxRange;
-  // Currently no pixel format that grants access to alpha
+  // Currently no pixel format grants access to alpha
   a = l / 8.0 / maxRange;
 
-  gl_FragColor = vec4(b, g, r, a);
+  gl_FragColor = vec4(r, g, b, a);
 }

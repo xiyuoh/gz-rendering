@@ -157,7 +157,7 @@ void OgreRenderTarget::RebuildViewport()
 //////////////////////////////////////////////////
 void OgreRenderTarget::SetGlobalMaterial(MaterialPtr _material)
 {
-  this->globalMaterial = _material->Clone();
+  this->globalMaterial = _material;
 
   // Have to rebuild the target so there is something to apply the applicator to
   this->targetDirty = true;

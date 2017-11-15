@@ -26,6 +26,9 @@ OgreRenderTargetMaterial::OgreRenderTargetMaterial(
     Ogre::Material *_material):
   scene(_scene), renderTarget(_renderTarget), material(_material)
 {
+  // Pick a name that's unlikely to collide with a real material scheme
+  this->schemeName = "__ignition__rendering__OgreRenderTargetMaterial";
+  this->renderTarget->getViewport(0)->setMaterialScheme(this->schemeName);
   this->renderTarget->addListener(this);
 }
 
@@ -39,41 +42,27 @@ OgreRenderTargetMaterial::~OgreRenderTargetMaterial()
 void OgreRenderTargetMaterial::preRenderTargetUpdate(
     const Ogre::RenderTargetEvent & /*_evt*/)
 {
-  this->scene->addRenderQueueListener(this);
+  // this->scene->addRenderQueueListener(this);
+  Ogre::MaterialManager::getSingleton().addListener(this);
 }
 
 //////////////////////////////////////////////////
 void OgreRenderTargetMaterial::postRenderTargetUpdate(
     const Ogre::RenderTargetEvent & /*_evt*/)
 {
-  // Unset the listener on the render queues
-  // one might think renderQueueEnded or postRenderQueues could be used
-  // instead, but both are called prior to the objects in the queue being
-  // rendered :(
-  for (auto *queue : this->renderQueues)
+  Ogre::MaterialManager::getSingleton().removeListener(this);
+}
+
+/// \brief Ogre callback that assigns colors to new renderables
+Ogre::Technique *OgreRenderTargetMaterial::handleSchemeNotFound(
+    uint16_t /*_schemeIndex*/, const Ogre::String &_schemeName,
+    Ogre::Material * /*_originalMaterial*/, uint16_t /*_lodIndex*/,
+    const Ogre::Renderable * /*_rend*/)
+{
+  if (_schemeName == this->schemeName)
   {
-    queue->setRenderableListener(nullptr);
+    // not using getBestTechnique() because it leads to infinite recursion here
+    return this->material->getSupportedTechnique(0);
   }
-  this->renderQueues.clear();
-
-  this->scene->removeRenderQueueListener(this);
-}
-
-//////////////////////////////////////////////////
-void OgreRenderTargetMaterial::renderQueueStarted (Ogre::uint8 /*_group*/,
-          const Ogre::String & /*invocation*/, bool & /*_skip*/)
-{
-  Ogre::RenderQueue *queue = this->scene->getRenderQueue();
-  queue->setRenderableListener(this);
-  this->renderQueues.push_back(queue);
-}
-
-//////////////////////////////////////////////////
-bool OgreRenderTargetMaterial::renderableQueued(
-    Ogre::Renderable * /*_renderable*/, Ogre::uint8 /*_group*/,
-    Ogre::ushort /*_priority*/, Ogre::Technique **_technique,
-    Ogre::RenderQueue * /*_queue*/)
-{
-  *_technique = this->material->getBestTechnique();
-  return true;
+  return nullptr;
 }

@@ -31,19 +31,16 @@ namespace ignition
     /// \internal
     ///
     /// On construction it registers as an Ogre::RenderTargetListener
-    /// on the provided Ogre::RenderTarget.
+    /// on the provided Ogre::RenderTarget, and sets the material scheme name
+    /// to a value that is unlikely to exist.
     /// When the target is about to be rendered it adds itself as an
-    /// Ogre::RenderQueueListener on the Ogre::SceneManager.
-    /// Every time a queue is about to be rendered it adds itself as an
-    /// Ogre::RenderQueue::RenderableListener to the queue.
-    /// There it sets the technique to be used when rendering each entity.
-    /// Once the scene has finished rendering it removes itself from the
-    /// listeners on the scene, and sets the listener on the Ogre::RenderQueue
-    /// to nullptr.
+    /// Ogre::MaterialManager::Listener.
+    /// Every time ogre tries to get a technique for a material it will call
+    /// handleSchemeNotFound which returns the first supported technique on the
+    /// material provided to this class's constructor.
     class IGNITION_VISIBLE OgreRenderTargetMaterial :
       public Ogre::RenderTargetListener,
-      public Ogre::RenderQueueListener,
-      public Ogre::RenderQueue::RenderableListener
+      public Ogre::MaterialManager::Listener
     {
       /// \brief constructor
       /// \param[in] _scene the scene manager responsible for rendering
@@ -63,14 +60,11 @@ namespace ignition
       private: virtual void postRenderTargetUpdate(
           const Ogre::RenderTargetEvent &_evt) override;
 
-      /// \brief Callback when a queue is beginning to be processed by a scene
-      private: virtual void renderQueueStarted (Ogre::uint8 _groupId,
-          const Ogre::String &invocation, bool &_skip) override;
-
-      /// \brief Callback called when each object is added the render queue.
-      private: virtual bool renderableQueued(Ogre::Renderable *_renderable,
-          Ogre::uint8 _groupId, Ogre::ushort _priority,
-          Ogre::Technique **_technique, Ogre::RenderQueue *_queue) override;
+      /// \brief Ogre callback that assigned same material to all renderables
+      public: virtual Ogre::Technique *handleSchemeNotFound(
+                  uint16_t _schemeIndex, const Ogre::String &_schemeName,
+                  Ogre::Material *_originalMaterial, uint16_t _lodIndex,
+                  const Ogre::Renderable *_rend) override;
 
       /// \brief scene manager responsible for rendering
       private: Ogre::SceneManager *scene;
@@ -81,8 +75,8 @@ namespace ignition
       /// \brief material that should be applied to all objects
       private: Ogre::Material *material;
 
-      /// \brief Queues to which this has been added as a listener
-      private: std::vector<Ogre::RenderQueue*> renderQueues;
+      /// \brief name of the material scheme used by this applicator
+      private: Ogre::String schemeName;
     };
   }
 }

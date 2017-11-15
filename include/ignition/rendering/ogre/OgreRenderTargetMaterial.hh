@@ -40,7 +40,7 @@ namespace ignition
     /// Once the scene has finished rendering it removes itself from the
     /// listeners on the scene, and sets the listener on the Ogre::RenderQueue
     /// to nullptr.
-    class IGNITION_VISIBLE OgreUniformMaterialApplicator :
+    class IGNITION_VISIBLE OgreRenderTargetMaterial :
       public Ogre::RenderTargetListener,
       public Ogre::RenderQueueListener,
       public Ogre::RenderQueue::RenderableListener
@@ -49,11 +49,11 @@ namespace ignition
       /// \param[in] _scene the scene manager responsible for rendering
       /// \param[in] _renderTarget the RenderTarget this should apply to
       /// \param[in] _material the material to apply to all renderables
-      public: OgreUniformMaterialApplicator(Ogre::SceneManager *_scene,
+      public: OgreRenderTargetMaterial(Ogre::SceneManager *_scene,
           Ogre::RenderTarget *_renderTarget, Ogre::Material *_material);
 
       /// \brief destructor
-      public: ~OgreUniformMaterialApplicator();
+      public: ~OgreRenderTargetMaterial();
 
       /// \brief Callback when a render target is about to be rendered
       private: virtual void preRenderTargetUpdate(

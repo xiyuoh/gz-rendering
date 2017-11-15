@@ -24,7 +24,7 @@
 #include "ignition/rendering/ogre/OgreRenderTypes.hh"
 #include "ignition/rendering/ogre/OgreIncludes.hh"
 #include "ignition/rendering/ogre/OgreObject.hh"
-#include "ignition/rendering/ogre/OgreUniformMaterialApplicator.hh"
+#include "ignition/rendering/ogre/OgreRenderTargetMaterial.hh"
 
 namespace Ogre
 {
@@ -88,7 +88,7 @@ namespace ignition
 
       protected: MaterialPtr globalMaterial;
 
-      protected: OgreUniformMaterialApplicatorPtr globalApplicator;
+      protected: OgreRenderTargetMaterialPtr globalApplicator;
 
       protected: bool colorDirty = true;
 

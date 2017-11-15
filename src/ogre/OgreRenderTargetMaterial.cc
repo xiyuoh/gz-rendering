@@ -15,13 +15,13 @@
  *
  */
 
-#include "ignition/rendering/ogre/OgreUniformMaterialApplicator.hh"
+#include "ignition/rendering/ogre/OgreRenderTargetMaterial.hh"
 
 using namespace ignition::rendering;
 
 
 //////////////////////////////////////////////////
-OgreUniformMaterialApplicator::OgreUniformMaterialApplicator(
+OgreRenderTargetMaterial::OgreRenderTargetMaterial(
     Ogre::SceneManager *_scene, Ogre::RenderTarget *_renderTarget,
     Ogre::Material *_material):
   scene(_scene), renderTarget(_renderTarget), material(_material)
@@ -30,20 +30,20 @@ OgreUniformMaterialApplicator::OgreUniformMaterialApplicator(
 }
 
 //////////////////////////////////////////////////
-OgreUniformMaterialApplicator::~OgreUniformMaterialApplicator()
+OgreRenderTargetMaterial::~OgreRenderTargetMaterial()
 {
   this->renderTarget->removeListener(this);
 }
 
 //////////////////////////////////////////////////
-void OgreUniformMaterialApplicator::preRenderTargetUpdate(
+void OgreRenderTargetMaterial::preRenderTargetUpdate(
     const Ogre::RenderTargetEvent & /*_evt*/)
 {
   this->scene->addRenderQueueListener(this);
 }
 
 //////////////////////////////////////////////////
-void OgreUniformMaterialApplicator::postRenderTargetUpdate(
+void OgreRenderTargetMaterial::postRenderTargetUpdate(
     const Ogre::RenderTargetEvent & /*_evt*/)
 {
   // Unset the listener on the render queues
@@ -60,7 +60,7 @@ void OgreUniformMaterialApplicator::postRenderTargetUpdate(
 }
 
 //////////////////////////////////////////////////
-void OgreUniformMaterialApplicator::renderQueueStarted (Ogre::uint8 /*_group*/,
+void OgreRenderTargetMaterial::renderQueueStarted (Ogre::uint8 /*_group*/,
           const Ogre::String & /*invocation*/, bool & /*_skip*/)
 {
   Ogre::RenderQueue *queue = this->scene->getRenderQueue();
@@ -69,7 +69,7 @@ void OgreUniformMaterialApplicator::renderQueueStarted (Ogre::uint8 /*_group*/,
 }
 
 //////////////////////////////////////////////////
-bool OgreUniformMaterialApplicator::renderableQueued(
+bool OgreRenderTargetMaterial::renderableQueued(
     Ogre::Renderable * /*_renderable*/, Ogre::uint8 /*_group*/,
     Ogre::ushort /*_priority*/, Ogre::Technique **_technique,
     Ogre::RenderQueue * /*_queue*/)

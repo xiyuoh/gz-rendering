@@ -174,7 +174,7 @@ void OgreRenderTarget::RebuildApplicator()
 
     Ogre::SceneManager *sceneMgr = this->scene->OgreSceneManager();
     Ogre::RenderTarget *target = this->RenderTarget();
-    this->globalApplicator.reset(new OgreUniformMaterialApplicator(
+    this->globalApplicator.reset(new OgreRenderTargetMaterial(
         sceneMgr, target, matPtr.get()));
   }
 }

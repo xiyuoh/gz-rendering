@@ -70,11 +70,15 @@ namespace ignition
       // Documentation inherited.
       public: virtual std::string VertexShader() const;
 
+      public: virtual ShaderParamsPtr VertexShaderParams() override;
+
       // Documentation inherited.
       public: virtual void SetVertexShader(const std::string &_path);
 
       // Documentation inherited.
       public: virtual std::string FragmentShader() const;
+
+      public: virtual ShaderParamsPtr FragmentShaderParams() override;
 
       // Documentation inherited.
       public: virtual void SetFragmentShader(const std::string &_path);
@@ -141,6 +145,15 @@ namespace ignition
 
     //////////////////////////////////////////////////
     template <class T>
+    ShaderParamsPtr BaseMaterial<T>::VertexShaderParams()
+    {
+      ignerr << "Vertex shader is not supported by the current render engine"
+          << std::endl;
+      return nullptr;
+    }
+
+    //////////////////////////////////////////////////
+    template <class T>
     void BaseMaterial<T>::SetVertexShader(const std::string &/*_path*/)
     {
       ignerr << "Vertex shader is not supported by the current render engine"
@@ -152,6 +165,15 @@ namespace ignition
     std::string BaseMaterial<T>::FragmentShader() const
     {
       return std::string();
+    }
+
+    //////////////////////////////////////////////////
+    template <class T>
+    ShaderParamsPtr BaseMaterial<T>::FragmentShaderParams()
+    {
+      ignerr << "Fragment shader is not supported by the current render engine"
+          << std::endl;
+      return nullptr;
     }
 
     //////////////////////////////////////////////////

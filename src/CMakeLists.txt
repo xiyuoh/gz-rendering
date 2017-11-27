@@ -17,10 +17,14 @@ set (sources
   PixelFormat.cc
   RenderEngineManager.cc
   RenderingIface.cc
+  ShaderParam.cc
+  ShaderParams.cc
   ShaderType.cc
 )
 
 set (gtest_sources
+  ShaderParam_TEST.cc
+  ShaderParams_TEST.cc
 )
 
 set (gtest_sources_dri

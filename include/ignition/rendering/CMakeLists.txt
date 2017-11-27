@@ -35,6 +35,8 @@ set (headers
   RenderTypes.hh
   Scene.hh
   Sensor.hh
+  ShaderParam.hh
+  ShaderParams.hh
   ShaderType.hh
   Storage.hh
   Util.hh

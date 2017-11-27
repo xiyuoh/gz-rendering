@@ -80,6 +80,7 @@ int main()
   ignition::rendering::MaterialPtr depthMat = scene->CreateMaterial();
   depthMat->SetVertexShader(depth_vertex_shader_path);
   depthMat->SetFragmentShader(depth_fragment_shader_path);
+  (*(depthMat->FragmentShaderParams()))["maxRange"] = 10.0f;
   depthCamera->SetGlobalMaterial(depthMat);
 
   ignition::rendering::ImagePtr image =

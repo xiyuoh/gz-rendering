@@ -106,11 +106,17 @@ namespace ignition
       // Documenation inherited.
       public: virtual std::string VertexShader() const;
 
+      public: virtual ShaderParamsPtr VertexShaderParams() override;
+
       // Documenation inherited.
       public: virtual void SetFragmentShader(const std::string &_path) override;
 
       // Documenation inherited.
       public: virtual std::string FragmentShader() const;
+
+      public: virtual ShaderParamsPtr FragmentShaderParams() override;
+
+      public: virtual void PreRender() override;
 
       protected: virtual void LoadImage(const std::string &_name,
                      Ogre::Image &_image);
@@ -127,6 +133,15 @@ namespace ignition
       protected: virtual void UpdateTransparency();
 
       protected: virtual void UpdateColorOperation();
+
+      /// bind shader parameters that have changed
+      protected: void UpdateShaderParams();
+
+      /// \brief Transfer params from ign-rendering type to ogre type
+      /// \param[in] _params ignition rendering params
+      /// \param[ou] _ogreParams ogre type for holding params
+      protected: void UpdateShaderParams(ConstShaderParamsPtr _params,
+        Ogre::GpuProgramParametersSharedPtr _ogreParams);
 
       protected: virtual void Init();
 
@@ -164,6 +179,12 @@ namespace ignition
 
       /// \brief Path to fragment shader program.
       protected: std::string fragmentShaderPath;
+
+      /// \brief Parameters to be bound to the vertex shader
+      protected: ShaderParamsPtr vertexShaderParams;
+
+      /// \brief Parameters to be bound to the fragment shader
+      protected: ShaderParamsPtr fragmentShaderParams;
 
       private: friend class OgreScene;
     };

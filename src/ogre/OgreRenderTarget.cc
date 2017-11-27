@@ -112,6 +112,11 @@ void OgreRenderTarget::PreRender()
 {
   BaseRenderTarget::PreRender();
   this->UpdateBackgroundColor();
+
+  if (this->globalMaterial)
+  {
+    this->globalMaterial->PreRender();
+  }
 }
 
 //////////////////////////////////////////////////

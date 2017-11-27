@@ -23,6 +23,7 @@
 #include "ignition/rendering/ogre/OgreRenderEngine.hh"
 #include "ignition/rendering/ogre/OgreScene.hh"
 #include "ignition/rendering/ogre/OgreRTShaderSystem.hh"
+#include "ignition/rendering/ShaderParams.hh"
 
 using namespace ignition;
 using namespace rendering;
@@ -254,6 +255,51 @@ enum ShaderType OgreMaterial::ShaderType() const
   return this->shaderType;
 }
 
+void OgreMaterial::PreRender()
+{
+  this->UpdateShaderParams();
+}
+
+//////////////////////////////////////////////////
+void OgreMaterial::UpdateShaderParams()
+{
+  if (this->vertexShaderParams && this->vertexShaderParams->IsDirty())
+  {
+    Ogre::GpuProgramParametersSharedPtr ogreParams;
+    ogreParams = this->ogrePass->getVertexProgramParameters();
+    this->UpdateShaderParams(this->vertexShaderParams, ogreParams);
+    this->vertexShaderParams->ClearDirty();
+  }
+  if (this->fragmentShaderParams && this->fragmentShaderParams->IsDirty())
+  {
+    Ogre::GpuProgramParametersSharedPtr ogreParams;
+    ogreParams = this->ogrePass->getFragmentProgramParameters();
+    this->UpdateShaderParams(this->fragmentShaderParams, ogreParams);
+    this->fragmentShaderParams->ClearDirty();
+  }
+}
+
+//////////////////////////////////////////////////
+void OgreMaterial::UpdateShaderParams(ConstShaderParamsPtr _params,
+    Ogre::GpuProgramParametersSharedPtr _ogreParams)
+{
+  for (const auto name_param : *_params)
+  {
+    if (ShaderParam::PARAM_FLOAT == name_param.second.Type())
+    {
+      float value;
+      name_param.second.Value(&value);
+      _ogreParams->setNamedConstant(name_param.first, value);
+    }
+    else if (ShaderParam::PARAM_INT == name_param.second.Type())
+    {
+      int value;
+      name_param.second.Value(&value);
+      _ogreParams->setNamedConstant(name_param.first, value);
+    }
+  }
+}
+
 //////////////////////////////////////////////////
 void OgreMaterial::SetVertexShader(const std::string &_path)
 {
@@ -278,9 +324,6 @@ void OgreMaterial::SetVertexShader(const std::string &_path)
   vertexShader->setSourceFile(_path);
   vertexShader->load();
 
-  Ogre::GpuProgramParametersSharedPtr params = vertexShader->getDefaultParameters();
-  params->setIgnoreMissingParams(true);
-
   assert(vertexShader->isLoaded());
   assert(!(vertexShader->hasCompileError()));
   assert(vertexShader->isSupported());
@@ -291,12 +334,19 @@ void OgreMaterial::SetVertexShader(const std::string &_path)
   this->ogreMaterial->load();
 
   this->vertexShaderPath = _path;
+  this->vertexShaderParams.reset(new ShaderParams);
 }
 
 //////////////////////////////////////////////////
 std::string OgreMaterial::VertexShader() const
 {
   return this->vertexShaderPath;
+}
+
+//////////////////////////////////////////////////
+ShaderParamsPtr OgreMaterial::VertexShaderParams()
+{
+  return this->vertexShaderParams;
 }
 
 //////////////////////////////////////////////////
@@ -335,12 +385,19 @@ void OgreMaterial::SetFragmentShader(const std::string &_path)
   this->ogreMaterial->load();
 
   this->fragmentShaderPath = _path;
+  this->fragmentShaderParams.reset(new ShaderParams);
 }
 
 //////////////////////////////////////////////////
 std::string OgreMaterial::FragmentShader() const
 {
   return this->fragmentShaderPath;
+}
+
+//////////////////////////////////////////////////
+ShaderParamsPtr OgreMaterial::FragmentShaderParams()
+{
+  return this->fragmentShaderParams;
 }
 
 //////////////////////////////////////////////////

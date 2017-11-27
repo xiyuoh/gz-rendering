@@ -27,8 +27,6 @@ namespace ignition
 {
   namespace rendering
   {
-    class OgreCamera;
-
     class IGNITION_VISIBLE OgreMaterial :
       public BaseMaterial<OgreObject>
     {
@@ -168,8 +166,6 @@ namespace ignition
       protected: std::string fragmentShaderPath;
 
       private: friend class OgreScene;
-
-      private: friend class OgreCamera;
     };
   }
 }

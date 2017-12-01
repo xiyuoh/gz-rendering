@@ -30,10 +30,14 @@ const double width = 512;
 const double height = 512;
 const int bytes_per_pixel = 3;
 
-const std::string vertex_shader_path = CMAKE_SOURCE_DIR "/vertex_shader.glsl";
-const std::string fragment_shader_path = CMAKE_SOURCE_DIR "/fragment_shader.glsl";
-const std::string depth_vertex_shader_path = CMAKE_SOURCE_DIR "/depth_vertex_shader.glsl";
-const std::string depth_fragment_shader_path = CMAKE_SOURCE_DIR "/depth_fragment_shader.glsl";
+const std::string vertex_shader_path =
+  CMAKE_SOURCE_DIR "/vertex_shader.glsl";
+const std::string fragment_shader_path =
+  CMAKE_SOURCE_DIR "/fragment_shader.glsl";
+const std::string depth_vertex_shader_path =
+  CMAKE_SOURCE_DIR "/depth_vertex_shader.glsl";
+const std::string depth_fragment_shader_path =
+  CMAKE_SOURCE_DIR "/depth_fragment_shader.glsl";
 
 
 //////////////////////////////////////////////////
@@ -52,7 +56,7 @@ int main()
 
   ignition::rendering::VisualPtr root = scene->RootVisual();
 
-  /// Create a camera
+  // Create a camera
   ignition::rendering::CameraPtr camera;
   camera = scene->CreateCamera("example_custom_shaders");
   camera->SetImageWidth(width);
@@ -63,7 +67,7 @@ int main()
   camera->SetImageFormat(ignition::rendering::PF_R8G8B8);
   root->AddChild(camera);
 
-  /// Create a camera for depth image
+  // Create a camera for depth image
   ignition::rendering::CameraPtr depthCamera;
   depthCamera = scene->CreateCamera("example_custom_shaders_depth");
   depthCamera->SetImageWidth(width);
@@ -76,7 +80,7 @@ int main()
 
   // Render to an in-memory image
 
-  //Call set a custom shader on all objects viewed through depthCamera
+  // Call set a custom shader on all objects viewed through depthCamera
   ignition::rendering::MaterialPtr depthMat = scene->CreateMaterial();
   depthMat->SetVertexShader(depth_vertex_shader_path);
   depthMat->SetFragmentShader(depth_fragment_shader_path);

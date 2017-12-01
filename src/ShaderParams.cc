@@ -47,8 +47,8 @@ ShaderParams::Iterator::Iterator()
 
 //////////////////////////////////////////////////
 ShaderParams::Iterator::Iterator(std::unique_ptr<IteratorPrivate> _dataPtr)
+  : dataPtr(std::move(_dataPtr))
 {
-  this->dataPtr = std::move(_dataPtr);
 }
 
 //////////////////////////////////////////////////
@@ -105,7 +105,8 @@ ShaderParams::Iterator &ShaderParams::Iterator::operator++()
 }
 
 //////////////////////////////////////////////////
-ShaderParams::Iterator ShaderParams::Iterator::operator++(int)
+ShaderParams::Iterator
+ShaderParams::Iterator::operator++(int)  // NOLINT(readability/casting)
 {
   ShaderParams::Iterator copy(*this);
   ++(this->dataPtr->iter);

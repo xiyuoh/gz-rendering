@@ -19,6 +19,7 @@
 #define IGNITION_RENDERING_SHADERPARAMS_HH_
 
 #include <memory>
+#include <string>
 #include <utility>
 
 #include <ignition/rendering/ShaderParam.hh>
@@ -44,7 +45,7 @@ namespace ignition
         public: Iterator();
 
         /// \brief Special constructor used by ShaderParams implementation
-        public: Iterator(std::unique_ptr<IteratorPrivate> _dataPtr);
+        public: explicit Iterator(std::unique_ptr<IteratorPrivate> _dataPtr);
 
         /// \brief Copy constructor
         public: Iterator(const Iterator &_iter);

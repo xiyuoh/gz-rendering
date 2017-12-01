@@ -44,7 +44,9 @@ ShaderParam::ShaderParam() :
 ShaderParam::ShaderParam(const ShaderParam &_other)
   : dataPtr(new ShaderParamPrivate)
 {
-  *(this->dataPtr) = *(_other.dataPtr);
+  // Avoid incorrect cppcheck error about dataPtr being assigned in constructor
+  ShaderParamPrivate &dp = *(this->dataPtr);
+  dp = *(_other.dataPtr);
 }
 
 //////////////////////////////////////////////////

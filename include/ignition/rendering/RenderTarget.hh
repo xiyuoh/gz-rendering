@@ -23,6 +23,7 @@
 #include "ignition/rendering/Image.hh"
 #include "ignition/rendering/Object.hh"
 
+
 namespace ignition
 {
   // forward declaration

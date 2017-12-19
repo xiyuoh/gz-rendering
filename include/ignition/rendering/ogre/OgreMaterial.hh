@@ -100,22 +100,32 @@ namespace ignition
 
       public: virtual Ogre::MaterialPtr Material() const;
 
-      // Documenation inherited.
+      // Documentation inherited.
+      // \sa Material::SetVertexShader(const std::string &)
       public: virtual void SetVertexShader(const std::string &_path) override;
 
-      // Documenation inherited.
-      public: virtual std::string VertexShader() const;
+      // Documentation inherited.
+      // \sa Material::VertexShader() const
+      public: virtual std::string VertexShader() const override;
 
+      // Documentation inherited.
+      // \sa Material::VertexShaderParams()
       public: virtual ShaderParamsPtr VertexShaderParams() override;
 
-      // Documenation inherited.
+      // Documentation inherited.
+      // \sa Material::SetFragmentShader(const std::string &)
       public: virtual void SetFragmentShader(const std::string &_path) override;
 
-      // Documenation inherited.
-      public: virtual std::string FragmentShader() const;
+      // Documentation inherited.
+      // \sa Material::FragmentShader() const
+      public: virtual std::string FragmentShader() const override;
 
+      // Documentation inherited.
+      // \sa Material::FragmentShaderParams()
       public: virtual ShaderParamsPtr FragmentShaderParams() override;
 
+      // Documentation inherited.
+      // \sa BaseMaterial::PreRender()
       public: virtual void PreRender() override;
 
       protected: virtual void LoadImage(const std::string &_name,
@@ -139,7 +149,7 @@ namespace ignition
 
       /// \brief Transfer params from ign-rendering type to ogre type
       /// \param[in] _params ignition rendering params
-      /// \param[ou] _ogreParams ogre type for holding params
+      /// \param[out] _ogreParams ogre type for holding params
       protected: void UpdateShaderParams(ConstShaderParamsPtr _params,
         Ogre::GpuProgramParametersSharedPtr _ogreParams);
 

@@ -65,7 +65,9 @@ namespace ignition
 
       public: virtual void Destroy() = 0;
 
-      // Set a material to render on every object
+      /// \brief Set a material to render on every object. This method is used
+      /// for special cases like the render target of a depth camera.
+      /// \param[in] _material The material to render
       public: void SetGlobalMaterial(MaterialPtr _material);
 
       protected: virtual Ogre::RenderTarget *RenderTarget() const = 0;
@@ -78,6 +80,11 @@ namespace ignition
 
       protected: virtual void RebuildViewport();
 
+      /// \brief Re-initializes globalApplicator to apply a material to
+      /// everything in the scene. Does nothing if no global material has been
+      /// set.
+      /// \sa OgreRenderTarget::RebuildImpl()
+      /// \sa BaseRenderTarget::Rebuild()
       protected: void RebuildApplicator();
 
       protected: Ogre::Camera *ogreCamera = nullptr;
@@ -86,15 +93,16 @@ namespace ignition
 
       protected: Ogre::ColourValue ogreBackgroundColor;
 
+      /// \brief a material used to render every object in the scene.
       protected: MaterialPtr globalMaterial;
 
+      /// \brief Helper class that applies the global material to every object
+      /// in the scene.
       protected: OgreRenderTargetMaterialPtr globalApplicator;
 
       protected: bool colorDirty = true;
 
       protected: unsigned int antiAliasing = 4;
-
-      private: friend class OgreCamera;
     };
 
     class IGNITION_VISIBLE OgreRenderTexture :

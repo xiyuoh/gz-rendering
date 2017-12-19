@@ -94,7 +94,6 @@ void OgreCamera::Render()
   this->renderTexture->Render();
 }
 
-
 //////////////////////////////////////////////////
 RenderTargetPtr OgreCamera::RenderTarget() const
 {

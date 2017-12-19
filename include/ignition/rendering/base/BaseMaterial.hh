@@ -68,21 +68,27 @@ namespace ignition
       public: virtual void SetShaderType(enum ShaderType _type) = 0;
 
       // Documentation inherited.
+      // \sa Material::VertexShader() const
       public: virtual std::string VertexShader() const override;
 
       // Documentation inherited.
+      // \sa Material::VertexShaderParams()
       public: virtual ShaderParamsPtr VertexShaderParams() override;
 
       // Documentation inherited.
+      // \sa Material::SetVertexShader(const std::string &)
       public: virtual void SetVertexShader(const std::string &_path) override;
 
       // Documentation inherited.
+      // \sa Material::FragmentShader() const
       public: virtual std::string FragmentShader() const override;
 
       // Documentation inherited.
+      // \sa Material::FragmentShaderParams()
       public: virtual ShaderParamsPtr FragmentShaderParams() override;
 
       // Documentation inherited.
+      // \sa Material::SetFragmentShader(const std::string &)
       public: virtual void SetFragmentShader(const std::string &_path) override;
 
       public: virtual void CopyFrom(ConstMaterialPtr _material);

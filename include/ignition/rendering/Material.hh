@@ -213,7 +213,7 @@ namespace ignition
       public: virtual std::string VertexShader() const = 0;
 
       /// \brief Get params for the vertex shader
-      /// \brief Returns editable parameters
+      /// \return editable parameters
       public: virtual ShaderParamsPtr VertexShaderParams() = 0;
 
       /// \brief Set the vertex shader
@@ -225,7 +225,7 @@ namespace ignition
       public: virtual std::string FragmentShader() const = 0;
 
       /// \brief Get params for the fragment shader
-      /// \brief Returns editable parameters
+      /// \return editable parameters
       public: virtual ShaderParamsPtr FragmentShaderParams() = 0;
 
       /// \brief Set the fragment shader

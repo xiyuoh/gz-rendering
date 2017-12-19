@@ -114,7 +114,6 @@ namespace ignition
 
       public: virtual void Destroy();
 
-
       protected: virtual Ogre::RenderTarget *RenderTarget() const;
 
       protected: virtual void RebuildTarget();

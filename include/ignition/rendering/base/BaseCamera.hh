@@ -103,7 +103,10 @@ namespace ignition
       // Documentation inherited.
       public: virtual math::Matrix4d ViewMatrix() const;
 
-      public: virtual void SetGlobalMaterial(const MaterialPtr &_material);
+      // Documentation inherited.
+      // \sa Camera::SetGlobalMaterial(const MaterialPtr &);
+      public:
+      virtual void SetGlobalMaterial(const MaterialPtr &_material) override;
 
       // Documentation inherited.
       public: virtual void SetTrackTarget(const NodePtr &_target,

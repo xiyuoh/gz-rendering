@@ -19,6 +19,8 @@
 
 #include <string>
 
+#include <ignition/math/Color.hh>
+
 #include "ignition/rendering/RenderTypes.hh"
 #include "ignition/rendering/Image.hh"
 #include "ignition/rendering/Object.hh"
@@ -26,12 +28,6 @@
 
 namespace ignition
 {
-  // forward declaration
-  namespace math
-  {
-    class Color;
-  }
-
   namespace rendering
   {
     /// \class RenderTarget RenderTarget.hh ignition/rendering/RenderTarget.hh

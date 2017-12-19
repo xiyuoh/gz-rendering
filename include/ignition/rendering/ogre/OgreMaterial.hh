@@ -144,7 +144,7 @@ namespace ignition
 
       protected: virtual void UpdateColorOperation();
 
-      /// bind shader parameters that have changed
+      /// \brief bind shader parameters that have changed
       protected: void UpdateShaderParams();
 
       /// \brief Transfer params from ign-rendering type to ogre type

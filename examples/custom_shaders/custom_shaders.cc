@@ -28,7 +28,7 @@ void PresentImage(ignition::rendering::ImagePtr _image,
 // Global constants due to laziness
 const double width = 512;
 const double height = 512;
-const int bytes_per_pixel = 3;
+const int bytesPerPixel = 3;
 
 const std::string vertex_shader_path =
   CMAKE_SOURCE_DIR "/vertex_shader.glsl";
@@ -52,6 +52,11 @@ int main()
   }
   // Create a scene and add stuff to it
   ignition::rendering::ScenePtr scene = engine->CreateScene("scene");
+  if (!scene)
+  {
+    std::cerr << "Failed to create scene." << std::endl;
+    return 1;
+  }
   BuildScene(scene);
 
   ignition::rendering::VisualPtr root = scene->RootVisual();

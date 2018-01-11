@@ -14,8 +14,8 @@
  * limitations under the License.
  *
  */
-#ifndef IGNITION_RENDERING_OGRE_OGREUNIFORMMATERIALAPPLICATOR_HH_
-#define IGNITION_RENDERING_OGRE_OGREUNIFORMMATERIALAPPLICATOR_HH_
+#ifndef IGNITION_RENDERING_OGRE_OGRRENDERTARGETMATERIAL_HH_
+#define IGNITION_RENDERING_OGRE_OGRRENDERTARGETMATERIAL_HH_
 
 #include <vector>
 
@@ -53,14 +53,27 @@ namespace ignition
       public: ~OgreRenderTargetMaterial();
 
       /// \brief Callback when a render target is about to be rendered
+      /// \param[in] _evt Ogre render target event containing information about
+      /// the source render target.
       private: virtual void preRenderTargetUpdate(
           const Ogre::RenderTargetEvent &_evt) override;
 
       /// \brief Callback when a render target is finisned being rendered
+      /// \param[in] _evt Ogre render target event containing information about
+      /// the source render target.
       private: virtual void postRenderTargetUpdate(
           const Ogre::RenderTargetEvent &_evt) override;
 
       /// \brief Ogre callback that assigned same material to all renderables
+      /// when the requested scheme is not found
+      /// \param[in] _schemeIndex Index of scheme requested
+      /// \param[in] _schemeName Name of scheme requested
+      /// \param[in] _originalMaterial Orignal material that does not contain
+      /// the requested scheme
+      /// \param[in] _lodIndex The material level-of-detail
+      /// \param[in] _rend Pointer to the Ogre::Renderable object requesting
+      /// the use of the techinique
+      /// \return The Ogre material technique to use when scheme is not found.
       public: virtual Ogre::Technique *handleSchemeNotFound(
                   uint16_t _schemeIndex, const Ogre::String &_schemeName,
                   Ogre::Material *_originalMaterial, uint16_t _lodIndex,

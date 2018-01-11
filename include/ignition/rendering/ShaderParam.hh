@@ -42,19 +42,23 @@ namespace ignition
       public: ShaderParam();
 
       /// \brief copy constructor
+      /// \param[in] _other Another ShaderParam
       public: ShaderParam(const ShaderParam &_other);
 
       /// \brief destructor
       public: ~ShaderParam();
 
-      /// \brief Return the type of this parameter
+      /// \brief Get the type of this parameter
+      /// \return Type of this parameter
       public: ParamType Type() const;
 
       /// \brief Set this to be a float param
-      public: void operator=(float _value);
+      /// \param[in] _value Value to set this param to.
+      public: void operator=(const float _value);
 
       /// \brief Set this to be an integer param;
-      public: void operator=(int _value);
+      /// \param[in] _value Value to set this param to.
+      public: void operator=(const int _value);
 
       /// \brief Get the value of this parameter if it is a float
       /// \param[out] _value variable the value will be copied to

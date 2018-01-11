@@ -45,21 +45,29 @@ namespace ignition
         public: Iterator();
 
         /// \brief Special constructor used by ShaderParams implementation
+        /// \param[in] _dataPtr Pointer to private data.
         public: explicit Iterator(std::unique_ptr<IteratorPrivate> _dataPtr);
 
         /// \brief Copy constructor
+        /// \param[in] _iter Another iterator
         public: Iterator(const Iterator &_iter);
 
         /// \brief Copy assignment
+        /// \param[in] _iter Another iterator
+        /// \return this
         Iterator& operator=(const Iterator &_iter);
 
         /// \brief Destructor
         public: ~Iterator();
 
         /// \brief Equality operator
+        /// \param[in] _iter Another iterator
+        /// \return True if input interator equal to this one, false otherwise.
         public: bool operator==(const Iterator &_iter);
 
         /// \brief Inequality operator
+        /// \param[in] _iter Another iterator
+        /// \return True if input interator is equal to this one, false otherwise
         public: bool operator!=(const Iterator &_iter);
 
         /// \brief Dereference operator
@@ -95,10 +103,12 @@ namespace ignition
 
       /// \brief Iterator to first parameter
       /// \remarks Necessary for range-base for loop support
+      /// \return Iterator pointing to first parameter.
       public: Iterator begin() const;
 
       /// \brief Iterator to one past last param
       /// \remarks Necessary for range-base for loop support
+      /// \return Iterator pointing to one past last parameter.
       public: Iterator end() const;
 
       /// \brief Have the params changed?

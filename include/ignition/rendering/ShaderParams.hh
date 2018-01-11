@@ -67,7 +67,8 @@ namespace ignition
 
         /// \brief Inequality operator
         /// \param[in] _iter Another iterator
-        /// \return True if input interator is equal to this one, false otherwise
+        /// \return True if input interator is equal to this one,
+        /// false otherwise
         public: bool operator!=(const Iterator &_iter);
 
         /// \brief Dereference operator

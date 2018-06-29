@@ -33,6 +33,8 @@ namespace ignition
     {
       /// \brief Ogre ray scene query object for computing intersection.
       public: Ogre::RaySceneQuery *rayQuery = nullptr;
+      public: OgreCameraPtr camera = nullptr;
+      public: ignition::math::Vector2i imgCoord;
     };
   }
 }
@@ -64,10 +66,114 @@ void OgreRayQuery::SetFromCamera(const CameraPtr &_camera,
 
   this->origin = OgreConversions::Convert(ray.getOrigin());
   this->direction = OgreConversions::Convert(ray.getDirection());
+
+
+  if (!_camera)
+  {
+    ignerr << "Camera is NULL!" << std::endl;
+    return;
+  }
+
+  this->dataPtr->camera = std::dynamic_pointer_cast<OgreCamera>(_camera);
+  if (!this->dataPtr->camera)
+  {
+    ignerr << "Unable to cast to OgreCamera" << std::endl;
+    return;
+  }
+
+   // TODO integrate device pixel ratio for retina displays
+  int ratio = 1;
+
+  // convert to img coord for selection buffer
+  this->dataPtr->imgCoord =
+      ignition::math::Vector2i(
+      ratio * screenPos.X() * this->dataPtr->camera->ImageWidth(),
+      ratio * screenPos.Y() * this->dataPtr->camera->ImageHeight());
+
+//  std::cerr << "img coord " << this->dataPtr->imgCoord << std::endl;
 }
 
 //////////////////////////////////////////////////
 RayQueryResult OgreRayQuery::ClosestPoint()
+{
+  RayQueryResult result;
+  if (!this->dataPtr->camera)
+    return result;
+
+  if (!this->dataPtr->camera->SelectionBuffer())
+    this->dataPtr->camera->CreateSelectionBuffer();
+
+  OgreSelectionBuffer *selectionBuffer =
+      this->dataPtr->camera->SelectionBuffer();
+
+  double distance = -1.0;
+  Ogre::Entity *ogreEntity = selectionBuffer->OnSelectionClick(
+      this->dataPtr->imgCoord.X(), this->dataPtr->imgCoord.Y());
+
+  if (!ogreEntity)
+    return result;
+
+  auto userAny = ogreEntity->getUserObjectBindings().getUserAny();
+  if (userAny.isEmpty() || userAny.getType() != typeid(unsigned int))
+    return result;
+
+  std::cerr << "closest point entity: " << ogreEntity->getName() << std::endl;
+
+  Ogre::Ray mouseRay(OgreConversions::Convert(this->origin),
+      OgreConversions::Convert(this->direction));
+
+  // mesh data to retrieve
+  size_t vertexCount;
+  size_t indexCount;
+  Ogre::Vector3 *vertices;
+  uint64_t *indices;
+
+ // Get the mesh information
+  this->MeshInformation(ogreEntity->getMesh().get(), vertexCount,
+      vertices, indexCount, indices,
+      OgreConversions::Convert(
+        ogreEntity->getParentNode()->_getDerivedPosition()),
+      OgreConversions::Convert(
+      ogreEntity->getParentNode()->_getDerivedOrientation()),
+      OgreConversions::Convert(
+      ogreEntity->getParentNode()->_getDerivedScale()));
+
+  for (unsigned int i = 0; i < indexCount; i += 3)
+  {
+    // when indices size is not divisible by 3
+    if (i+2 >= indexCount)
+      break;
+
+    // check for a hit against this triangle
+    std::pair<bool, Ogre::Real> hit = Ogre::Math::intersects(mouseRay,
+        vertices[indices[i]],
+        vertices[indices[i+1]],
+        vertices[indices[i+2]],
+        true, false);
+
+    // if it was a hit check if its the closest
+    if (hit.first)
+    {
+      if ((distance < 0.0f) || (hit.second < distance))
+      {
+        // this is the closest so far, save it off
+        distance = hit.second;
+        result.distance = distance;
+        result.point =
+            OgreConversions::Convert(mouseRay.getPoint(distance));
+
+        result.objectId = Ogre::any_cast<unsigned int>(userAny);
+      }
+    }
+  }
+  delete [] vertices;
+  delete [] indices;
+
+  return result;
+}
+
+//////////////////////////////////////////////////
+/*RayQueryResult OgreRayQuery::ClosestPointOld()
 {
   RayQueryResult result;
   OgreScenePtr ogreScene = std::dynamic_pointer_cast<OgreScene>(this->Scene());
@@ -155,6 +261,7 @@ RayQueryResult OgreRayQuery::ClosestPoint()
 
   return result;
 }
+*/
 
 //////////////////////////////////////////////////
 void OgreRayQuery::MeshInformation(const Ogre::Mesh *_mesh,

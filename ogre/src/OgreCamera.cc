@@ -144,11 +144,20 @@ void OgreCamera::CreateRenderTexture()
 }
 
 //////////////////////////////////////////////////
-void OgreCamera::SetSelectionBuffer()
+void OgreCamera::CreateSelectionBuffer()
 {
+  if (this->selectionBuffer)
+    return;
+
   this->selectionBuffer = new OgreSelectionBuffer(this->name,
       this->scene->OgreSceneManager(), this->ImageWidth(),
       this->ImageHeight());
+}
+
+//////////////////////////////////////////////////
+OgreSelectionBuffer *OgreCamera::SelectionBuffer() const
+{
+  return this->selectionBuffer;
 }
 
 //////////////////////////////////////////////////
@@ -159,7 +168,7 @@ VisualPtr OgreCamera::VisualAt(const ignition::math::Vector2i
 
   if (!this->selectionBuffer)
   {
-    this->SetSelectionBuffer();
+    this->CreateSelectionBuffer();
 
     if (!this->selectionBuffer)
     {
@@ -167,7 +176,8 @@ VisualPtr OgreCamera::VisualAt(const ignition::math::Vector2i
     }
   }
 
-  int ratio = static_cast<int>(this->AspectRatio());
+  // TODO integrate device pixel ratio for retina displays
+  int ratio = 1;
 
   ignition::math::Vector2i mousePos(
       ratio * _mousePos.X(), ratio * _mousePos.Y());

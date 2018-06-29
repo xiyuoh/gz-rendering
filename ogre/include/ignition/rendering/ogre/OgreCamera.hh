@@ -75,15 +75,17 @@ namespace ignition
       public: virtual void SetMaterial(
                   const MaterialPtr &_material) override;
 
+      public: virtual void CreateSelectionBuffer();
+
+      public: virtual OgreSelectionBuffer *SelectionBuffer() const;
+
       protected: virtual RenderTargetPtr RenderTarget() const;
 
       protected: virtual void Init();
 
-      protected: virtual void SetSelectionBuffer();
+      protected: virtual void CreateRenderTexture();
 
       private: void CreateCamera();
-
-      protected: virtual void CreateRenderTexture();
 
       protected: Ogre::Camera *ogreCamera = nullptr;
 

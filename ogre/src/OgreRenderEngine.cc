@@ -308,16 +308,23 @@ bool OgreRenderEngine::InitImpl()
 //////////////////////////////////////////////////
 void OgreRenderEngine::LoadAttempt()
 {
+  ignerr << "====  start load attempt " << std::endl;
   this->CreateLogger();
   this->CreateContext();
   this->CreateRoot();
   this->CreateOverlay();
   this->LoadPlugins();
+  ignerr << "=======   done load plugins" << std::endl;
   this->CreateRenderSystem();
+  ignerr << "=======   done create render system" << std::endl;
   this->ogreRoot->initialise(false);
+  ignerr << "=======   done initialize" << std::endl;
   this->CreateResources();
+  ignerr << "=======   done create resources" << std::endl;
   this->CreateRenderWindow();
+  ignerr << "=======   done create render window" << std::endl;
   this->CheckCapabilities();
+  ignerr << "====   done load attempt " << std::endl;
 }
 
 //////////////////////////////////////////////////
@@ -332,7 +339,8 @@ void OgreRenderEngine::CreateLogger()
 
   // create actual log
   this->ogreLogManager = new Ogre::LogManager();
-  this->ogreLogManager->createLog(logPath, true, false, false);
+  // this->ogreLogManager->createLog(logPath, true, false, false);
+  this->ogreLogManager->createLog("debug-ogre.log", true, false, false);
 }
 
 //////////////////////////////////////////////////

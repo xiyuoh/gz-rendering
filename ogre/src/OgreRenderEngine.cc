@@ -447,6 +447,8 @@ void OgreRenderEngine::LoadPlugins()
       }
       catch(Ogre::Exception &e)
       {
+        ignerr << "Attempt to load " << *piter << " failed: " << e.what()
+               << ". Desc: " << e.getFullDescription() << std::endl;
         try
         {
           // Load the debug plugin into OGRE

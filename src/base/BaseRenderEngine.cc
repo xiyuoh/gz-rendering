@@ -171,6 +171,7 @@ ScenePtr BaseRenderEngine::CreateScene(const std::string &_name)
 ScenePtr BaseRenderEngine::CreateScene(unsigned int _id,
     const std::string &_name)
 {
+  ignerr << "-----------------create scene " << std::endl;
   if (!this->IsInitialized())
   {
     ignerr << "Render-engine has not been initialized" << std::endl;
@@ -191,6 +192,7 @@ ScenePtr BaseRenderEngine::CreateScene(unsigned int _id,
 
   ScenePtr scene = this->CreateSceneImpl(_id, _name);
   this->PrepareScene(scene);
+  ignerr << "-----------------done create scene " << std::endl;
   return scene;
 }
 

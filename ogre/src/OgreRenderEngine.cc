@@ -101,6 +101,7 @@ OgreRenderEngine::~OgreRenderEngine()
 //////////////////////////////////////////////////
 bool OgreRenderEngine::Fini()
 {
+  ignerr << "------------------ fini " << std::endl;
   if (this->scenes)
   {
     this->scenes->RemoveAll();
@@ -138,6 +139,7 @@ bool OgreRenderEngine::Fini()
 
   this->loaded = false;
   this->initialized = false;
+  ignerr << "------------------ done fini " << std::endl;
 
   return true;
 }
@@ -259,8 +261,10 @@ Ogre::Root *OgreRenderEngine::OgreRoot() const
 ScenePtr OgreRenderEngine::CreateSceneImpl(unsigned int _id,
     const std::string &_name)
 {
+  ignerr << "---------------- ogre create scene impl " << std::endl;
   auto scene = OgreScenePtr(new OgreScene(_id, _name));
   this->scenes->Add(scene);
+  ignerr << "---------------- done ogre create scene impl " << std::endl;
   return scene;
 }
 
@@ -704,6 +708,7 @@ void OgreRenderEngine::CheckCapabilities()
 //////////////////////////////////////////////////
 void OgreRenderEngine::InitAttempt()
 {
+  ignerr << "--------------init attempt " << std::endl;
   if (this->renderPathType == NONE)
   {
     ignwarn << "Cannot initialize render engine since "
@@ -722,16 +727,21 @@ void OgreRenderEngine::InitAttempt()
 
   // Set default mipmap level (NB some APIs ignore this)
   Ogre::TextureManager::getSingleton().setDefaultNumMipmaps(5);
+  ignerr << "--------------init attempt 2" << std::endl;
 
   // init the resources
   Ogre::ResourceGroupManager::getSingleton().initialiseAllResourceGroups();
+  ignerr << "--------------init attempt 3" << std::endl;
 
   Ogre::MaterialManager::getSingleton().setDefaultTextureFiltering(
       Ogre::TFO_ANISOTROPIC);
+  ignerr << "--------------init attempt 4" << std::endl;
 
   OgreRTShaderSystem::Instance()->Init();
+  ignerr << "--------------init attempt 5" << std::endl;
 
   this->scenes = OgreSceneStorePtr(new OgreSceneStore);
+  ignerr << "--------------done init attempt " << std::endl;
 }
 
 #if (OGRE_VERSION >= ((1 << 16) | (9 << 8) | 0))

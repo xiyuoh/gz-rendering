@@ -433,11 +433,17 @@ bool OgreRTShaderSystem::Paths(std::string &coreLibsPath,
 
   for (auto const &p : paths)
   {
+    ignerr << " ---------    rtshader paths 3.1 testing p: " << p << std::endl;
     if (common::exists(p))
     {
+      ignerr << " ---------    rtshader paths 3.2 p exists!: " << p << std::endl;
       coreLibsPath = p;
+      ignerr << " ---------    rtshader paths 3.3 home dir: " << std::string(std::getenv(IGN_HOMEDIR)) << std::endl;
       // setup patch name for rt shader cache in tmp
-      std::string tmpDir = std::getenv(IGN_HOMEDIR);
+      std::string tmpDir = std::string(std::getenv(IGN_HOMEDIR));
+
+      ignerr << " ---------    rtshader paths 3.4 " << tmpDir << std::endl;
+
       tmpDir = common::joinPaths(tmpDir, ".ignition", "rendering",
           "ogre-rtshader");
       ignerr << " ---------    rtshader paths 4 " << tmpDir << std::endl;

@@ -410,9 +410,12 @@ bool OgreRTShaderSystem::Paths(std::string &coreLibsPath,
     std::string &cachePath)
 {
   ignerr << " ---------    rtshader paths " << std::endl;
-  const char *env = std::getenv("IGN_RENDERING_RESOURCE_PATH");
-  std::string resourcePath = (env) ? std::string(env) :
-      std::string(IGN_RENDERING_RESOURCE_PATH);
+  std::string resourcePath;
+  if (!common::env("IGN_RENDERING_RESOURCE_PATH", resourcePath))
+  {
+    ignerr << "Failed to locate ign-rendering resources. "
+           << "IGN_RENDERING_RESOURCE_PATH is not set" << std::endl;
+  }
 
   ignerr << " ---------    rtshader paths 1: " << std::string(IGN_RENDERING_RESOURCE_PATH) << std::endl;
 
@@ -438,9 +441,15 @@ bool OgreRTShaderSystem::Paths(std::string &coreLibsPath,
     {
       ignerr << " ---------    rtshader paths 3.2 p exists!: " << p << std::endl;
       coreLibsPath = p;
-      ignerr << " ---------    rtshader paths 3.3 home dir: " << std::string(std::getenv(IGN_HOMEDIR)) << std::endl;
+      ignerr << " ---------    rtshader paths 3.31 coreLibsPath: " << coreLibsPath  << std::endl;
+      ignerr << " ---------    rtshader paths 3.3 home dir: " << std::string(IGN_HOMEDIR) << std::endl;
       // setup patch name for rt shader cache in tmp
-      std::string tmpDir = std::string(std::getenv(IGN_HOMEDIR));
+      std::string tmpDir;
+      if (!common::env(std::string(IGN_HOMEDIR), tmpDir))
+      {
+        ignerr << "HOME (or HOMEPATH on Windows) environment variable not set"
+               << std::endl;
+      }
 
       ignerr << " ---------    rtshader paths 3.4 " << tmpDir << std::endl;
 
@@ -449,9 +458,7 @@ bool OgreRTShaderSystem::Paths(std::string &coreLibsPath,
       ignerr << " ---------    rtshader paths 4 " << tmpDir << std::endl;
       // Get the user
       std::string user = "nobody";
-      const char* userEnv = std::getenv("USER");
-      if (userEnv)
-        user = std::string(userEnv);
+      common::env("USER", user);
       cachePath = common::joinPaths(tmpDir, user + "-rtshaderlibcache");
       ignerr << " ---------    rtshader paths 5 " << cachePath << std::endl;
       // Create the directory

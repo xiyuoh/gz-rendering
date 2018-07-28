@@ -937,39 +937,61 @@ void BaseScene::CreateMaterials()
 {
   MaterialPtr material;
 
-  material = this->CreateMaterial("Default/TransRed");
-  material->SetAmbient(1.0, 0.0, 0.0);
-  material->SetDiffuse(1.0, 0.0, 0.0);
-  material->SetEmissive(1.0, 0.0, 0.0);
-  material->SetTransparency(0.5);
-  material->SetCastShadows(false);
-  material->SetReceiveShadows(false);
-  material->SetLightingEnabled(false);
+  // check if material already exists or not
+  std::string matName = "Default/TransRed";
+  MaterialPtr result = this->Material(matName);
+  if (!result)
+  {
+    material = this->CreateMaterial(matName);
+    material->SetAmbient(1.0, 0.0, 0.0);
+    material->SetDiffuse(1.0, 0.0, 0.0);
+    material->SetEmissive(1.0, 0.0, 0.0);
+    material->SetTransparency(0.5);
+    material->SetCastShadows(false);
+    material->SetReceiveShadows(false);
+    material->SetLightingEnabled(false);
+  }
 
-  material = this->CreateMaterial("Default/TransGreen");
-  material->SetAmbient(0.0, 1.0, 0.0);
-  material->SetDiffuse(0.0, 1.0, 0.0);
-  material->SetEmissive(0.0, 1.0, 0.0);
-  material->SetTransparency(0.5);
-  material->SetCastShadows(false);
-  material->SetReceiveShadows(false);
-  material->SetLightingEnabled(false);
+  // check if material already exists or not
+  matName = "Default/TransGreen";
+  result = this->Material(matName);
+  if (!result)
+  {
+    material = this->CreateMaterial(matName);
+    material->SetAmbient(0.0, 1.0, 0.0);
+    material->SetDiffuse(0.0, 1.0, 0.0);
+    material->SetEmissive(0.0, 1.0, 0.0);
+    material->SetTransparency(0.5);
+    material->SetCastShadows(false);
+    material->SetReceiveShadows(false);
+    material->SetLightingEnabled(false);
+  }
 
-  material = this->CreateMaterial("Default/TransBlue");
-  material->SetAmbient(0.0, 0.0, 1.0);
-  material->SetDiffuse(0.0, 0.0, 1.0);
-  material->SetEmissive(0.0, 0.0, 1.0);
-  material->SetTransparency(0.5);
-  material->SetCastShadows(false);
-  material->SetReceiveShadows(false);
-  material->SetLightingEnabled(false);
+  matName = "Default/TransBlue";
+  result = this->Material(matName);
+  if (!result)
+  {
+    material = this->CreateMaterial(matName);
+    material->SetAmbient(0.0, 0.0, 1.0);
+    material->SetDiffuse(0.0, 0.0, 1.0);
+    material->SetEmissive(0.0, 0.0, 1.0);
+    material->SetTransparency(0.5);
+    material->SetCastShadows(false);
+    material->SetReceiveShadows(false);
+    material->SetLightingEnabled(false);
+  }
 
-  material = this->CreateMaterial("Default/White");
-  material->SetAmbient(1.0, 1.0, 1.0);
-  material->SetDiffuse(1.0, 1.0, 1.0);
-  material->SetEmissive(1.0, 1.0, 1.0);
-  material->SetTransparency(0);
-  material->SetCastShadows(true);
-  material->SetReceiveShadows(true);
-  material->SetLightingEnabled(true);
+  matName = "Default/White";
+  result = this->Material(matName);
+  if (!result)
+  {
+    material = this->CreateMaterial(matName);
+    material->SetAmbient(1.0, 1.0, 1.0);
+    material->SetDiffuse(1.0, 1.0, 1.0);
+    material->SetEmissive(1.0, 1.0, 1.0);
+    material->SetTransparency(0);
+    material->SetCastShadows(true);
+    material->SetReceiveShadows(true);
+    material->SetLightingEnabled(true);
+  }
 }

@@ -412,10 +412,7 @@ bool OgreRTShaderSystem::Paths(std::string &coreLibsPath,
   ignerr << " ---------    rtshader paths " << std::endl;
   std::string resourcePath;
   if (!common::env("IGN_RENDERING_RESOURCE_PATH", resourcePath))
-  {
-    ignerr << "Failed to locate ign-rendering resources. "
-           << "IGN_RENDERING_RESOURCE_PATH is not set" << std::endl;
-  }
+    resourcePath = std::string(IGN_RENDERING_RESOURCE_PATH);
 
   ignerr << " ---------    rtshader paths 1: " << std::string(IGN_RENDERING_RESOURCE_PATH) << std::endl;
 

@@ -481,9 +481,10 @@ void Ogre2RenderEngine::CreateRenderSystem()
 //////////////////////////////////////////////////
 void Ogre2RenderEngine::CreateResources()
 {
-  const char *env = std::getenv("IGN_RENDERING_RESOURCE_PATH");
-  std::string resourcePath = (env) ? std::string(env) :
-      IGN_RENDERING_RESOURCE_PATH;
+  std::string resourcePath;
+  if (!common::env("IGN_RENDERING_RESOURCE_PATH", resourcePath))
+    resourcePath = std::string(IGN_RENDERING_RESOURCE_PATH);
+
   // install path
   std::string mediaPath = common::joinPaths(resourcePath, "ogre2", "media");
   if (!common::exists(mediaPath))

@@ -418,7 +418,7 @@ bool testCD(const std::string &_path)
   size_t index = 0;
   while (index < _path.size())
   {
-    size_t end = _path.find('/', index+1);
+    size_t end = _path.find(common::separator(""), index+1);
     std::string dir = _path.substr(0, end);
     std::cerr << "checking: " << dir << std::endl;
     if (!common::exists(dir))
@@ -491,7 +491,7 @@ bool OgreRTShaderSystem::Paths(std::string &coreLibsPath,
       cachePath = common::joinPaths(tmpDir, user + "-rtshaderlibcache");
       ignerr << " ---------    rtshader paths 5 " << cachePath << std::endl;
       // Create the directory
-      // if (!common::createDirectories(cachePath))
+//      if (!common::createDirectories(cachePath))
       if (!testCD(cachePath))
       {
         ignerr << "Failed to create RTShaderSystem cache directory: "

@@ -340,7 +340,10 @@ void OgreRenderEngine::CreateLogger()
   if (logPath.empty())
     logPath = common::cwd();
   logPath = common::joinPaths(logPath, ".ignition", "rendering");
-  common::createDirectories(logPath);
+  if (!common::createDirectories(logPath))
+  {
+    ignerr << "Failed to create ogre log directory: " << logPath << std::endl;
+  }
   logPath = common::joinPaths(logPath, "ogre.log");
 
   // create actual log

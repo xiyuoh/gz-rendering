@@ -405,6 +405,30 @@ void OgreRTShaderSystem::GenerateShaders(OgreSubMesh *subMesh)
   }
 }
 
+/////////////////////////////////////////////////
+bool testCD(const std::string &_path)
+{
+  size_t index = 0;
+  while (index < _path.size())
+  {
+    size_t end = _path.find('/', index+1);
+    std::string dir = _path.substr(0, end);
+    std::cerr << "checking: " << dir << std::endl;
+    if (!common::exists(dir))
+    {
+      std::cerr << "does not exist, creating: " << dir << std::endl;
+#ifdef _WIN32
+      _mkdir(dir.c_str());
+#else
+      mkdir(dir.c_str(), S_IRWXU | S_IRWXG | S_IROTH | S_IXOTH);
+#endif
+    }
+    index = end;
+  }
+
+  return true;
+}
+
 //////////////////////////////////////////////////
 bool OgreRTShaderSystem::Paths(std::string &coreLibsPath,
     std::string &cachePath)
@@ -460,7 +484,12 @@ bool OgreRTShaderSystem::Paths(std::string &coreLibsPath,
       cachePath = common::joinPaths(tmpDir, user + "-rtshaderlibcache");
       ignerr << " ---------    rtshader paths 5 " << cachePath << std::endl;
       // Create the directory
-      common::createDirectories(cachePath);
+      // if (!common::createDirectories(cachePath))
+      if (!testCD(cachePath))
+      {
+        ignerr << "Failed to create RTShaderSystem cache directory: "
+               << cachePath << std::endl;
+      }
       ignerr << " ---------    rtshader paths 6 " << std::endl;
       break;
     }

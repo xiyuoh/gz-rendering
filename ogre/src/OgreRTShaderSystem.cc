@@ -444,6 +444,7 @@ bool OgreRTShaderSystem::Paths(std::string &coreLibsPath,
       std::string tmpDir;
       if (!common::env(std::string(IGN_HOMEDIR), tmpDir))
       {
+        tmpDir = common::cwd();
         ignerr << "HOME (or HOMEPATH on Windows) environment variable not set"
                << std::endl;
       }

@@ -304,6 +304,8 @@ void Ogre2RenderEngine::CreateLogger()
   // create log file path
   std::string logPath;
   ignition::common::env(IGN_HOMEDIR, logPath);
+  if (logPath.empty())
+    logPath = common::cwd();
   logPath = common::joinPaths(logPath, ".ignition", "rendering");
   common::createDirectories(logPath);
   logPath = common::joinPaths(logPath, "ogre2.log");

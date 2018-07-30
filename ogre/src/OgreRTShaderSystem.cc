@@ -18,7 +18,14 @@
   // Ensure that Winsock2.h is included before Windows.h, which can get
   // pulled in by anybody (e.g., Boost).
   #include <Winsock2.h>
+
+#include <direct.h>
+#include <stdlib.h>
+#include <stdio.h>
+
+
 #endif
+
 
 #include <list>
 #include <mutex>

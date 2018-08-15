@@ -18,7 +18,7 @@
 #define IGNITION_RENDERING_OGRE_OGRESENSOR_HH_
 
 #include "ignition/rendering/base/BaseSensor.hh"
-#include "ignition/rendering/ogre/OgreNode.hh"
+#include "ignition/rendering/ogre/OgreVisual.hh"
 
 namespace ignition
 {
@@ -27,7 +27,7 @@ namespace ignition
     inline namespace IGNITION_RENDERING_VERSION_NAMESPACE {
     //
     class IGNITION_RENDERING_OGRE_VISIBLE OgreSensor :
-      public BaseSensor<OgreNode>
+      public BaseSensor<OgreVisual>
     {
       protected: OgreSensor();
 

@@ -18,7 +18,7 @@
 #define IGNITION_RENDERING_SENSOR_HH_
 
 #include "ignition/rendering/config.hh"
-#include "ignition/rendering/Node.hh"
+#include "ignition/rendering/Visual.hh"
 
 namespace ignition
 {
@@ -30,7 +30,7 @@ namespace ignition
     /// \brief Represents a scene sensor. The most obvious example is a camera,
     /// but it can be anything that generates output from the scene.
     class IGNITION_RENDERING_VISIBLE Sensor :
-      public virtual Node
+      public virtual Visual
     {
       /// \brief Sensor
       public: virtual ~Sensor() { }

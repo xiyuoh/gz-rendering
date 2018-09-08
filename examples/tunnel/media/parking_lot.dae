@@ -1,0 +1,251 @@
+<?xml version="1.0" encoding="utf-8"?>
+<COLLADA xmlns="http://www.collada.org/2005/11/COLLADASchema" version="1.4.1">
+  <asset><contributor><author></author><authoring_tool>FBX COLLADA exporter</authoring_tool><comments></comments></contributor><created>2018-09-07T20:46:34Z</created><keywords></keywords><modified>2018-09-07T20:46:34Z</modified><revision></revision><subject></subject><title></title><unit meter="0.010000" name="centimeter"></unit><up_axis>Z_UP</up_axis></asset>
+  <library_images>
+    <image id="MapFBXASC032FBXASC0353-image" name="MapFBXASC032FBXASC0353"><init_from>parking_lot.png</init_from></image>
+  </library_images>
+  <library_materials>
+    <material id="Entrance" name="Entrance">
+      <instance_effect url="#Entrance-fx"/>
+    </material>
+    <material id="FBXASC0495FBXASC032-FBXASC032Default" name="FBXASC0495FBXASC032-FBXASC032Default">
+      <instance_effect url="#FBXASC0495FBXASC032-FBXASC032Default-fx"/>
+    </material>
+  </library_materials>
+  <library_effects>
+    <effect id="Entrance-fx" name="Entrance">
+      <profile_COMMON>
+        <technique sid="standard">
+          <phong>
+            <emission>
+              <color sid="emission">0.000000  0.000000 0.000000 1.000000</color>
+            </emission>
+            <ambient>
+              <color sid="ambient">0.588235  0.588235 0.588235 1.000000</color>
+            </ambient>
+            <diffuse>
+              <color sid="diffuse">0.588235  0.588235 0.588235 1.000000</color>
+            </diffuse>
+            <specular>
+              <color sid="specular">0.000000  0.000000 0.000000 1.000000</color>
+            </specular>
+            <shininess>
+              <float sid="shininess">2.000000</float>
+            </shininess>
+            <reflective>
+              <color sid="reflective">0.000000  0.000000 0.000000 1.000000</color>
+            </reflective>
+            <reflectivity>
+              <float sid="reflectivity">1.000000</float>
+            </reflectivity>
+            <transparent opaque="RGB_ZERO">
+              <color sid="transparent">1.000000  1.000000 1.000000 1.000000</color>
+            </transparent>
+            <transparency>
+              <float sid="transparency">0.000000</float>
+            </transparency>
+          </phong>
+        </technique>
+      </profile_COMMON>
+    </effect>
+    <effect id="FBXASC0495FBXASC032-FBXASC032Default-fx" name="FBXASC0495FBXASC032-FBXASC032Default">
+      <profile_COMMON>
+        <technique sid="standard">
+          <phong>
+            <emission>
+              <color sid="emission">0.000000  0.000000 0.000000 1.000000</color>
+            </emission>
+            <ambient>
+              <color sid="ambient">0.588235  0.588235 0.588235 1.000000</color>
+            </ambient>
+            <diffuse>
+              <texture texture="MapFBXASC032FBXASC0353-image" texcoord="CHANNEL0">
+                <extra>
+                  <technique profile="MAYA">
+                    <wrapU sid="wrapU0">TRUE</wrapU>
+                    <wrapV sid="wrapV0">TRUE</wrapV>
+                    <blend_mode>ADD</blend_mode>
+                  </technique>
+                </extra>
+              </texture>
+            </diffuse>
+            <specular>
+              <color sid="specular">0.000000  0.000000 0.000000 1.000000</color>
+            </specular>
+            <shininess>
+              <float sid="shininess">2.000000</float>
+            </shininess>
+            <reflective>
+              <color sid="reflective">0.000000  0.000000 0.000000 1.000000</color>
+            </reflective>
+            <reflectivity>
+              <float sid="reflectivity">1.000000</float>
+            </reflectivity>
+            <transparent opaque="RGB_ZERO">
+              <color sid="transparent">1.000000  1.000000 1.000000 1.000000</color>
+            </transparent>
+            <transparency>
+              <float sid="transparency">0.000000</float>
+            </transparency>
+          </phong>
+        </technique>
+      </profile_COMMON>
+    </effect>
+  </library_effects>
+  <library_geometries>
+    <geometry id="Object020-lib" name="Object020Mesh">
+      <mesh>
+        <source id="Object020-POSITION">
+          <float_array id="Object020-POSITION-array" count="66">
+-416.587036 -2411.934814 -0.000004
+-440.270630 -2411.934814 0.000000
+-778.291321 -2411.934814 0.000000
+0.000000 -2411.934814 -0.000031
+-248.366302 -2411.934814 -0.000031
+-336.330322 -2411.934814 -0.000004
+416.587036 -2411.934814 -0.000004
+440.270630 -2411.934814 0.000000
+778.291321 -2411.934814 0.000000
+248.366302 -2411.934814 -0.000031
+336.330322 -2411.934814 -0.000004
+-416.587036 -1096.794678 -0.000004
+-440.270630 -1053.012085 0.000000
+-778.291321 -845.248779 0.000000
+0.000000 -1212.541626 -0.000031
+-248.366302 -1200.109741 -0.000031
+-336.330322 -1158.980591 -0.000004
+416.587036 -1096.794678 -0.000004
+440.270630 -1053.012085 0.000000
+778.291321 -845.248779 0.000000
+248.366302 -1200.109741 -0.000031
+336.330322 -1158.980591 -0.000004
+</float_array>
+          <technique_common>
+            <accessor source="#Object020-POSITION-array" count="22" stride="3">
+              <param name="X" type="float"/>
+              <param name="Y" type="float"/>
+              <param name="Z" type="float"/>
+            </accessor>
+          </technique_common>
+        </source>
+        <source id="Object020-Normal0">
+          <float_array id="Object020-Normal0-array" count="180">
+0.000000 0.000000 1.000000
+0.000000 0.000000 1.000000
+0.000000 0.000000 1.000000
+0.000000 0.000000 1.000000
+0.000000 0.000000 1.000000
+0.000000 0.000000 1.000000
+0.000000 0.000000 1.000000
+0.000000 0.000000 1.000000
+0.000000 0.000000 1.000000
+0.000000 0.000000 1.000000
+0.000000 0.000000 1.000000
+0.000000 0.000000 1.000000
+0.000000 0.000000 1.000000
+0.000000 0.000000 1.000000
+0.000000 0.000000 1.000000
+0.000000 0.000000 1.000000
+0.000000 0.000000 1.000000
+0.000000 0.000000 1.000000
+0.000000 0.000000 1.000000
+0.000000 0.000000 1.000000
+0.000000 0.000000 1.000000
+0.000000 0.000000 1.000000
+0.000000 0.000000 1.000000
+0.000000 0.000000 1.000000
+0.000000 0.000000 1.000000
+0.000000 0.000000 1.000000
+0.000000 0.000000 1.000000
+0.000000 0.000000 1.000000
+0.000000 0.000000 1.000000
+0.000000 0.000000 1.000000
+-0.000000 0.000000 1.000000
+-0.000000 0.000000 1.000000
+-0.000000 0.000000 1.000000
+-0.000000 0.000000 1.000000
+-0.000000 0.000000 1.000000
+-0.000000 0.000000 1.000000
+0.000000 0.000000 1.000000
+0.000000 0.000000 1.000000
+0.000000 0.000000 1.000000
+0.000000 0.000000 1.000000
+0.000000 0.000000 1.000000
+0.000000 0.000000 1.000000
+0.000000 0.000000 1.000000
+0.000000 0.000000 1.000000
+0.000000 0.000000 1.000000
+0.000000 0.000000 1.000000
+0.000000 0.000000 1.000000
+0.000000 0.000000 1.000000
+0.000000 0.000000 1.000000
+0.000000 0.000000 1.000000
+0.000000 0.000000 1.000000
+0.000000 0.000000 1.000000
+0.000000 0.000000 1.000000
+0.000000 0.000000 1.000000
+-0.000000 0.000000 1.000000
+-0.000000 0.000000 1.000000
+-0.000000 0.000000 1.000000
+-0.000000 0.000000 1.000000
+-0.000000 0.000000 1.000000
+-0.000000 0.000000 1.000000
+</float_array>
+          <technique_common>
+            <accessor source="#Object020-Normal0-array" count="60" stride="3">
+              <param name="X" type="float"/>
+              <param name="Y" type="float"/>
+              <param name="Z" type="float"/>
+            </accessor>
+          </technique_common>
+        </source>
+        <source id="Object020-UV0">
+          <float_array id="Object020-UV0-array" count="44">
+0.217156 0.000000
+0.232371 0.000000
+-0.000000 0.000000
+0.283930 0.000000
+0.340441 0.000000
+0.500000 0.000000
+0.767629 0.000000
+0.782844 0.000000
+1.000000 0.000000
+0.659559 0.000000
+0.716070 0.000000
+0.232371 0.839441
+0.217156 0.867387
+-0.000000 1.000000
+0.500000 0.765561
+0.340441 0.773496
+0.283930 0.799748
+0.767629 0.839441
+0.782844 0.867387
+1.000000 1.000000
+0.659559 0.773496
+0.716070 0.799748
+</float_array>
+          <technique_common>
+            <accessor source="#Object020-UV0-array" count="22" stride="2">
+              <param name="S" type="float"/>
+              <param name="T" type="float"/>
+            </accessor>
+          </technique_common>
+        </source>
+        <vertices id="Object020-VERTEX">
+          <input semantic="POSITION" source="#Object020-POSITION"/>
+        </vertices>
+        <triangles count="0" material="Entrance"><input semantic="VERTEX" offset="0" source="#Object020-VERTEX"/><input semantic="NORMAL" offset="1" source="#Object020-Normal0"/><input semantic="TEXCOORD" offset="2" set="0" source="#Object020-UV0"/><p></p></triangles>
+        <triangles count="20" material="FBXASC0495FBXASC032-FBXASC032Default"><input semantic="VERTEX" offset="0" source="#Object020-VERTEX"/><input semantic="NORMAL" offset="1" source="#Object020-Normal0"/><input semantic="TEXCOORD" offset="2" set="0" source="#Object020-UV0"/><p> 12 0 12 1 1 0 11 2 11 11 3 11 1 4 0 0 5 1 13 6 13 2 7 2 12 8 12 12 9 12 2 10 2 1 11 0 11 12 11 0 13 1 16 14 16 16 15 16 0 16 1 5 17 3 15 18 15 4 19 4 14 20 14 14 21 14 4 22 4 3 23 5 16 24 16 5 25 3 15 26 15 15 27 15 5 28 3 4 29 4 7 30 7 17 31 17 6 32 6 17 33 17 7 34 7 18 35 18 18 36 18 8 37 8 19 38 19 8 39 8 18 40 18 7 41 7 14 42 14 9 43 9 20 44 20 9 45 9 14 46 14 3 47 5 21 48 21 6 49 6 17 50 17 6 51 6 21 52 21 10 53 10 20 54 20 10 55 10 21 56 21 10 57 10 20 58 20 9 59 9</p></triangles>
+      </mesh>
+    </geometry>
+  </library_geometries>
+  <library_visual_scenes>
+    <visual_scene id="ParkingLot" name="ParkingLot">
+      <node name="Object020" id="Object020" layer="Entrance_ncl1_2" sid="Object020"><matrix sid="matrix">1.000000 0.000000 0.000000 0.000000 0.000000 1.000000 0.000000 0.000000 0.000000 0.000000 1.000000 0.000000 0.000000 0.000000 0.000000 1.000000</matrix><instance_geometry url="#Object020-lib"><bind_material><technique_common><instance_material symbol="Entrance" target="#Entrance"/><instance_material symbol="FBXASC0495FBXASC032-FBXASC032Default" target="#FBXASC0495FBXASC032-FBXASC032Default"/></technique_common></bind_material></instance_geometry><extra><technique profile="FCOLLADA"><visibility>1.000000</visibility></technique></extra></node>
+      <extra><technique profile="MAX3D"><frame_rate>30.000000</frame_rate></technique><technique profile="FCOLLADA"><start_time>0.000000</start_time><end_time>3.333333</end_time></technique></extra>
+    </visual_scene>
+  </library_visual_scenes>
+  <scene>
+    <instance_visual_scene url="#ParkingLot"></instance_visual_scene>
+  </scene>
+</COLLADA>

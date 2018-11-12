@@ -107,6 +107,9 @@ Ogre::Camera *Ogre2RenderTarget::Camera() const
 //////////////////////////////////////////////////
 void Ogre2RenderTarget::SetCamera(Ogre::Camera *_camera)
 {
+  if (this->ogreCamera == _camera)
+    return;
+
   this->ogreCamera = _camera;
   this->targetDirty = true;
 }
@@ -253,6 +256,23 @@ Ogre::RenderTarget *Ogre2RenderTexture::RenderTarget() const
   return this->ogreTexture->getBuffer()->getRenderTarget();
 }
 
+//////////////////////////////////////////////////
+void Ogre2RenderTexture::RebuildImpl()
+{
+  if (this->sizeDirty)
+  {
+    this->Resize();
+  }
+  if (this->targetDirty)
+  {
+    this->RebuildTarget();
+  }
+
+  this->RebuildMaterial();
+  this->RebuildCompositor();
+
+  std::cerr << "this->vp " << this->RenderTarget()->getViewport(0)->getActualWidth() << " " << this->RenderTarget()->getViewport(0)->getActualHeight() << std::endl;
+}
 
 //////////////////////////////////////////////////
 void Ogre2RenderTexture::RebuildTarget()
@@ -264,18 +284,55 @@ void Ogre2RenderTexture::RebuildTarget()
 //////////////////////////////////////////////////
 void Ogre2RenderTexture::DestroyTarget()
 {
-  if (nullptr == this->ogreTexture)
+  if (!this->ogreTexture)
     return;
 
   auto &manager = Ogre::TextureManager::getSingleton();
   manager.unload(this->ogreTexture->getName());
   manager.remove(this->ogreTexture->getName());
 
-  // TODO(anyone) there is memory leak when a render texture is destroyed.
-  // The RenderSystem::_cleanupDepthBuffers method used in ogre1 does not
-  // seem to work in ogre2
-
   this->ogreTexture = nullptr;
+}
+
+//////////////////////////////////////////////////
+void Ogre2RenderTexture::Resize()
+{
+  if (!this->ogreTexture)
+    return;
+
+  Ogre::DepthBuffer *db = this->RenderTarget()->getDepthBuffer();
+//  std::cerr << "db " << db->isDepthTexture() << " " << db->isManual() << " " << db->getPoolId() <<  std::endl;
+//  std::cerr << "db " << db->getPoolId() <<  std::endl;
+  auto engine = Ogre2RenderEngine::Instance();
+//  engine->OgreRoot()->getRenderSystem()->_cleanupDepthBuffers();
+  engine->OgreRoot()->getRenderSystem()->_destroyDepthBuffer(db);
+
+//  auto engine = Ogre2RenderEngine::Instance();
+//  engine->OgreRoot()->getRenderSystem()->destroyRenderTarget(
+//      this->RenderTarget()->getName());
+
+  auto rt = this->RenderTarget();
+
+  this->ogreTexture->freeInternalResources();
+
+  std::cerr << "rt name " << rt->getName() << std::endl;
+
+  this->ogreTexture->setWidth(this->width);
+  this->ogreTexture->setHeight(this->height);
+//  this->RenderTarget()->getViewport(0)->updateDimensions();
+
+/*  this->RenderTarget()->getViewport(0)->setDimensions(0, 0, 1, 1);
+  double ratio = static_cast<double>(this->width) /
+      static_cast<double>(this->height);
+  double hfov = 1.33;
+  double vfov = 2.0 * atan(tan(hfov / 2.0) / ratio);
+
+  this->ogreCamera->setAspectRatio(ratio);
+  this->ogreCamera->setFOVy(Ogre::Radian(vfov));
+*/
+
+  this->ogreTexture->createInternalResources();
+//  this->RenderTarget()->setDepthBufferPool(0);
 }
 
 //////////////////////////////////////////////////
@@ -288,6 +345,9 @@ void Ogre2RenderTexture::BuildTarget()
   this->ogreTexture = (manager.createManual(this->name, "General",
       Ogre::TEX_TYPE_2D, this->width, this->height, 0, ogreFormat,
       Ogre::TU_RENDERTARGET, 0, true, this->antiAliasing)).getPointer();
+//      Ogre::TU_RENDERTARGET, 0, true, this->antiAliasing, "", false, false)).getPointer();
+//  this->RenderTarget()->setDepthBufferPool(Ogre::DepthBuffer::POOL_NON_SHAREABLE);
+//  this->RenderTarget()->setDepthBufferPool(0);
 }
 
 //////////////////////////////////////////////////

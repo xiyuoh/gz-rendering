@@ -55,7 +55,7 @@ double Ogre2Camera::AspectRatio() const
 void Ogre2Camera::SetAspectRatio(const double _ratio)
 {
   BaseCamera::SetAspectRatio(_ratio);
-  return this->ogreCamera->setAspectRatio(_ratio);
+  this->ogreCamera->setAspectRatio(_ratio);
 }
 
 //////////////////////////////////////////////////

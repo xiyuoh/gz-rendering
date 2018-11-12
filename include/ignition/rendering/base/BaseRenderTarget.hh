@@ -67,6 +67,9 @@ namespace ignition
 
       protected: bool targetDirty = true;
 
+      /// \brief A flag to indicate the render target size is dirty
+      protected: bool sizeDirty = true;
+
       protected: unsigned int width = 0u;
 
       protected: unsigned int height = 0u;
@@ -145,10 +148,11 @@ namespace ignition
     template <class T>
     void BaseRenderTarget<T>::Rebuild()
     {
-      if (this->targetDirty)
+      if (this->sizeDirty || this->targetDirty)
       {
         this->RebuildImpl();
         this->targetDirty = false;
+        this->sizeDirty = false;
       }
     }
 
@@ -164,7 +168,7 @@ namespace ignition
     void BaseRenderTarget<T>::SetWidth(const unsigned int _width)
     {
       this->width = _width;
-      this->targetDirty = true;
+      this->sizeDirty = true;
     }
 
     //////////////////////////////////////////////////
@@ -179,7 +183,7 @@ namespace ignition
     void BaseRenderTarget<T>::SetHeight(const unsigned int _height)
     {
       this->height = _height;
-      this->targetDirty = true;
+      this->sizeDirty = true;
     }
 
     //////////////////////////////////////////////////

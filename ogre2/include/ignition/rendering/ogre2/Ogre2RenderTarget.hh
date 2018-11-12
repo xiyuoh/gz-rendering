@@ -98,7 +98,7 @@ namespace ignition
       protected: virtual void UpdateBackgroundColor();
 
       /// \brief Implementation of the Rebuild function
-      protected: virtual void RebuildImpl();
+      protected: virtual void RebuildImpl() override;
 
       /// \brief Rebuild the render target
       protected: virtual void RebuildTarget() = 0;
@@ -165,6 +165,12 @@ namespace ignition
 
       // Documentation inherited.
       public: virtual Ogre::RenderTarget *RenderTarget() const override;
+
+      // Documentation inherited.
+      protected: virtual void RebuildImpl() override;
+
+      /// \brief Resize the render texture.
+      protected: virtual void Resize();
 
       // Documentation inherited.
       protected: virtual void RebuildTarget() override;

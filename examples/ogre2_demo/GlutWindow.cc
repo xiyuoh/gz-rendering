@@ -32,6 +32,7 @@
 #include <mutex>
 
 #include <ignition/common/Console.hh>
+#include <ignition/common/Time.hh>
 #include <ignition/rendering/Camera.hh>
 #include <ignition/rendering/Image.hh>
 #include <ignition/rendering/RayQuery.hh>
@@ -249,6 +250,16 @@ void handleMouse()
 //////////////////////////////////////////////////
 void displayCB()
 {
+  static ignition::common::Time prev;
+  if (prev == ignition::common::Time::Zero)
+    prev = ignition::common::Time::SystemTime();
+  else
+  {
+    ignition::common::Time now = ignition::common::Time::SystemTime();
+    std::cerr << (now-prev).Double() << std::endl;
+    prev = now;
+  }
+
 #if __APPLE__
   CGLSetCurrentContext(g_context);
 #elif _WIN32

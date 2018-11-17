@@ -186,6 +186,28 @@ void buildScene(ScenePtr _scene)
   camera->SetAspectRatio(1.333);
   camera->SetHFOV(M_PI / 2);
   root->AddChild(camera);
+
+
+
+  for (int y = -10; y < 10; ++y)
+//  for (int y = 1; y < 2; ++y)
+  {
+    for (int x = -10; x < 10; ++x)
+//    for (int x = 1; x < 2; ++x)
+    {
+
+      VisualPtr mesh = _scene->CreateVisual();
+      MeshDescriptor descriptor;
+      descriptor.meshName = common::joinPaths(RESOURCE_PATH, "polaris.dae");
+      //descriptor.meshName = common::joinPaths(RESOURCE_PATH, "duck.dae");
+      descriptor.mesh = meshManager->Load(descriptor.meshName);
+      MeshPtr meshGeom = _scene->CreateMesh(descriptor);
+      mesh->AddGeometry(meshGeom);
+      mesh->SetLocalPosition(x*2, y*2, 0);
+      mesh->SetLocalRotation(1.5708, 0, 2.0);
+      root->AddChild(mesh);
+    }
+  }
 }
 
 //////////////////////////////////////////////////

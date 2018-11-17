@@ -81,6 +81,10 @@ void MeshDescriptorTest::Descriptor(const std::string &_renderEngine)
   EXPECT_EQ("unit_cylinder", cylinderDescriptor.meshName);
   EXPECT_NE(nullptr, cylinderDescriptor.mesh);
   EXPECT_EQ("unit_cylinder", cylinderDescriptor.mesh->Name());
+
+  // Clean up
+  engine->DestroyScene(scene);
+  rendering::unloadEngine(engine->Name());
 }
 
 /////////////////////////////////////////////////
@@ -90,7 +94,7 @@ TEST_P(MeshDescriptorTest, Descriptor)
 }
 
 INSTANTIATE_TEST_CASE_P(MeshDescriptor, MeshDescriptorTest,
-    ::testing::Values("ogre", "optix"),
+    RENDER_ENGINE_VALUES,
     ignition::rendering::PrintToStringParam());
 
 int main(int argc, char **argv)

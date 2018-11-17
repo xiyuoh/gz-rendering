@@ -31,7 +31,7 @@ using namespace ignition;
 using namespace rendering;
 
 class MeshTest : public testing::Test,
-                     public testing::WithParamInterface<const char *>
+                 public testing::WithParamInterface<const char *>
 {
   /// \brief Test mesh and submesh basic API
   public: void MeshSubMesh(const std::string &_renderEngine);
@@ -84,6 +84,10 @@ void MeshTest::MeshSubMesh(const std::string &_renderEngine)
   // unique material
   submesh->SetMaterial(matClone, true);
   EXPECT_NE(matClone, submesh->Material());
+
+  // Clean up
+  engine->DestroyScene(scene);
+  rendering::unloadEngine(engine->Name());
 }
 
 /////////////////////////////////////////////////
@@ -93,7 +97,7 @@ TEST_P(MeshTest, MeshSubMesh)
 }
 
 INSTANTIATE_TEST_CASE_P(Mesh, MeshTest,
-    ::testing::Values("ogre", "optix"),
+    RENDER_ENGINE_VALUES,
     ignition::rendering::PrintToStringParam());
 
 int main(int argc, char **argv)

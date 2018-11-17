@@ -71,11 +71,19 @@ void RenderTargetTest::RenderTexture(const std::string &_renderEngine)
 
   // Clean up
   engine->DestroyScene(scene);
+  rendering::unloadEngine(engine->Name());
 }
 
 /////////////////////////////////////////////////
 void RenderTargetTest::RenderWindow(const std::string &_renderEngine)
 {
+  if (_renderEngine != "ogre")
+  {
+    igndbg << "RenderWindow not supported yet in rendering engine: "
+            << _renderEngine << std::endl;
+    return;
+  }
+
   // create and populate scene
   RenderEngine *engine = rendering::engine(_renderEngine);
   if (!engine)
@@ -111,6 +119,7 @@ void RenderTargetTest::RenderWindow(const std::string &_renderEngine)
 
   // Clean up
   engine->DestroyScene(scene);
+  rendering::unloadEngine(engine->Name());
 }
 
 /////////////////////////////////////////////////
@@ -126,7 +135,7 @@ TEST_P(RenderTargetTest, RenderWindow)
 }
 
 INSTANTIATE_TEST_CASE_P(RenderTarget, RenderTargetTest,
-    ::testing::Values("ogre", "optix"),
+    RENDER_ENGINE_VALUES,
     ignition::rendering::PrintToStringParam());
 
 int main(int argc, char **argv)

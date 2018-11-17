@@ -66,6 +66,13 @@ class GpuRaysTest: public testing::Test,
 /// \brief Test GPU rays configuraions
 void GpuRaysTest::Configure(const std::string &_renderEngine)
 {
+  if (_renderEngine != "ogre")
+  {
+    igndbg << "GpuRays not supported yet in rendering engine: "
+            << _renderEngine << std::endl;
+    return;
+  }
+
   // create and populate scene
   RenderEngine *engine = rendering::engine(_renderEngine);
   if (!engine)
@@ -137,13 +144,20 @@ void GpuRaysTest::Configure(const std::string &_renderEngine)
 /// \brief Test detection of different boxes
 void GpuRaysTest::RaysUnitBox(const std::string &_renderEngine)
 {
+  if (_renderEngine != "ogre")
+  {
+    igndbg << "GpuRays not supported yet in rendering engine: "
+            << _renderEngine << std::endl;
+    return;
+  }
+
   // Test GPU rays with 3 boxes in the world.
   // First GPU rays at identity orientation, second at 90 degree roll
   // First place 2 of 3 boxes within range and verify range values.
   // then move all 3 boxes out of range and verify range values
 
-  const double hMinAngle = -M_PI/2.0;
-  const double hMaxAngle = M_PI/2.0;
+  const double hMinAngle = -IGN_PI/2.0;
+  const double hMaxAngle = IGN_PI/2.0;
   const double minRange = 0.1;
   const double maxRange = 10.0;
   const int hRayCount = 320;
@@ -183,7 +197,7 @@ void GpuRaysTest::RaysUnitBox(const std::string &_renderEngine)
 
   // Create a second ray caster rotated
   ignition::math::Pose3d testPose2(ignition::math::Vector3d(0, 0, 0.1),
-      ignition::math::Quaterniond(M_PI/2.0, 0, 0));
+      ignition::math::Quaterniond(IGN_PI/2.0, 0, 0));
 
   GpuRaysPtr gpuRays2 = scene->CreateGpuRays("gpu_rays_2");
   gpuRays2->SetWorldPosition(testPose2.Pos());
@@ -293,20 +307,28 @@ void GpuRaysTest::RaysUnitBox(const std::string &_renderEngine)
 
   // Clean up
   engine->DestroyScene(scene);
+  rendering::unloadEngine(engine->Name());
 }
 
 /////////////////////////////////////////////////
 /// \brief Test GPU rays vertical component
 void GpuRaysTest::LaserVertical(const std::string &_renderEngine)
 {
+  if (_renderEngine != "ogre")
+  {
+    igndbg << "GpuRays not supported yet in rendering engine: "
+            << _renderEngine << std::endl;
+    return;
+  }
+
   // Test a rays that has a vertical range component.
   // Place a box within range and verify range values,
   // then move the box out of range and verify range values
 
-  double hMinAngle = -M_PI/2.0;
-  double hMaxAngle = M_PI/2.0;
-  double vMinAngle = -M_PI/4.0;
-  double vMaxAngle = M_PI/4.0;
+  double hMinAngle = -IGN_PI/2.0;
+  double hMaxAngle = IGN_PI/2.0;
+  double vMinAngle = -IGN_PI/4.0;
+  double vMaxAngle = IGN_PI/4.0;
   double minRange = 0.1;
   double maxRange = 5.0;
   unsigned int hRayCount = 640;
@@ -415,6 +437,7 @@ void GpuRaysTest::LaserVertical(const std::string &_renderEngine)
 
   // Clean up
   engine->DestroyScene(scene);
+  rendering::unloadEngine(engine->Name());
 }
 
 /////////////////////////////////////////////////
@@ -436,7 +459,7 @@ TEST_P(GpuRaysTest, LaserVertical)
 }
 
 INSTANTIATE_TEST_CASE_P(GpuRays, GpuRaysTest,
-    ::testing::Values("ogre"),
+    RENDER_ENGINE_VALUES,
     ignition::rendering::PrintToStringParam());
 
 int main(int argc, char **argv)

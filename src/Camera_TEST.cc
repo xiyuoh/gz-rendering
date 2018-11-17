@@ -99,6 +99,7 @@ void CameraTest::ViewProjectionMatrix(const std::string &_renderEngine)
 
   // Clean up
   engine->DestroyScene(scene);
+  rendering::unloadEngine(engine->Name());
 }
 
 /////////////////////////////////////////////////
@@ -143,6 +144,7 @@ void CameraTest::RenderTexture(const std::string &_renderEngine)
 
   // Clean up
   engine->DestroyScene(scene);
+  rendering::unloadEngine(engine->Name());
 }
 
 /////////////////////////////////////////////////
@@ -214,6 +216,7 @@ void CameraTest::TrackFollow(const std::string &_renderEngine)
 
   // Clean up
   engine->DestroyScene(scene);
+  rendering::unloadEngine(engine->Name());
 }
 
 /////////////////////////////////////////////////
@@ -235,7 +238,7 @@ TEST_P(CameraTest, TrackFollow)
 }
 
 INSTANTIATE_TEST_CASE_P(Camera, CameraTest,
-    ::testing::Values("ogre", "optix"),
+    RENDER_ENGINE_VALUES,
     ignition::rendering::PrintToStringParam());
 
 int main(int argc, char **argv)

@@ -154,14 +154,14 @@ void buildScene(ScenePtr _scene)
   plane->SetMaterial(white);
   root->AddChild(plane);
 
-  // create directional light
+/*  // create directional light
   DirectionalLightPtr light0 = _scene->CreateDirectionalLight();
   light0->SetDirection(0.5, 0.5, -1);
   light0->SetDiffuseColor(0.8, 0.7, 0.6);
   light0->SetSpecularColor(0.3, 0.3, 0.3);
   root->AddChild(light0);
 
-  // create spot light
+ // create spot light
   SpotLightPtr light1 = _scene->CreateSpotLight();
   light1->SetDiffuseColor(0.8, 0.8, 0.3);
   light1->SetSpecularColor(0.2, 0.2, 0.2);
@@ -175,6 +175,23 @@ void buildScene(ScenePtr _scene)
   light2->SetSpecularColor(0.2, 0.2, 0.2);
   light2->SetLocalPosition(3, 0, 2);
   root->AddChild(light2);
+*/
+
+  for (int x = -10; x < 10; x+=4)
+  {
+    for (int y = -10; y < 10; y+=4)
+    {
+//      SpotLightPtr l = _scene->CreateSpotLight();
+//      PointLightPtr l = _scene->CreatePointLight();
+      DirectionalLightPtr l = _scene->CreateDirectionalLight();
+      l->SetDirection(0, 0, -1);
+      l->SetLocalPose(math::Pose3d(x*2, y*2, 5, 0, 0, 0));
+      l->SetDiffuseColor(0.8, 0.7, 0.6);
+      l->SetSpecularColor(0.3, 0.3, 0.3);
+      root->AddChild(l);
+    }
+  }
+
 
   // create camera
   CameraPtr camera = _scene->CreateCamera("camera");
@@ -186,7 +203,6 @@ void buildScene(ScenePtr _scene)
   camera->SetAspectRatio(1.333);
   camera->SetHFOV(IGN_PI / 2);
   root->AddChild(camera);
-
 
 
   for (int y = -10; y < 10; ++y)
@@ -208,6 +224,7 @@ void buildScene(ScenePtr _scene)
       root->AddChild(mesh);
     }
   }
+
 }
 
 //////////////////////////////////////////////////
@@ -238,7 +255,7 @@ int main(int _argc, char** _argv)
   std::vector<std::string> engineNames;
   std::vector<CameraPtr> cameras;
 
-  engineNames.push_back("ogre2");
+  engineNames.push_back("ogre");
   for (auto engineName : engineNames)
   {
     try

@@ -67,8 +67,7 @@ endif()
 
 ign_find_package(IgnOGRE VERSION 1.8.0
   COMPONENTS ${ign_ogre_components}
-  REQUIRED_BY ogre
-  PRIVATE_FOR ogre)
+  REQUIRED_BY ogre)
 
 if (OGRE_FOUND)
   # find boost - mainly needed on macOS and also by the terrain component

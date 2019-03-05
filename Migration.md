@@ -9,6 +9,6 @@ release will remove the deprecated code.
 
 ### Deletions
 
-1. **ogre/include/ignition/rendering/OgreDepthCamera.hh**
+1. **ogre/include/ignition/rendering/ogre/OgreDepthCamera.hh**
     + OgreDepthCameraPrivate class
 

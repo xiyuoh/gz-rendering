@@ -22,7 +22,7 @@
 #include "ignition/rendering/ogre/OgreIncludes.hh"
 #include "ignition/rendering/ogre/OgreGaussianNoisePass.hh"
 
-namespace ignition
+/*namespace ignition
 {
   namespace rendering
   {
@@ -150,3 +150,4 @@ void OgreGaussianNoisePass::Destroy()
 }
 
 // IGN_RENDERING_REGISTER_RENDER_PASS(OgreGaussianNoisePass, GaussianNoisePass)
+*/

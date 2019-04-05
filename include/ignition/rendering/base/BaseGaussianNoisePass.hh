@@ -20,8 +20,8 @@
 #include <string>
 #include <ignition/math/Rand.hh>
 
-#include "ignition/rendering/GaussianNoisePass.hh"
 #include "ignition/rendering/base/BaseObject.hh"
+#include "ignition/rendering/GaussianNoisePass.hh"
 
 namespace ignition
 {

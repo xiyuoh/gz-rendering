@@ -55,7 +55,7 @@ void RenderPassSystemTest::RenderPassSystem(const std::string &_renderEngine)
             << "render pass system" << std::endl;
     return;
   }
-
+/*
   // test creating abstract render pass
   RenderPassPtr nullPass = rpSystem->Create<RenderPass>();
   EXPECT_EQ(nullptr, nullPass);
@@ -70,6 +70,7 @@ void RenderPassSystemTest::RenderPassSystem(const std::string &_renderEngine)
   GaussianNoisePassPtr noisePass =
       std::dynamic_pointer_cast<GaussianNoisePass>(pass);
   EXPECT_NE(nullptr, noisePass);
+*/
 }
 
 /////////////////////////////////////////////////

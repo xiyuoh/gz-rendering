@@ -97,7 +97,7 @@ void RenderPassTest::GaussianNoise(const std::string &_renderEngine)
   double noiseMean = 0.1;
   double noiseStdDev = 0.01;
   RenderPassSystemPtr rpSystem = engine->RenderPassSystem();
-  if (rpSystem)
+/*  if (rpSystem)
   {
     // add gaussian noise pass
     RenderPassPtr pass = rpSystem->Create<GaussianNoisePass>();
@@ -108,6 +108,7 @@ void RenderPassTest::GaussianNoise(const std::string &_renderEngine)
     camera->AddRenderPass(noisePass);
   }
   else
+*/
   {
     ignwarn << "Engine '" << _renderEngine << "' does not support "
             << "render pass  system" << std::endl;

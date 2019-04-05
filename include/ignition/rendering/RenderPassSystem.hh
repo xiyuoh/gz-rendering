@@ -24,7 +24,7 @@
 
 #include "ignition/rendering/config.hh"
 #include "ignition/rendering/Export.hh"
-#include "ignition/rendering/RenderPass.hh"
+//#include "ignition/rendering/RenderPass.hh"
 #include "ignition/rendering/RenderTypes.hh"
 
 namespace ignition
@@ -40,12 +40,13 @@ namespace ignition
      * ignition/rendering/RenderPassSystem.hh
      */
     /// \brief A factory interface for creating render passes
-    class IGNITION_RENDERING_VISIBLE RenderPassFactory
+/*    class IGNITION_RENDERING_VISIBLE RenderPassFactory
     {
       /// \brief Instantiate new render pass
       /// \return New render pass
       public: virtual RenderPass *New() const = 0;
     };
+*/
 
     /* \class RenderPassSystem RenderPassSystem.hh \
      * ignition/rendering/RenderPassSystem.hh
@@ -59,7 +60,7 @@ namespace ignition
       /// \brief Destructor
       public: virtual ~RenderPassSystem();
 
-      /// \brief Templated function for creating render passes
+/*      /// \brief Templated function for creating render passes
       /// \return Pointer to the render pass created
       public: template<typename T> RenderPassPtr Create()
               {
@@ -79,13 +80,14 @@ namespace ignition
 
       /// \brief A map of render pass type id name to its factory class
       private: static std::map<std::string, RenderPassFactory *> renderPassMap;
+*/
 
       /// \internal
       /// \brief Pointer to private data class
       private: std::unique_ptr<RenderPassSystemPrivate> dataPtr;
     };
 
-    /// \brief Render pass registration macro
+/*    /// \brief Render pass registration macro
     ///
     /// Use this macro to register render pass with the render pass factory.
     #define IGN_RENDERING_REGISTER_RENDER_PASS(classname, interface) \
@@ -102,6 +104,7 @@ namespace ignition
               } \
     }; \
     static classname##Factory global_##classname##Factory;
+*/
     }
   }
 }

@@ -146,7 +146,7 @@ void RenderTargetTest::AddRemoveRenderPass(const std::string &_renderEngine)
   }
   ScenePtr scene = engine->CreateScene("scene");
 
-  // create a render texture and verify no render pass exists
+/*  // create a render texture and verify no render pass exists
   RenderTexturePtr renderTexture = scene->CreateRenderTexture();
   EXPECT_EQ(0u, renderTexture->RenderPassCount());
 
@@ -178,6 +178,7 @@ void RenderTargetTest::AddRemoveRenderPass(const std::string &_renderEngine)
   renderTexture->RemoveRenderPass(pass1);
   EXPECT_EQ(1u, renderTexture->RenderPassCount());
   EXPECT_EQ(pass2, renderTexture->RenderPassByIndex(0u));
+*/
 }
 
 /////////////////////////////////////////////////

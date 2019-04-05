@@ -27,7 +27,7 @@ class ignition::rendering::RenderPassSystemPrivate
 {
 };
 
-std::map<std::string, RenderPassFactory *> RenderPassSystem::renderPassMap;
+//std::map<std::string, RenderPassFactory *> RenderPassSystem::renderPassMap;
 
 //////////////////////////////////////////////////
 // RenderPassSystem
@@ -42,7 +42,7 @@ RenderPassSystem::~RenderPassSystem()
 {
 }
 
-//////////////////////////////////////////////////
+/*/////////////////////////////////////////////////
 RenderPassPtr RenderPassSystem::CreateImpl(const std::string &_type)
 {
   RenderPassPtr pass;
@@ -65,3 +65,4 @@ void RenderPassSystem::Register(const std::string &_name,
 {
   renderPassMap[_name] = _factory;
 }
+*/

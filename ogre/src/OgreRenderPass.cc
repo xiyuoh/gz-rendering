@@ -20,6 +20,7 @@
 using namespace ignition;
 using namespace rendering;
 
+/*
 //////////////////////////////////////////////////
 OgreRenderPass::OgreRenderPass()
 {
@@ -49,3 +50,4 @@ void OgreRenderPass::CreateRenderPass()
 {
   // To be overriden by derived render pass classes
 }
+*/

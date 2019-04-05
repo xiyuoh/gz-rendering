@@ -31,7 +31,7 @@ namespace ignition
     /* \class OgreRenderPass OgreRenderPass.hh \
      * ignition/rendering/ogre/OgreRenderPass.hh
      */
-    /// \brief Ogre implementation of the RenderPass class
+/*    /// \brief Ogre implementation of the RenderPass class
     class IGNITION_RENDERING_OGRE_VISIBLE OgreRenderPass :
       public BaseRenderPass<OgreObject>
     {
@@ -54,6 +54,7 @@ namespace ignition
       /// \brief Pointer to the ogre camera
       protected: Ogre::Camera *ogreCamera = nullptr;
     };
+*/
     }
   }
 }

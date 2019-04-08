@@ -66,7 +66,7 @@ namespace ignition
     class PointLight;
     class RayQuery;
     class RenderEngine;
-    class RenderPass;
+//    class RenderPass;
     class RenderPassSystem;
     class RenderTarget;
     class RenderTexture;
@@ -157,7 +157,7 @@ namespace ignition
 
     /// \def RenderPassPtr
     /// \brief Shared pointer to RenderPass
-    typedef shared_ptr<RenderPass> RenderPassPtr;
+//    typedef shared_ptr<RenderPass> RenderPassPtr;
 
     /// \def RenderPassSystemPtr
     /// \brief Shared pointer to RenderPassSystem
@@ -275,11 +275,11 @@ namespace ignition
 
     /// \def const RenderPassPtr
     /// \brief Shared pointer to const RenderPass
-    typedef shared_ptr<const RenderPass> ConstRenderPassPtr;
+//    typedef shared_ptr<const RenderPass> ConstRenderPassPtr;
 
     /// \def const RenderPassSystemPtr
     /// \brief Shared pointer to const RenderPassSystem
-    typedef shared_ptr<const RenderPassSystem> ConstRenderPassSystemPtr;
+//    typedef shared_ptr<const RenderPassSystem> ConstRenderPassSystemPtr;
 
     /// \def const RenderTargetPtr
     /// \brief Shared pointer to const RenderTarget

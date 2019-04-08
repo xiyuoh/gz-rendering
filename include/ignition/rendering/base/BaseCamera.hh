@@ -164,7 +164,7 @@ namespace ignition
       public: virtual unsigned int RenderTextureGLId() const override;
 
       // Documentation inherited.
-      public: virtual void AddRenderPass(const RenderPassPtr &_pass) override;
+/*      public: virtual void AddRenderPass(const RenderPassPtr &_pass) override;
 
       // Documentation inherited.
       public: virtual void RemoveRenderPass(const RenderPassPtr &_pass)
@@ -176,6 +176,7 @@ namespace ignition
       // Documentation inherited.
       public: virtual RenderPassPtr RenderPassByIndex(unsigned int _index)
           const override;
+*/
 
       protected: virtual void *CreateImageBuffer() const;
 
@@ -705,7 +706,7 @@ namespace ignition
       return 0u;
     }
 
-    //////////////////////////////////////////////////
+/*    //////////////////////////////////////////////////
     template <class T>
     void BaseCamera<T>::AddRenderPass(const RenderPassPtr &_pass)
     {
@@ -732,6 +733,7 @@ namespace ignition
     {
       return this->RenderTarget()->RenderPassByIndex(_index);
     }
+*/
     }
   }
 }

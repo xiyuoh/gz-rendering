@@ -240,7 +240,7 @@ void CameraTest::AddRemoveRenderPass(const std::string &_renderEngine)
 
   CameraPtr camera = scene->CreateCamera();
   EXPECT_TRUE(camera != nullptr);
-
+/*
   // verify no render pass exists for camera
   EXPECT_EQ(0u, camera->RenderPassCount());
 
@@ -252,7 +252,7 @@ void CameraTest::AddRemoveRenderPass(const std::string &_renderEngine)
             << "render pass system" << std::endl;
     return;
   }
-/*  RenderPassPtr pass1 = rpSystem->Create<GaussianNoisePass>();
+  RenderPassPtr pass1 = rpSystem->Create<GaussianNoisePass>();
   EXPECT_NE(nullptr, pass1);
 
   // test adding a render pass

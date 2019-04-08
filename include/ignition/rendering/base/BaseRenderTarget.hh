@@ -62,7 +62,7 @@ namespace ignition
       public: virtual math::Color BackgroundColor() const override;
 
       // Documentation inherited
-      public: virtual void AddRenderPass(const RenderPassPtr &_pass) override;
+/*      public: virtual void AddRenderPass(const RenderPassPtr &_pass) override;
 
       // Documentation inherited
       public: virtual void RemoveRenderPass(const RenderPassPtr &_pass)
@@ -74,6 +74,7 @@ namespace ignition
       // Documentation inherited
       public: virtual RenderPassPtr RenderPassByIndex(unsigned int _index)
           const override;
+*/
 
       protected: virtual void Rebuild();
 
@@ -226,7 +227,7 @@ namespace ignition
       return this->Scene()->BackgroundColor();
     }
 
-    //////////////////////////////////////////////////
+/*    //////////////////////////////////////////////////
     template <class T>
     void BaseRenderTarget<T>::AddRenderPass(const RenderPassPtr &_pass)
     {
@@ -238,7 +239,7 @@ namespace ignition
     template <class T>
     void BaseRenderTarget<T>::RemoveRenderPass(const RenderPassPtr &_pass)
     {
-/*      auto it = std::find(this->renderPasses.begin(), this->renderPasses.end(),
+      auto it = std::find(this->renderPasses.begin(), this->renderPasses.end(),
           _pass);
       if (it != this->renderPasses.end())
       {
@@ -246,7 +247,6 @@ namespace ignition
         this->renderPasses.erase(it);
         this->renderPassDirty = true;
       }
-*/
     }
 
     //////////////////////////////////////////////////
@@ -262,17 +262,17 @@ namespace ignition
     RenderPassPtr BaseRenderTarget<T>::RenderPassByIndex(unsigned int _index)
         const
     {
-/*      if (_index > this->renderPasses.size())
+      if (_index > this->renderPasses.size())
       {
         ignerr << "RenderPass index out of range: " << _index << std::endl;
         return RenderPassPtr();
       }
       return this->renderPasses[_index];
-*/
 
       return RenderPassPtr();
     }
 
+*/
     //////////////////////////////////////////////////
     // BaseRenderTexture
     //////////////////////////////////////////////////

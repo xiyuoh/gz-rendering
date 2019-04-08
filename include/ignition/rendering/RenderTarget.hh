@@ -77,7 +77,7 @@ namespace ignition
       /// \return Render target background color.
       public: virtual math::Color BackgroundColor() const = 0;
 
-      /// \brief Add a render pass to the render target
+/*      /// \brief Add a render pass to the render target
       /// \param[in] _pass New render pass to add
       public: virtual void AddRenderPass(const RenderPassPtr &_pass) = 0;
 
@@ -93,6 +93,7 @@ namespace ignition
       /// \return Render pass at the specified index
       public: virtual RenderPassPtr RenderPassByIndex(unsigned int _index)
           const = 0;
+*/
     };
 
     /* \class RenderTexture RenderTexture.hh \

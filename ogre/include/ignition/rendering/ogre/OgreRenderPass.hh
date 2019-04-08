@@ -17,10 +17,10 @@
 #ifndef IGNITION_RENDERING_OGRE_OGRERENDERPASS_HH_
 #define IGNITION_RENDERING_OGRE_OGRERENDERPASS_HH_
 
+#include "ignition/rendering/ogre/OgreObject.hh"
 #include "ignition/rendering/base/BaseRenderPass.hh"
 #include "ignition/rendering/ogre/Export.hh"
-#include "ignition/rendering/ogre/OgreIncludes.hh"
-#include "ignition/rendering/ogre/OgreObject.hh"
+//#include "ignition/rendering/ogre/OgreIncludes.hh"
 
 namespace ignition
 {

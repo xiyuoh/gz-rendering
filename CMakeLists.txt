@@ -42,6 +42,11 @@ ign_find_package(ignition-plugin1 REQUIRED COMPONENTS all)
 set(IGN_PLUGIN_VER ${ignition-plugin1_VERSION_MAJOR})
 
 #--------------------------------------
+# Find sdformat
+ign_find_package(sdformat8 REQUIRED_BY gziface)
+set(SDFORMAT_VER ${sdformat8_VERSION_MAJOR})
+
+#--------------------------------------
 # Find FreeImage
 ign_find_package(FreeImage VERSION 3.9
   REQUIRED_BY optix
@@ -133,6 +138,12 @@ endif()
 if (HAVE_OGRE2)
   list(APPEND RENDERING_COMPONENTS ogre2)
 endif()
+
+if (sdformat${sdformat8_VERSION_MAJOR}_FOUND)
+  list(APPEND RENDERING_COMPONENTS gziface)
+endif()
+
+
 
 ign_configure_build(QUIT_IF_BUILD_ERRORS
     COMPONENTS ${RENDERING_COMPONENTS})

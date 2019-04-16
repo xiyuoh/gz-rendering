@@ -169,6 +169,8 @@ void Ogre2RenderTarget::Render()
   this->ogreCompositorWorkspace->setEnabled(true);
   auto engine = Ogre2RenderEngine::Instance();
   engine->OgreRoot()->renderOneFrame();
+//  this->RenderTarget()->writeContentsToFile("test.jpg");
+
   this->ogreCompositorWorkspace->setEnabled(false);
 
   // The code below for manual updating render textures was suggested in ogre

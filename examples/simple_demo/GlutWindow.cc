@@ -71,7 +71,6 @@ double g_offset = 0.0;
 //////////////////////////////////////////////////
 void updateCameras()
 {
-  return;
   for (ir::CameraPtr camera : g_cameras)
   {
     camera->SetLocalPosition(g_offset, g_offset, g_offset);

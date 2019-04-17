@@ -19,9 +19,10 @@
 
 using namespace ignition;
 using namespace rendering;
+using namespace gziface;
 
 /// \brief Private data class.
-class ignition::rendering::SceneManagerPrivate
+class ignition::rendering::gziface::SceneManagerPrivate
 {
   /// \brief Keep track of world ID, which is equivalent to the scene's
   /// root visual.
@@ -55,6 +56,12 @@ SceneManager::~SceneManager() = default;
 void SceneManager::SetScene(ScenePtr _scene)
 {
   this->dataPtr->scene = std::move(_scene);
+}
+
+/////////////////////////////////////////////////
+ScenePtr SceneManager::Scene() const
+{
+  return this->dataPtr->scene;
 }
 
 /////////////////////////////////////////////////
@@ -173,6 +180,7 @@ VisualPtr SceneManager::CreateVisual(uint64_t _id,
   if (parent)
     name = parent->Name() + "::" + name;
   VisualPtr visualVis = this->dataPtr->scene->CreateVisual(name);
+  visualVis->SetLocalPose(_visual.Pose());
 
   math::Vector3d scale = math::Vector3d::One;
   math::Pose3d localPose;
@@ -347,15 +355,20 @@ LightPtr SceneManager::CreateLight(uint64_t _id,
     parent = it->second;
   }
 
+  std::string name = _light.Name().empty() ? std::to_string(_id) :
+      _light.Name();
+  if (parent)
+    name = parent->Name() +  "::" + name;
+
   LightPtr light;
   switch (_light.Type())
   {
     case sdf::LightType::POINT:
-      light = this->dataPtr->scene->CreatePointLight();
+      light = this->dataPtr->scene->CreatePointLight(name);
       break;
     case sdf::LightType::SPOT:
     {
-      light = this->dataPtr->scene->CreateSpotLight();
+      light = this->dataPtr->scene->CreateSpotLight(name);
       SpotLightPtr spotLight =
           std::dynamic_pointer_cast<SpotLight>(light);
       spotLight->SetInnerAngle(_light.SpotInnerAngle());
@@ -365,7 +378,7 @@ LightPtr SceneManager::CreateLight(uint64_t _id,
     }
     case sdf::LightType::DIRECTIONAL:
     {
-      light = this->dataPtr->scene->CreateDirectionalLight();
+      light = this->dataPtr->scene->CreateDirectionalLight(name);
       DirectionalLightPtr dirLight =
           std::dynamic_pointer_cast<DirectionalLight>(light);
 

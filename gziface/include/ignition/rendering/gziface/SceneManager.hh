@@ -46,7 +46,8 @@ namespace rendering
 {
 // Inline bracket to help doxygen filtering.
 inline namespace IGNITION_RENDERING_VERSION_NAMESPACE {
-  //
+namespace gziface
+{
   // Forward declaration
   class SceneManagerPrivate;
 
@@ -62,6 +63,10 @@ inline namespace IGNITION_RENDERING_VERSION_NAMESPACE {
     /// \brief Set the scene to manage
     /// \param[in] _scene Scene pointer.
     public: void SetScene(ScenePtr _scene);
+
+    /// \brief Get the scene
+    /// \return Pointer to scene
+    public: ScenePtr Scene() const;
 
     /// \brief Set the world's ID.
     /// \param[in] _id World ID.
@@ -97,13 +102,13 @@ inline namespace IGNITION_RENDERING_VERSION_NAMESPACE {
     /// \param[out] _localPose Additional local pose to be applied after the
     /// visual's pose
     /// \return Geometry object loaded from the sdf dom
-    public: GeometryPtr LoadGeometry(const sdf::Geometry &_geom,
+    protected: GeometryPtr LoadGeometry(const sdf::Geometry &_geom,
         math::Vector3d &_scale, math::Pose3d &_localPose);
 
     /// \brief Load a material
     /// \param[in] _material Material sdf dom
     /// \return Material object loaded from the sdf dom
-    public: MaterialPtr LoadMaterial(
+    protected: MaterialPtr LoadMaterial(
         const sdf::Material &_material);
 
     /// \brief Create a light
@@ -142,6 +147,7 @@ inline namespace IGNITION_RENDERING_VERSION_NAMESPACE {
     /// \brief Pointer to private data class
     private: std::unique_ptr<SceneManagerPrivate> dataPtr;
   };
+}
 }
 }
 }

@@ -30,6 +30,7 @@
 #include <sdf/Material.hh>
 #include <sdf/Mesh.hh>
 #include <sdf/Model.hh>
+#include <sdf/Pbr.hh>
 #include <sdf/Plane.hh>
 #include <sdf/Sphere.hh>
 #include <sdf/Visual.hh>

@@ -234,11 +234,6 @@ VisualPtr SceneManager::CreateVisual(uint64_t _id,
     // TODO(anyone) set transparency)
     // material->SetTransparency(_visual.Transparency());
 
-    // TODO(anyone) Get roughness and metalness from message instead
-    // of giving a default value.
-    material->SetRoughness(0.3);
-    material->SetMetalness(0.3);
-
     geom->SetMaterial(material);
   }
   else
@@ -328,6 +323,86 @@ MaterialPtr SceneManager::LoadMaterial(
   material->SetDiffuse(_material.Diffuse());
   material->SetSpecular(_material.Specular());
   material->SetEmissive(_material.Emissive());
+
+  // parse PBR params
+  const sdf::Pbr *pbr = _material.PbrMaterial();
+  if (pbr)
+  {
+    sdf::PbrWorkflow *workflow = nullptr;
+    const sdf::PbrWorkflow *metal =
+        pbr->Workflow(sdf::PbrWorkflowType::METAL);
+    if (metal)
+    {
+      double roughness = metal->Roughness();
+      double metalness = metal->Metalness();
+      material->SetRoughness(roughness);
+      material->SetMetalness(metalness);
+
+      // roughness map
+      std::string roughnessMap = metal->RoughnessMap();
+      if (!roughnessMap.empty())
+      {
+        std::string fullPath = common::findFile(roughnessMap);
+        if (!fullPath.empty())
+          material->SetRoughnessMap(fullPath);
+        else
+          ignerr << "Unable to find file [" << roughnessMap << "]\n";
+      }
+
+      // metalness map
+      std::string metalnessMap = metal->MetalnessMap();
+      if (!metalnessMap.empty())
+      {
+        std::string fullPath = common::findFile(metalnessMap);
+        if (!fullPath.empty())
+          material->SetMetalnessMap(fullPath);
+        else
+          ignerr << "Unable to find file [" << metalnessMap << "]\n";
+      }
+      workflow = const_cast<sdf::PbrWorkflow *>(metal);
+    }
+    else
+    {
+      ignerr << "PBR material: currently only metal workflow is supported"
+             << std::endl;
+    }
+
+    // albedo map
+    std::string albedoMap = workflow->AlbedoMap();
+    if (!albedoMap.empty())
+    {
+      std::string fullPath = common::findFile(albedoMap);
+      if (!fullPath.empty())
+      {
+        material->SetTexture(fullPath);
+      }
+      else
+        ignerr << "Unable to find file [" << albedoMap << "]\n";
+    }
+
+    // normal map
+    std::string normalMap = workflow->NormalMap();
+    if (!normalMap.empty())
+    {
+      std::string fullPath = common::findFile(normalMap);
+      if (!fullPath.empty())
+        material->SetNormalMap(fullPath);
+      else
+        ignerr << "Unable to find file [" << normalMap << "]\n";
+    }
+
+
+    // environment map
+    std::string environmentMap = workflow->EnvironmentMap();
+    if (!environmentMap.empty())
+    {
+      std::string fullPath = common::findFile(environmentMap);
+      if (!fullPath.empty())
+        material->SetEnvironmentMap(fullPath);
+      else
+        ignerr << "Unable to find file [" << environmentMap << "]\n";
+    }
+  }
   return material;
 }
 

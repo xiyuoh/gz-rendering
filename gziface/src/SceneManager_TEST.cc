@@ -143,7 +143,7 @@ void SceneManagerTest::SceneManager(const std::string &_renderEngine)
   CameraPtr camera = scene->CreateCamera("camera");
   ASSERT_NE(nullptr, camera);
   uint64_t sensorId = 15;
-  sceneMgr.AddSensor(sensorId, camera->Id(), worldId);
+  sceneMgr.AddSensor(sensorId, camera->Name(), worldId);
   EXPECT_TRUE(sceneMgr.HasEntity(sensorId));
   NodePtr sensor = sceneMgr.NodeById(sensorId);
   EXPECT_EQ(camera, sensor);

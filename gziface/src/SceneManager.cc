@@ -485,7 +485,7 @@ LightPtr SceneManager::CreateLight(uint64_t _id,
 }
 
 /////////////////////////////////////////////////
-bool SceneManager::AddSensor(uint64_t _gazeboId, uint64_t _renderingId,
+bool SceneManager::AddSensor(uint64_t _gazeboId, const std::string &_sensorName,
     uint64_t _parentGazeboId)
 {
   if (this->dataPtr->sensors.find(_gazeboId) != this->dataPtr->sensors.end())
@@ -508,10 +508,10 @@ bool SceneManager::AddSensor(uint64_t _gazeboId, uint64_t _renderingId,
     parent = it->second;
   }
 
-  SensorPtr sensor = this->dataPtr->scene->SensorById(_renderingId);
+  SensorPtr sensor = this->dataPtr->scene->SensorByName(_sensorName);
   if (!sensor)
   {
-    ignerr << "Unable to find sensor [" << _renderingId << "]" << std::endl;
+    ignerr << "Unable to find sensor [" << _sensorName << "]" << std::endl;
     return false;
   }
 

@@ -124,10 +124,10 @@ namespace gziface
     /// to the scene. Here we just keep track of it and make sure it has
     /// the correct parent.
     /// \param[in] _gazeboId Entity in Gazebo
-    /// \param[in] _renderingId ID of sensor node in Ignition Rendering.
+    /// \param[in] _sensorName Name of sensor node in Ignition Rendering.
     /// \param[in] _parentId Parent Id on Gazebo.
     /// \return True if sensor is successfully handled
-    public: bool AddSensor(uint64_t _gazeboId, uint64_t _renderingId,
+    public: bool AddSensor(uint64_t _gazeboId, const std::string &_sensorName,
         uint64_t _parentGazeboId = 0);
 
     /// \brief Check if entity exists

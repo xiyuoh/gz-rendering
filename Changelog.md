@@ -4,6 +4,9 @@
 
 ### Ignition Rendering 2.0.0 (20XX-XX-XX)
 
+1. Add `gziface` component for Ignition-Gazebo scene management, and add depnedency on sdformat.
+    * [Pull request](https://bitbucket.org/ignitionrobotics/ign-rendering/pull-requests/)
+
 1. Add GizmoVisual class
     * [Pull request 163](https://bitbucket.org/ignitionrobotics/ign-rendering/pull-requests/163)
 

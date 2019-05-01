@@ -143,8 +143,6 @@ if (sdformat${sdformat8_VERSION_MAJOR}_FOUND)
   list(APPEND RENDERING_COMPONENTS gziface)
 endif()
 
-
-
 ign_configure_build(QUIT_IF_BUILD_ERRORS
     COMPONENTS ${RENDERING_COMPONENTS})
 

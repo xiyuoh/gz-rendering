@@ -14,31 +14,33 @@
  * limitations under the License.
  *
 */
-#ifndef _DYNAMICRENDERABLE_HH_
-#define _DYNAMICRENDERABLE_HH_
+#ifndef IGNITION_RENDERABLE_OGRE_OGREDYNAMICRENDERABLE_HH_
+#define IGNITION_RENDERABLE_OGRE_OGREDYNAMICRENDERABLE_HH_
 
 #include <string>
-//#include "gazebo/rendering/ogre_gazebo.h"
-//#include "gazebo/rendering/RenderTypes.hh"
-//#include "gazebo/util/system.hh"
+#include "ignition/rendering/ogre/Export.hh"
+#include "ignition/rendering/ogre/OgreIncludes.hh"
+#include "ignition/rendering/ogre/OgreRenderTypes.hh"
 
 namespace ignition
 {
   namespace rendering
   {
+    inline namespace IGNITION_RENDERING_VERSION_NAMESPACE {
     /// \addtogroup gazebo_rendering
     /// \{
 
     /// \class DynamicRenderable DynamicRenderable.hh rendering/rendering.hh
     /// \brief Abstract base class providing mechanisms for dynamically
     /// growing hardware buffers.
-    class GZ_RENDERING_VISIBLE DynamicRenderable : public Ogre::SimpleRenderable
+    class IGNITION_RENDERING_OGRE_VISIBLE OgreDynamicRenderable :
+      public Ogre::SimpleRenderable
     {
       /// \brief Constructor
-      public: DynamicRenderable();
+      public: OgreDynamicRenderable();
 
       /// \brief Virtual destructor
-      public: virtual ~DynamicRenderable();
+      public: virtual ~OgreDynamicRenderable();
 
       /// \brief Initializes the dynamic renderable.
       /// \remarks This function should only be called once. It initializes the
@@ -107,6 +109,7 @@ namespace ignition
       /// \brief Maximum capacity of the currently allocated index buffer.
       protected: size_t indexBufferCapacity;
     };
+    }
     /// \}
   }
 }

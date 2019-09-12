@@ -15,27 +15,26 @@
  *
 */
 
-// #include "gazebo/common/Console.hh"
-// #include "gazebo/rendering/DynamicRenderable.hh"
+#include "ignition/common/Console.hh"
 #include "ignition/rendering/ogre/OgreDynamicRenderable.hh"
 using namespace ignition;
 using namespace rendering;
 
 
 //////////////////////////////////////////////////
-DynamicRenderable::DynamicRenderable()
+OgreDynamicRenderable::OgreDynamicRenderable()
 {
 }
 
 //////////////////////////////////////////////////
-DynamicRenderable::~DynamicRenderable()
+OgreDynamicRenderable::~OgreDynamicRenderable()
 {
   delete this->mRenderOp.vertexData;
   delete this->mRenderOp.indexData;
 }
 
 //////////////////////////////////////////////////
-void DynamicRenderable::Init(RenderOpType operationType, bool useIndices)
+void OgreDynamicRenderable::Init(RenderOpType operationType, bool useIndices)
 {
   this->SetOperationType(operationType);
 
@@ -55,7 +54,7 @@ void DynamicRenderable::Init(RenderOpType operationType, bool useIndices)
 }
 
 //////////////////////////////////////////////////
-void DynamicRenderable::SetOperationType(RenderOpType opType)
+void OgreDynamicRenderable::SetOperationType(RenderOpType opType)
 {
   switch (opType)
   {
@@ -83,16 +82,16 @@ void DynamicRenderable::SetOperationType(RenderOpType opType)
       this->mRenderOp.operationType = Ogre::RenderOperation::OT_TRIANGLE_FAN;
       break;
     case RENDERING_MESH_RESOURCE:
-      gzwarn << "RENDERING_MESH_RESOURCE not handled\n";
+      ignwarn << "RENDERING_MESH_RESOURCE not handled\n";
       break;
     default:
-      gzerr << "Unknown render operation type[" << opType << "]\n";
+      ignerr << "Unknown render operation type[" << opType << "]\n";
       break;
   }
 }
 
 //////////////////////////////////////////////////
-RenderOpType DynamicRenderable::GetOperationType() const
+RenderOpType OgreDynamicRenderable::GetOperationType() const
 {
   RenderOpType type;
   switch (this->mRenderOp.operationType)
@@ -127,7 +126,7 @@ RenderOpType DynamicRenderable::GetOperationType() const
 }
 
 //////////////////////////////////////////////////
-void DynamicRenderable::PrepareHardwareBuffers(size_t vertexCount,
+void OgreDynamicRenderable::PrepareHardwareBuffers(size_t vertexCount,
                                                size_t indexCount)
 {
   // Prepare vertex buffer
@@ -229,14 +228,14 @@ void DynamicRenderable::PrepareHardwareBuffers(size_t vertexCount,
 }
 
 //////////////////////////////////////////////////
-Ogre::Real DynamicRenderable::getBoundingRadius() const
+Ogre::Real OgreDynamicRenderable::getBoundingRadius() const
 {
   return Ogre::Math::Sqrt(std::max(mBox.getMaximum().squaredLength(),
                                    mBox.getMinimum().squaredLength()));
 }
 
 //////////////////////////////////////////////////
-Ogre::Real DynamicRenderable::getSquaredViewDepth(const Ogre::Camera* cam) const
+Ogre::Real OgreDynamicRenderable::getSquaredViewDepth(const Ogre::Camera* cam) const
 {
   Ogre::Vector3 vMin, vMax, vMid, vDist;
   vMin = mBox.getMinimum();
@@ -247,7 +246,7 @@ Ogre::Real DynamicRenderable::getSquaredViewDepth(const Ogre::Camera* cam) const
 }
 
 /////////////////////////////////////////////////
-std::string DynamicRenderable::GetMovableType() const
+std::string OgreDynamicRenderable::GetMovableType() const
 {
   return "gazebo::DynamicRenderable";
 }

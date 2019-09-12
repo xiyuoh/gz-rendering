@@ -170,7 +170,7 @@ void OgreDynamicRenderable::PrepareHardwareBuffers(size_t vertexCount,
         this->vertexBufferCapacity,
         Ogre::HardwareBuffer::HBU_DYNAMIC_WRITE_ONLY);
 
-    // TODO: Custom HBU_?
+    // TODO(anyone): Custom HBU_?
 
     // Bind buffer
     this->mRenderOp.vertexData->vertexBufferBinding->setBinding(0, vbuf);
@@ -219,7 +219,7 @@ void OgreDynamicRenderable::PrepareHardwareBuffers(size_t vertexCount,
           Ogre::HardwareIndexBuffer::IT_16BIT,
           this->indexBufferCapacity,
           Ogre::HardwareBuffer::HBU_DYNAMIC_WRITE_ONLY);
-      // TODO: Custom HBU_?
+      // TODO(anyone): Custom HBU_?
     }
 
     // Update index count in the render operation
@@ -235,7 +235,8 @@ Ogre::Real OgreDynamicRenderable::getBoundingRadius() const
 }
 
 //////////////////////////////////////////////////
-Ogre::Real OgreDynamicRenderable::getSquaredViewDepth(const Ogre::Camera* cam) const
+Ogre::Real OgreDynamicRenderable::getSquaredViewDepth(
+          const Ogre::Camera* cam) const
 {
   Ogre::Vector3 vMin, vMax, vMid, vDist;
   vMin = mBox.getMinimum();

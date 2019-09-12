@@ -102,7 +102,7 @@ namespace ignition
     typedef shared_ptr<OgreSubMeshStore>         OgreSubMeshStorePtr;
     typedef shared_ptr<OgreMaterialMap>          OgreMaterialMapPtr;
     typedef shared_ptr<OgreRenderTargetMaterial> OgreRenderTargetMaterialPtr;
-    
+
     enum RenderOpType
     {
       RENDERING_POINT_LIST = 0,

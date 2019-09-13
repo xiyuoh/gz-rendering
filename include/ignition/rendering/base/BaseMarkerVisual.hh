@@ -36,8 +36,7 @@ namespace ignition
     /// \brief A marker visualization. The MarkerManager class should
     /// instantiate instances of this class.
     /// \sa MarkerManager
-    class IGNITION_RENDERING_OGRE_VISIBLE MarkerVisual :
-      public Visual
+    class IGNITION_RENDERING_OGRE_VISIBLE BaseMarkerVisual
     {
       /*
       /// \brief Constructor.
@@ -49,9 +48,6 @@ namespace ignition
       public: virtual ~BaseMarkerVisual();
       */
       
-      /// \brief Destructor.
-      public: virtual ~BaseMarkerVisual() { }
-
       /// \brief Load the marker
       /// \param[in] _msg The marker message to load the visual from.
       public: void Load(const ignition::msgs::Marker &_msg) = 0;
@@ -80,6 +76,21 @@ namespace ignition
       /// \param[in] _msg The message that defines what to add or modify
       private: void Text(const ignition::msgs::Marker &_msg) = 0;
     };
+    
+    /////////////////////////////////////////////////
+    // BaseMarkerVisual
+    /////////////////////////////////////////////////
+    template <class T>
+    BaseMarkerVisual<T>::BaseMarkerVisual()
+    {
+    }
+
+    /////////////////////////////////////////////////
+    template <class T>
+    BaseMarkerVisual<T>::~BaseMarkerVisual()
+    {
+    }
+    
     }
     /// \endcond
   }

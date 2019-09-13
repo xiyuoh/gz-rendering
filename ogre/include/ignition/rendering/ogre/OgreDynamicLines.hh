@@ -22,11 +22,9 @@
 #include <string>
 #include <ignition/math/Color.hh>
 
-//#include "gazebo/common/CommonIface.hh"
 #include "ignition/rendering/ogre/OgreConversions.hh"
 #include "ignition/rendering/ogre/Export.hh"
 #include "ignition/rendering/ogre/OgreDynamicRenderable.hh"
-//#include "gazebo/util/system.hh"
 
 namespace ignition
 {

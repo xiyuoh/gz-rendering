@@ -183,34 +183,34 @@ namespace ignition
 
       /// \internal
       /// \brief Get the world transform (from MovableObject)
-      protected: void WorldTransforms(Ogre::Matrix4 *_xform) const override;
+      protected: void getWorldTransforms(Ogre::Matrix4 *_xform) const override;
 
       /// \internal
       /// \brief Get the bounding radius (from MovableObject)
-      protected: float BoundingRadius() const override;
+      protected: float getBoundingRadius() const override;
 
       /// \internal
       /// \brief Get the squared view depth (from MovableObject)
-      protected: float SquaredViewDepth(const Ogre::Camera *_cam) const
+      protected: float getSquaredViewDepth(const Ogre::Camera *_cam) const
           override;
 
       /// \internal
       /// \brief Get the render operation
-      protected: void RenderOperation(Ogre::RenderOperation &_op) override;
+      protected: void getRenderOperation(Ogre::RenderOperation &_op) override;
 
       /// \internal
       /// \brief Get the material
-      protected: const Ogre::MaterialPtr &Material() const override;
+      protected: const Ogre::MaterialPtr &getMaterial() const override;
 
       /// \internal
       /// \brief Get the lights
-      protected: const Ogre::LightList &Lights() const override;
+      protected: const Ogre::LightList &getLights() const override;
 
       /// \internal
-      private: const Ogre::AxisAlignedBox &BoundingBox() const override;
+      private: const Ogre::AxisAlignedBox &getBoundingBox() const override;
 
       /// \internal
-      private: const Ogre::String &MovableType() const override;
+      private: const Ogre::String &getMovableType() const override;
 
       /// \internal
       private: void _notifyCurrentCamera(Ogre::Camera *_cam) override;

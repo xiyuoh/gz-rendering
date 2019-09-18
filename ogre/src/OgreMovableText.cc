@@ -740,14 +740,14 @@ void OgreMovableText::UpdateColors()
 }
 
 //////////////////////////////////////////////////
-const Ogre::AxisAlignedBox &OgreMovableText::BoundingBox(void) const
+const Ogre::AxisAlignedBox &OgreMovableText::getBoundingBox(void) const
 {
   std::lock_guard<std::recursive_mutex> lock(this->dataPtr->mutex);
   return *this->dataPtr->aabb;
 }
 
 //////////////////////////////////////////////////
-const Ogre::String &OgreMovableText::MovableType() const
+const Ogre::String &OgreMovableText::getMovableType() const
 {
   std::lock_guard<std::recursive_mutex> lock(this->dataPtr->mutex);
   static Ogre::String movType = "MovableText";
@@ -755,7 +755,7 @@ const Ogre::String &OgreMovableText::MovableType() const
 }
 
 //////////////////////////////////////////////////
-void MovableText::WorldTransforms(Ogre::Matrix4 *_xform) const
+void OgreMovableText::getWorldTransforms(Ogre::Matrix4 *_xform) const
 {
   std::lock_guard<std::recursive_mutex> lock(this->dataPtr->mutex);
   if (this->isVisible() && this->dataPtr->camera)
@@ -782,21 +782,21 @@ void MovableText::WorldTransforms(Ogre::Matrix4 *_xform) const
 }
 
 //////////////////////////////////////////////////
-float OgreMovableText::BoundingRadius() const
+float OgreMovableText::getBoundingRadius() const
 {
   std::lock_guard<std::recursive_mutex> lock(this->dataPtr->mutex);
   return this->dataPtr->radius;
 }
 
 //////////////////////////////////////////////////
-float OgreMovableText::SquaredViewDepth(const Ogre::Camera * /*cam_*/) const
+float OgreMovableText::getSquaredViewDepth(const Ogre::Camera * /*cam_*/) const
 {
   std::lock_guard<std::recursive_mutex> lock(this->dataPtr->mutex);
   return 0;
 }
 
 //////////////////////////////////////////////////
-void OgreMovableText::RenderOperation(Ogre::RenderOperation & op)
+void OgreMovableText::getRenderOperation(Ogre::RenderOperation & op)
 {
   std::lock_guard<std::recursive_mutex> lock(this->dataPtr->mutex);
 
@@ -811,7 +811,7 @@ void OgreMovableText::RenderOperation(Ogre::RenderOperation & op)
 }
 
 //////////////////////////////////////////////////
-const Ogre::MaterialPtr &OgreMovableText::Material(void) const
+const Ogre::MaterialPtr &OgreMovableText::getMaterial(void) const
 {
   std::lock_guard<std::recursive_mutex> lock(this->dataPtr->mutex);
   IGN_ASSERT(!this->dataPtr->material.isNull(),
@@ -820,7 +820,7 @@ const Ogre::MaterialPtr &OgreMovableText::Material(void) const
 }
 
 //////////////////////////////////////////////////
-const Ogre::LightList &OgreMovableText::Lights(void) const
+const Ogre::LightList &OgreMovableText::getLights(void) const
 {
   std::lock_guard<std::recursive_mutex> lock(this->dataPtr->mutex);
   return this->dataPtr->lightList;

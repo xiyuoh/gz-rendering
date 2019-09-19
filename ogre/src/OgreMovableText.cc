@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2012 Open Source Robotics Foundation
+ * Copyright (C) 2019 Open Source Robotics Foundation
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,7 +15,7 @@
  *
 */
 /**
- * File: MovableText.cpp
+ * File: OgreMovableText.cpp
  *
  * description: This create create a billboarding object that display a text.
  *
@@ -30,10 +30,6 @@
 #endif
 
 #include <mutex>
-
-// #include "gazebo/common/common.hh"
-// #include "gazebo/common/Assert.hh"
-// #include "gazebo/rendering/MovableText.hh"
 
 #include "ignition/common/Console.hh"
 #include "ignition/rendering/ogre/OgreMovableText.hh"

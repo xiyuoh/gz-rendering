@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2012 Open Source Robotics Foundation
+ * Copyright (C) 2019 Open Source Robotics Foundation
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -25,11 +25,6 @@
 
 #include "ignition/rendering/ogre/Export.hh"
 #include "ignition/rendering/ogre/OgreIncludes.hh"
-
-// TODO: remove this line
-//#include "gazebo/rendering/ogre_gazebo.h"
-
-//#include "gazebo/util/system.hh"
 
 namespace ignition
 {

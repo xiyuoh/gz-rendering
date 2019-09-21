@@ -33,12 +33,16 @@
 
 #include "ignition/common/Console.hh"
 #include "ignition/rendering/ogre2/Ogre2MovableText.hh"
+#include "ignition/rendering/ogre2/Ogre2Material.hh"
 
 #define POS_TEX_BINDING    0
 #define COLOUR_BINDING     1
 
 using namespace ignition;
 using namespace rendering;
+
+static unsigned int msGenNameCount = 0;
+static uint8_t msRenderQueueId = 0;
 
 /// \brief Private data for the MovableText class.
 class ignition::rendering::Ogre2MovableTextPrivate
@@ -102,7 +106,7 @@ class ignition::rendering::Ogre2MovableTextPrivate
   public: Ogre::Font *font = nullptr;
 
   /// \brief Text material
-  public: Ogre::MaterialPtr material;
+  public: Ogre2MaterialPtr material = nullptr;
 
   /// \brief Keep an empty list of lights.
   public: Ogre::LightList lightList;
@@ -110,7 +114,19 @@ class ignition::rendering::Ogre2MovableTextPrivate
 
 //////////////////////////////////////////////////
 Ogre2MovableText::Ogre2MovableText()
-    : dataPtr(new Ogre2MovableTextPrivate)
+    : MovableObject(Ogre::IdType(msGenNameCount++), nullptr, nullptr, msRenderQueueId++),
+    dataPtr(new Ogre2MovableTextPrivate)
+{
+  this->dataPtr->renderOp.vertexData = nullptr;
+
+  this->dataPtr->aabb = new Ogre::AxisAlignedBox;
+}
+
+//////////////////////////////////////////////////
+Ogre2MovableText::Ogre2MovableText(Ogre::IdType id, Ogre::ObjectMemoryManager *objectMemoryManager,
+		                   Ogre::SceneManager *manager, uint8_t renderQueueId)
+    : MovableObject(id, objectMemoryManager, manager, renderQueueId),
+      dataPtr(new Ogre2MovableTextPrivate)
 {
   this->dataPtr->renderOp.vertexData = nullptr;
 
@@ -184,7 +200,7 @@ void Ogre2MovableText::SetFontName(const std::string &_newFontName)
   }
 
   if (this->dataPtr->fontName != _newFontName ||
-      this->dataPtr->material.isNull() || !this->dataPtr->font)
+      !this->dataPtr->material || !this->dataPtr->font)
   {
     auto font = (Ogre::Font*)Ogre::FontManager::getSingleton()
         .getByName(_newFontName).getPointer();
@@ -200,23 +216,20 @@ void Ogre2MovableText::SetFontName(const std::string &_newFontName)
 
     this->dataPtr->font->load();
 
-    if (!this->dataPtr->material.isNull())
+    if (this->dataPtr->material)
     {
       Ogre::MaterialManager::getSingletonPtr()->remove(
-          this->dataPtr->material->getName());
-      this->dataPtr->material.setNull();
+            this->dataPtr->material->Name());
+      this->dataPtr->material = nullptr;
     }
 
-    this->dataPtr->material = this->dataPtr->font->getMaterial()->clone(
-        this->mName + "Material");
+    //TODO implement this
+    //this->dataPtr->material = this->dataPtr->font->getMaterial()->clone(
+    //    this->mName + "Material");
 
-    if (!this->dataPtr->material->isLoaded())
-      this->dataPtr->material->load();
-
-    this->dataPtr->material->setDepthCheckEnabled(!this->dataPtr->onTop);
-    this->dataPtr->material->setDepthBias(!this->dataPtr->onTop, 0);
-    this->dataPtr->material->setDepthWriteEnabled(this->dataPtr->onTop);
-    this->dataPtr->material->setLightingEnabled(false);
+    this->dataPtr->material->SetDepthCheckEnabled(!this->dataPtr->onTop);
+    this->dataPtr->material->SetDepthWriteEnabled(this->dataPtr->onTop);
+    this->dataPtr->material->SetLightingEnabled(false);
 
     this->dataPtr->needUpdate = true;
   }
@@ -341,13 +354,12 @@ float Ogre2MovableText::Baseline() const
 void Ogre2MovableText::SetShowOnTop(bool show)
 {
   std::lock_guard<std::recursive_mutex> lock(this->dataPtr->mutex);
-  if (this->dataPtr->onTop != show && !this->dataPtr->material.isNull())
+  if (this->dataPtr->onTop != show && this->dataPtr->material)
   {
     this->dataPtr->onTop = show;
 
-    this->dataPtr->material->setDepthBias(!this->dataPtr->onTop, 0);
-    this->dataPtr->material->setDepthCheckEnabled(!this->dataPtr->onTop);
-    this->dataPtr->material->setDepthWriteEnabled(this->dataPtr->onTop);
+    this->dataPtr->material->SetDepthCheckEnabled(!this->dataPtr->onTop);
+    this->dataPtr->material->SetDepthWriteEnabled(this->dataPtr->onTop);
   }
 }
 
@@ -377,12 +389,12 @@ void Ogre2MovableText::SetupGeometry()
   std::lock_guard<std::recursive_mutex> lock(this->dataPtr->mutex);
 
   IGN_ASSERT(this->dataPtr->font, "font class member is null");
-  IGN_ASSERT(!this->dataPtr->material.isNull(), "material class member is null");
+  IGN_ASSERT(this->dataPtr->material, "material class member is null");
 
-  Ogre::VertexDeclaration *decl = nullptr;
-  Ogre::VertexBufferBinding *bind = nullptr;
-  Ogre::HardwareVertexBufferSharedPtr ptbuf;
-  Ogre::HardwareVertexBufferSharedPtr cbuf;
+  Ogre::v1::VertexDeclaration *decl = nullptr;
+  Ogre::v1::VertexBufferBinding *bind = nullptr;
+  Ogre::v1::HardwareVertexBufferSharedPtr ptbuf;
+  Ogre::v1::HardwareVertexBufferSharedPtr cbuf;
   float *pVert = nullptr;
   float largestWidth = 0;
   float left = 0;
@@ -415,13 +427,13 @@ void Ogre2MovableText::SetupGeometry()
   }
 
   if (!this->dataPtr->renderOp.vertexData)
-    this->dataPtr->renderOp.vertexData = new Ogre::VertexData();
+    this->dataPtr->renderOp.vertexData = new Ogre::v1::VertexData();
 
   this->dataPtr->renderOp.indexData = 0;
   this->dataPtr->renderOp.vertexData->vertexStart = 0;
   this->dataPtr->renderOp.vertexData->vertexCount = vertexCount;
   this->dataPtr->renderOp.operationType =
-      Ogre::RenderOperation::OT_TRIANGLE_LIST;
+      Ogre::OT_TRIANGLE_LIST;
   this->dataPtr->renderOp.useIndexes = false;
 
   decl = this->dataPtr->renderOp.vertexData->vertexDeclaration;
@@ -432,16 +444,16 @@ void Ogre2MovableText::SetupGeometry()
     decl->addElement(POS_TEX_BINDING, offset, Ogre::VET_FLOAT3,
                      Ogre::VES_POSITION);
 
-  offset += Ogre::VertexElement::getTypeSize(Ogre::VET_FLOAT3);
+  offset += Ogre::v1::VertexElement::getTypeSize(Ogre::VET_FLOAT3);
 
   if (!decl->findElementBySemantic(Ogre::VES_TEXTURE_COORDINATES))
     decl->addElement(POS_TEX_BINDING, offset, Ogre::VET_FLOAT2,
                      Ogre::VES_TEXTURE_COORDINATES, 0);
 
-  ptbuf = Ogre::HardwareBufferManager::getSingleton().createVertexBuffer(
+  ptbuf = Ogre::v1::HardwareBufferManager::getSingleton().createVertexBuffer(
             decl->getVertexSize(POS_TEX_BINDING),
             this->dataPtr->renderOp.vertexData->vertexCount,
-            Ogre::HardwareBuffer::HBU_DYNAMIC_WRITE_ONLY);
+            Ogre::v1::HardwareBuffer::HBU_DYNAMIC_WRITE_ONLY);
 
   bind->setBinding(POS_TEX_BINDING, ptbuf);
 
@@ -449,14 +461,14 @@ void Ogre2MovableText::SetupGeometry()
   if (!decl->findElementBySemantic(Ogre::VES_DIFFUSE))
     decl->addElement(COLOUR_BINDING, 0, Ogre::VET_COLOUR, Ogre::VES_DIFFUSE);
 
-  cbuf = Ogre::HardwareBufferManager::getSingleton().createVertexBuffer(
+  cbuf = Ogre::v1::HardwareBufferManager::getSingleton().createVertexBuffer(
            decl->getVertexSize(COLOUR_BINDING),
            this->dataPtr->renderOp.vertexData->vertexCount,
-           Ogre::HardwareBuffer::HBU_DYNAMIC_WRITE_ONLY);
+           Ogre::v1::HardwareBuffer::HBU_DYNAMIC_WRITE_ONLY);
 
   bind->setBinding(COLOUR_BINDING, cbuf);
 
-  pVert = static_cast<float*>(ptbuf->lock(Ogre::HardwareBuffer::HBL_DISCARD));
+  pVert = static_cast<float*>(ptbuf->lock(Ogre::v1::HardwareBuffer::HBL_DISCARD));
 
   // Derive space width from a capital A
   if (ignition::math::equal(this->dataPtr->spaceWidth, 0.0f))
@@ -465,7 +477,7 @@ void Ogre2MovableText::SetupGeometry()
         this->dataPtr->charHeight * 2.0;
   }
 
-  if (this->dataPtr->vertAlign == OgreMovableText::V_ABOVE)
+  if (this->dataPtr->vertAlign == Ogre2MovableText::V_ABOVE)
   {
     // Raise the first line of the caption
     top += this->dataPtr->charHeight;
@@ -708,12 +720,12 @@ void Ogre2MovableText::UpdateColors()
   std::lock_guard<std::recursive_mutex> lock(this->dataPtr->mutex);
 
   Ogre::RGBA clr;
-  Ogre::HardwareVertexBufferSharedPtr vbuf;
+  Ogre::v1::HardwareVertexBufferSharedPtr vbuf;
   Ogre::RGBA *pDest = nullptr;
   unsigned int i;
 
   IGN_ASSERT(this->dataPtr->font, "font class member is null");
-  IGN_ASSERT(!this->dataPtr->material.isNull(), "material class member is null");
+  IGN_ASSERT(this->dataPtr->material, "material class member is null");
 
   // Convert to system-specific
   Ogre::ColourValue cv(this->dataPtr->color.R(), this->dataPtr->color.G(),
@@ -724,7 +736,7 @@ void Ogre2MovableText::UpdateColors()
          COLOUR_BINDING);
 
   pDest = static_cast<Ogre::RGBA*>(
-      vbuf->lock(Ogre::HardwareBuffer::HBL_DISCARD));
+      vbuf->lock(Ogre::v1::HardwareBuffer::HBL_DISCARD));
 
   for (i = 0; i < this->dataPtr->renderOp.vertexData->vertexCount; ++i)
   {

@@ -61,6 +61,10 @@ namespace ignition
       /// \brief Constructor
       public: Ogre2MovableText();
 
+      /// \brief Constructor
+      public: Ogre2MovableText(Ogre::IdType id, Ogre::ObjectMemoryManager *objectMemoryManager,
+			       Ogre::SceneManager *manager, uint8_t renderQueueId);
+      
       /// \brief Destructor
       public: virtual ~Ogre2MovableText();
 

@@ -290,6 +290,38 @@ void Ogre2Material::ClearEnvironmentMap()
 }
 
 //////////////////////////////////////////////////
+bool Ogre2Material::HasEmissiveMap() const
+{
+  return !this->emissiveMapName.empty();
+}
+
+//////////////////////////////////////////////////
+std::string Ogre2Material::EmissiveMap() const
+{
+  return this->emissiveMapName;
+}
+
+//////////////////////////////////////////////////
+void Ogre2Material::SetEmissiveMap(const std::string &_name)
+{
+  if (_name.empty())
+  {
+    this->ClearEmissiveMap();
+    return;
+  }
+
+  this->emissiveMapName = _name;
+  this->SetTextureMapImpl(this->emissiveMapName, Ogre::PBSM_EMISSIVE);
+}
+
+//////////////////////////////////////////////////
+void Ogre2Material::ClearEmissiveMap()
+{
+  this->emissiveMapName = "";
+  this->ogreDatablock->setTexture(Ogre::PBSM_EMISSIVE, 0, Ogre::TexturePtr());
+}
+
+//////////////////////////////////////////////////
 void Ogre2Material::SetRoughness(const float _roughness)
 {
   this->ogreDatablock->setRoughness(_roughness);
@@ -366,16 +398,13 @@ void Ogre2Material::SetTextureMapImpl(const std::string &_texture,
       hlmsTextureManager->createOrRetrieveTexture(baseName,
       this->ogreDatablock->suggestMapTypeBasedOnTextureType(_type));
 
-  this->ogreDatablock->setTexture(_type, texLocation.xIdx, texLocation.texture);
+  Ogre::HlmsSamplerblock samplerBlockRef;
+  samplerBlockRef.mU = Ogre::TAM_WRAP;
+  samplerBlockRef.mV = Ogre::TAM_WRAP;
+  samplerBlockRef.mW = Ogre::TAM_WRAP;
 
-  // texture addressing mode defaults to 'clamp' for all except detail maps
-  // in ogre2. Change default to 'wrap' instead
-  Ogre::HlmsSamplerblock samplerblock(
-      *this->ogreDatablock->getSamplerblock(_type));
-  samplerblock.mU = Ogre::TAM_WRAP;
-  samplerblock.mV = Ogre::TAM_WRAP;
-  samplerblock.mW = Ogre::TAM_WRAP;
-  this->ogreDatablock->setSamplerblock(_type, samplerblock);
+  this->ogreDatablock->setTexture(_type, texLocation.xIdx, texLocation.texture,
+      &samplerBlockRef);
 }
 
 //////////////////////////////////////////////////

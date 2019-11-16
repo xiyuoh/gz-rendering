@@ -35,25 +35,25 @@ Ogre2Camera::Ogre2Camera()
 //////////////////////////////////////////////////
 Ogre2Camera::~Ogre2Camera()
 {
+  this->Destroy();
+}
+
+//////////////////////////////////////////////////
+void Ogre2Camera::Destroy()
+{
+  if (!this->ogreCamera || !this->Scene()->IsInitialized())
+    return;
+
   Ogre::SceneManager *ogreSceneManager;
   ogreSceneManager = this->scene->OgreSceneManager();
   if (ogreSceneManager == nullptr)
   {
     ignerr << "Scene manager cannot be obtained" << std::endl;
   }
-  if (this->ogreCamera != nullptr)
+  if (ogreSceneManager->findCameraNoThrow(this->name) != nullptr)
   {
     ogreSceneManager->destroyCamera(this->ogreCamera);
     this->ogreCamera = nullptr;
-  }
-  else
-  {
-    if (this->ogreCamera != nullptr && ogreSceneManager->findCameraNoThrow(
-      this->name) != nullptr)
-    {
-      ogreSceneManager->destroyCamera(this->ogreCamera);
-      this->ogreCamera = nullptr;
-    }
   }
 }
 
@@ -252,7 +252,6 @@ math::Matrix4d Ogre2Camera::ViewMatrix() const
 //////////////////////////////////////////////////
 void Ogre2Camera::SetNearClipPlane(const double _near)
 {
-  // this->nearClip = _near;
   BaseCamera::SetNearClipPlane(_near);
   this->ogreCamera->setNearClipDistance(_near);
 }

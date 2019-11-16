@@ -86,7 +86,13 @@ namespace ignition
       protected: virtual CameraPtr CreateCameraImpl(unsigned int _id,
                      const std::string &_name);
 
+      // Documentation inherited
       protected: virtual DepthCameraPtr CreateDepthCameraImpl(
+                     const unsigned int _id,
+                     const std::string &_name);
+
+      // Documentation inherited
+      protected: virtual ThermalCameraPtr CreateThermalCameraImpl(
                      const unsigned int _id,
                      const std::string &_name);
 
@@ -130,6 +136,10 @@ namespace ignition
 
       // Documentation inherited
       protected: virtual GridPtr CreateGridImpl(unsigned int _id,
+                     const std::string &_name);
+
+      // Documentation inherited
+      protected: virtual MarkerPtr CreateMarkerImpl(unsigned int _id,
                      const std::string &_name);
 
       // Documentation inherited

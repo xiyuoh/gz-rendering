@@ -29,6 +29,7 @@
 #include "ignition/rendering/ogre/OgreIncludes.hh"
 #include "ignition/rendering/ogre/OgreText.hh"
 #include "ignition/rendering/ogre/OgreMaterial.hh"
+#include "ignition/rendering/ogre/OgreMarker.hh"
 #include "ignition/rendering/ogre/OgreMeshFactory.hh"
 #include "ignition/rendering/ogre/OgreRayQuery.hh"
 #include "ignition/rendering/ogre/OgreRenderEngine.hh"
@@ -36,6 +37,7 @@
 #include "ignition/rendering/ogre/OgreRTShaderSystem.hh"
 #include "ignition/rendering/ogre/OgreScene.hh"
 #include "ignition/rendering/ogre/OgreStorage.hh"
+#include "ignition/rendering/ogre/OgreThermalCamera.hh"
 #include "ignition/rendering/ogre/OgreVisual.hh"
 
 namespace ignition
@@ -286,6 +288,11 @@ void OgreScene::Clear()
 void OgreScene::Destroy()
 {
   BaseScene::Destroy();
+
+  // ogre scene manager is destroyed when ogre root is deleted
+  // removing here seems to cause the system to freeze on deleting rthsader
+  // system when unloading the engine
+  this->ogreSceneManager = nullptr;
 }
 
 //////////////////////////////////////////////////
@@ -380,6 +387,15 @@ DepthCameraPtr OgreScene::CreateDepthCameraImpl(const unsigned int _id,
     const std::string &_name)
 {
   OgreDepthCameraPtr camera(new OgreDepthCamera);
+  bool result = this->InitObject(camera, _id, _name);
+  return (result) ? camera : nullptr;
+}
+
+//////////////////////////////////////////////////
+ThermalCameraPtr OgreScene::CreateThermalCameraImpl(const unsigned int _id,
+    const std::string &_name)
+{
+  OgreThermalCameraPtr camera(new OgreThermalCamera);
   bool result = this->InitObject(camera, _id, _name);
   return (result) ? camera : nullptr;
 }
@@ -490,6 +506,15 @@ GridPtr OgreScene::CreateGridImpl(unsigned int _id, const std::string &_name)
   OgreGridPtr grid(new OgreGrid);
   bool result = this->InitObject(grid, _id, _name);
   return (result) ? grid: nullptr;
+}
+
+//////////////////////////////////////////////////
+MarkerPtr OgreScene::CreateMarkerImpl(unsigned int _id,
+                                      const std::string &_name)
+{
+  OgreMarkerPtr marker(new OgreMarker);
+  bool result = this->InitObject(marker, _id, _name);
+  return (result) ? marker: nullptr;
 }
 
 //////////////////////////////////////////////////

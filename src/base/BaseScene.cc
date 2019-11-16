@@ -35,6 +35,7 @@
 #include "ignition/rendering/RayQuery.hh"
 #include "ignition/rendering/RenderTarget.hh"
 #include "ignition/rendering/Text.hh"
+#include "ignition/rendering/ThermalCamera.hh"
 #include "ignition/rendering/Visual.hh"
 #include "ignition/rendering/base/BaseStorage.hh"
 #include "ignition/rendering/base/BaseScene.hh"
@@ -741,6 +742,33 @@ DepthCameraPtr BaseScene::CreateDepthCamera(const unsigned int _id,
 }
 
 //////////////////////////////////////////////////
+ThermalCameraPtr BaseScene::CreateThermalCamera()
+{
+  unsigned int objId = this->CreateObjectId();
+  return this->CreateThermalCamera(objId);
+}
+//////////////////////////////////////////////////
+ThermalCameraPtr BaseScene::CreateThermalCamera(const unsigned int _id)
+{
+  std::string objName = this->CreateObjectName(_id, "ThermalCamera");
+  return this->CreateThermalCamera(_id, objName);
+}
+//////////////////////////////////////////////////
+ThermalCameraPtr BaseScene::CreateThermalCamera(const std::string &_name)
+{
+  unsigned int objId = this->CreateObjectId();
+  return this->CreateThermalCamera(objId, _name);
+}
+//////////////////////////////////////////////////
+ThermalCameraPtr BaseScene::CreateThermalCamera(const unsigned int _id,
+    const std::string &_name)
+{
+  ThermalCameraPtr camera = this->CreateThermalCameraImpl(_id, _name);
+  bool result = this->RegisterSensor(camera);
+  return (result) ? camera : nullptr;
+}
+
+//////////////////////////////////////////////////
 GpuRaysPtr BaseScene::CreateGpuRays()
 {
   unsigned int objId = this->CreateObjectId();
@@ -948,6 +976,14 @@ GridPtr BaseScene::CreateGrid()
   unsigned int objId = this->CreateObjectId();
   std::string objName = this->CreateObjectName(objId, "Grid");
   return this->CreateGridImpl(objId, objName);
+}
+
+//////////////////////////////////////////////////
+MarkerPtr BaseScene::CreateMarker()
+{
+  unsigned int objId = this->CreateObjectId();
+  std::string objName = this->CreateObjectName(objId, "Marker");
+  return this->CreateMarkerImpl(objId, objName);
 }
 
 //////////////////////////////////////////////////

@@ -38,6 +38,7 @@ namespace ignition
     class OgreJointVisual;
     class OgreLight;
     class OgreMaterial;
+    class OgreMarker;
     class OgreMesh;
     class OgreMeshFactory;
     class OgreNode;
@@ -54,6 +55,7 @@ namespace ignition
     class OgreSpotLight;
     class OgreSubMesh;
     class OgreText;
+    class OgreThermalCamera;
     class OgreVisual;
 
     typedef BaseSceneStore<OgreScene>       OgreSceneStore;
@@ -77,6 +79,7 @@ namespace ignition
     typedef shared_ptr<OgreJointVisual>          OgreJointVisualPtr;
     typedef shared_ptr<OgreLight>                OgreLightPtr;
     typedef shared_ptr<OgreMaterial>             OgreMaterialPtr;
+    typedef shared_ptr<OgreMarker>               OgreMarkerPtr;
     typedef shared_ptr<OgreMesh>                 OgreMeshPtr;
     typedef shared_ptr<OgreMeshFactory>          OgreMeshFactoryPtr;
     typedef shared_ptr<OgreNode>                 OgreNodePtr;
@@ -102,6 +105,7 @@ namespace ignition
     typedef shared_ptr<OgreSubMeshStore>         OgreSubMeshStorePtr;
     typedef shared_ptr<OgreMaterialMap>          OgreMaterialMapPtr;
     typedef shared_ptr<OgreRenderTargetMaterial> OgreRenderTargetMaterialPtr;
+    typedef shared_ptr<OgreThermalCamera>        OgreThermalCameraPtr;
     }
   }
 }

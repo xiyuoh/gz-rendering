@@ -60,6 +60,7 @@ namespace ignition
     class Image;
     class Light;
     class Material;
+    class Marker;
     class Mesh;
     class Node;
     class Object;
@@ -78,6 +79,7 @@ namespace ignition
     class SpotLight;
     class SubMesh;
     class Text;
+    class ThermalCamera;
     class Visual;
 
     /// \def ArrowVisualPtr
@@ -95,6 +97,10 @@ namespace ignition
     /// \def DepthCameraPtr
     /// \brief Shared pointer to DepthCamera
     typedef shared_ptr<DepthCamera> DepthCameraPtr;
+
+    /// \def ThermalCameraPtr
+    /// \brief Shared pointer to ThermalCamera
+    typedef shared_ptr<ThermalCamera> ThermalCameraPtr;
 
     /// \def GpuRaysPtr
     /// \brief Shared pointer to GpuRays
@@ -135,6 +141,10 @@ namespace ignition
     /// \def MaterialPtr
     /// \brief Shared pointer to Material
     typedef shared_ptr<Material> MaterialPtr;
+
+    /// \def MarkerPtr
+    /// \brief Shared pointer to Marker
+    typedef shared_ptr<Marker> MarkerPtr;
 
     /// \def MeshPtr
     /// \brief Shared pointer to Mesh
@@ -221,6 +231,10 @@ namespace ignition
     /// \def const DepthCameraPtr
     /// \brief Shared pointer to const DepthCamera
     typedef shared_ptr<const DepthCamera> ConstDepthCameraPtr;
+
+    /// \def const ThermalCameraPtr
+    /// \brief Shared pointer to const ThermalCamera
+    typedef shared_ptr<const ThermalCamera> ConstThermalCameraPtr;
 
     /// \def const GpuRaysPtr
     /// \brief Shared pointer to const GpuRays

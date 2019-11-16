@@ -25,6 +25,7 @@
 #include "ignition/rendering/ogre2/Ogre2GpuRays.hh"
 #include "ignition/rendering/ogre2/Ogre2Includes.hh"
 #include "ignition/rendering/ogre2/Ogre2Light.hh"
+#include "ignition/rendering/ogre2/Ogre2Marker.hh"
 #include "ignition/rendering/ogre2/Ogre2Material.hh"
 #include "ignition/rendering/ogre2/Ogre2MeshFactory.hh"
 #include "ignition/rendering/ogre2/Ogre2Node.hh"
@@ -33,6 +34,7 @@
 #include "ignition/rendering/ogre2/Ogre2RenderTarget.hh"
 #include "ignition/rendering/ogre2/Ogre2RenderTypes.hh"
 #include "ignition/rendering/ogre2/Ogre2Scene.hh"
+#include "ignition/rendering/ogre2/Ogre2ThermalCamera.hh"
 #include "ignition/rendering/ogre2/Ogre2Visual.hh"
 
 using namespace ignition;
@@ -219,6 +221,15 @@ DepthCameraPtr Ogre2Scene::CreateDepthCameraImpl(const unsigned int _id,
 }
 
 //////////////////////////////////////////////////
+ThermalCameraPtr Ogre2Scene::CreateThermalCameraImpl(const unsigned int _id,
+    const std::string &_name)
+{
+  Ogre2ThermalCameraPtr camera(new Ogre2ThermalCamera);
+  bool result = this->InitObject(camera, _id, _name);
+  return (result) ? camera : nullptr;
+}
+
+//////////////////////////////////////////////////
 GpuRaysPtr Ogre2Scene::CreateGpuRaysImpl(unsigned int _id,
     const std::string &_name)
 {
@@ -322,6 +333,15 @@ GridPtr Ogre2Scene::CreateGridImpl(unsigned int /*_id*/,
 {
   // TODO(anyone)
   return GridPtr();
+}
+
+//////////////////////////////////////////////////
+MarkerPtr Ogre2Scene::CreateMarkerImpl(unsigned int _id,
+    const std::string &_name)
+{
+  Ogre2MarkerPtr marker(new Ogre2Marker);
+  bool result = this->InitObject(marker, _id, _name);
+  return (result) ? marker: nullptr;
 }
 
 //////////////////////////////////////////////////

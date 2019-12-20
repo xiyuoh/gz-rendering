@@ -27,6 +27,9 @@
 using namespace ignition;
 using namespace rendering;
 
+// todo(anyone) make this a member variable in ign-rendering4
+static float devicePixelRatio = 1.0;
+
 //////////////////////////////////////////////////
 Ogre2Camera::Ogre2Camera()
 {
@@ -124,6 +127,9 @@ void Ogre2Camera::Init()
   this->CreateCamera();
   this->CreateRenderTexture();
   this->Reset();
+
+  // device pixel ratio is used by mouse picking
+  devicePixelRatio = screenScalingFactor();
 }
 
 //////////////////////////////////////////////////
@@ -196,7 +202,7 @@ VisualPtr Ogre2Camera::VisualAt(const ignition::math::Vector2i &_mousePos)
     }
   }
 
-  float ratio = screenScalingFactor();
+  float ratio = devicePixelRatio;
   ignition::math::Vector2i mousePos(
       static_cast<int>(std::rint(ratio * _mousePos.X())),
       static_cast<int>(std::rint(ratio * _mousePos.Y())));

@@ -6,6 +6,9 @@
 
 ### Ignition Rendering 4.0.0
 
+1. Use default material properties from ign-common PBR material when loading a mesh
+    * [Pull request 238](https://bitbucket.org/ignitionrobotics/ign-rendering/pull-requests/238)
+
 1. Add support for transparency based on textures alpha channel for ogre1 and ogre2
     * [Pull request 229](https://bitbucket.org/ignitionrobotics/ign-rendering/pull-requests/229)
 

@@ -284,10 +284,13 @@ namespace ignition
       // \sa Material::SetFragmentShader(const std::string &)
       public: virtual void SetFragmentShader(const std::string &_path) override;
 
+      // Documentation inherited.
       public: virtual void CopyFrom(ConstMaterialPtr _material) override;
 
+      // Documentation inherited.
       public: virtual void CopyFrom(const common::Material &_material) override;
 
+      // Documentation inherited.
       public: virtual void PreRender() override;
 
       protected: virtual void Reset();
@@ -916,6 +919,18 @@ namespace ignition
       this->ClearNormalMap();
       // TODO(anyone): update common::Material
       this->SetShaderType(ST_PIXEL);
+
+      common::Pbr defaultPbr;
+      common::Pbr *pbrMat = _material.PbrMaterial();
+      if (!pbrMat)
+        pbrMat = &defaultPbr;
+      this->SetNormalMap(pbrMat->NormalMap());
+      this->SetRoughnessMap(pbrMat->RoughnessMap());
+      this->SetMetalnessMap(pbrMat->MetalnessMap());
+      this->SetRoughness(pbrMat->Roughness());
+      this->SetMetalness(pbrMat->Metalness());
+      this->SetEnvironmentMap(pbrMat->EnvironmentMap());
+      this->SetEmissiveMap(pbrMat->EmissiveMap());
     }
 
     //////////////////////////////////////////////////

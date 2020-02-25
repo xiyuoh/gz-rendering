@@ -443,18 +443,21 @@ void MaterialTest::Copy(const std::string &_renderEngine)
   EXPECT_EQ(lightingEnabled, comCopy->LightingEnabled());
   EXPECT_EQ(textureName, comCopy->Texture());
   EXPECT_TRUE(comCopy->HasTexture());
-  EXPECT_DOUBLE_EQ(roughness, comCopy->Roughness());
-  EXPECT_DOUBLE_EQ(metalness, comCopy->Metalness());
-  EXPECT_TRUE(comCopy->HasNormalMap());
-  EXPECT_EQ(normalMapName, comCopy->NormalMap());
-  EXPECT_TRUE(comCopy->HasRoughnessMap());
-  EXPECT_EQ(roughnessMapName, comCopy->RoughnessMap());
-  EXPECT_TRUE(comCopy->HasMetalnessMap());
-  EXPECT_EQ(metalnessMapName, comCopy->MetalnessMap());
-  EXPECT_TRUE(comCopy->HasEmissiveMap());
-  EXPECT_EQ(emissiveMapName, comCopy->EmissiveMap());
-  EXPECT_TRUE(comCopy->HasEnvironmentMap());
-  EXPECT_EQ(envMapName, comCopy->EnvironmentMap());
+  if (material->Type() == MaterialType::MT_PBS)
+  {
+    EXPECT_DOUBLE_EQ(roughness, comCopy->Roughness());
+    EXPECT_DOUBLE_EQ(metalness, comCopy->Metalness());
+    EXPECT_TRUE(comCopy->HasNormalMap());
+    EXPECT_EQ(normalMapName, comCopy->NormalMap());
+    EXPECT_TRUE(comCopy->HasRoughnessMap());
+    EXPECT_EQ(roughnessMapName, comCopy->RoughnessMap());
+    EXPECT_TRUE(comCopy->HasMetalnessMap());
+    EXPECT_EQ(metalnessMapName, comCopy->MetalnessMap());
+    EXPECT_TRUE(comCopy->HasEmissiveMap());
+    EXPECT_EQ(emissiveMapName, comCopy->EmissiveMap());
+    EXPECT_TRUE(comCopy->HasEnvironmentMap());
+    EXPECT_EQ(envMapName, comCopy->EnvironmentMap());
+  }
 
   // Clean up
   engine->DestroyScene(scene);

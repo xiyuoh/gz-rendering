@@ -342,6 +342,9 @@ namespace ignition
 
       /// \brief Set to true to enable object with this material to cast shadows
       protected: bool castShadows = true;
+
+      /// \brief Default pbr material properties
+      private: const common::Pbr kDefaultPbr;
     };
 
     //////////////////////////////////////////////////
@@ -920,10 +923,9 @@ namespace ignition
       // TODO(anyone): update common::Material
       this->SetShaderType(ST_PIXEL);
 
-      common::Pbr defaultPbr;
-      common::Pbr *pbrMat = _material.PbrMaterial();
+      const common::Pbr *pbrMat = _material.PbrMaterial();
       if (!pbrMat)
-        pbrMat = &defaultPbr;
+        pbrMat = &this->kDefaultPbr;
       this->SetNormalMap(pbrMat->NormalMap());
       this->SetRoughnessMap(pbrMat->RoughnessMap());
       this->SetMetalnessMap(pbrMat->MetalnessMap());
@@ -970,8 +972,8 @@ namespace ignition
       this->ClearRoughnessMap();
       this->ClearMetalnessMap();
       this->ClearEmissiveMap();
-      this->SetRoughness(1.0);
-      this->SetMetalness(0.8);
+      this->SetRoughness(this->kDefaultPbr.Roughness());
+      this->SetMetalness(this->kDefaultPbr.Metalness());
       this->SetShaderType(ST_PIXEL);
     }
     }

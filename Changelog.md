@@ -26,6 +26,18 @@
 1. Fixed gazebo scene viewer example
     * [Pull request 228](https://bitbucket.org/ignitionrobotics/ign-rendering/pull-requests/228)
 
+1. Ogre2: Fix shadows by dynamically generating shadow maps
+    * [Pull request 222](https://bitbucket.org/ignitionrobotics/ign-rendering/pull-requests/222)
+
+1. Ogre2: Destroy resources before recreating shadows
+    * [Pull request 223](https://bitbucket.org/ignitionrobotics/ign-rendering/pull-requests/223)
+
+1. Fix custom shaders example
+    * [Pull request 230](https://bitbucket.org/ignitionrobotics/ign-rendering/pull-requests/230)
+
+1. Add API to check which engines are loaded
+    * [Pull request 233](https://bitbucket.org/ignitionrobotics/ign-rendering/pull-requests/233)
+
 ### Ignition Rendering 3.0.0 (2019-12-10)
 
 1. Support setting cast shadows
@@ -59,6 +71,16 @@
     * [Pull request 204](https://bitbucket.org/ignitionrobotics/ign-rendering/pull-requests/204)
 
 ### Ignition Rendering 2.X.X (2019-XX-XX)
+
+1. Add API to check which engines are loaded
+    * [Pull request 233](https://bitbucket.org/ignitionrobotics/ign-rendering/pull-requests/233)
+
+1. Fix custom shaders example
+    * [Pull request 230](https://bitbucket.org/ignitionrobotics/ign-rendering/pull-requests/230)
+
+1. Ogre2: Fix shadows by dynamically generating shadow maps
+    * [Pull request 222](https://bitbucket.org/ignitionrobotics/ign-rendering/pull-requests/222)
+    * [Pull request 223](https://bitbucket.org/ignitionrobotics/ign-rendering/pull-requests/223)
 
 ### Ignition Rendering 2.2.0 (2019-11-20)
 

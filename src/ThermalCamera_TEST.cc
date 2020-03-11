@@ -72,6 +72,9 @@ void ThermalCameraTest::ThermalCamera(const std::string &_renderEngine)
   camera->SetLinearResolution(resolution);
   EXPECT_FLOAT_EQ(resolution, camera->LinearResolution());
 
+  camera->SetVisibilityMask(0x00000001u);
+  EXPECT_EQ(0x00000001u, camera->VisibilityMask());
+
   // Clean up
   engine->DestroyScene(scene);
   rendering::unloadEngine(engine->Name());

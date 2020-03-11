@@ -60,6 +60,9 @@ class GpuRaysTest: public testing::Test,
 
   // Test vertical measurements
   public: void LaserVertical(const std::string &_renderEngine);
+
+  // Test visibility mask
+  public: void VisibilityMask(const std::string &_renderEngine);
 };
 
 /////////////////////////////////////////////////
@@ -133,6 +136,11 @@ void GpuRaysTest::Configure(const std::string &_renderEngine)
 
     gpuRays->SetVerticalRayCount(67);
     EXPECT_NEAR(gpuRays->VerticalRayCount(), 67, 1e-6);
+
+    EXPECT_EQ(static_cast<uint32_t>(IGN_VISIBILITY_ALL),
+        gpuRays->VisibilityMask());
+    gpuRays->SetVisibilityMask(0x00000001u);
+    EXPECT_EQ(0x00000001u, gpuRays->VisibilityMask());
   }
 
   // Clean up
@@ -449,6 +457,118 @@ void GpuRaysTest::LaserVertical(const std::string &_renderEngine)
 }
 
 /////////////////////////////////////////////////
+/// \brief Test detection of objects with visibility mask / flags set
+void GpuRaysTest::VisibilityMask(const std::string &_renderEngine)
+{
+#ifdef __APPLE__
+  std::cerr << "Skipping test for apple, see issue #35." << std::endl;
+  return;
+#endif
+
+  if (_renderEngine == "optix")
+  {
+    igndbg << "GpuRays not supported yet in rendering engine: "
+            << _renderEngine << std::endl;
+    return;
+  }
+
+  // Test GPU rays with 3 boxes in the world
+  // Only one of them should be visible
+
+  const double hMinAngle = -IGN_PI/2.0;
+  const double hMaxAngle = IGN_PI/2.0;
+  const double minRange = 0.1;
+  const double maxRange = 10.0;
+  const int hRayCount = 320;
+  const int vRayCount = 1;
+
+  common::Time waitTime = common::Time(WAIT_TIME);
+
+  // create and populate scene
+  RenderEngine *engine = rendering::engine(_renderEngine);
+  if (!engine)
+  {
+    igndbg << "Engine '" << _renderEngine
+              << "' is not supported" << std::endl;
+    return;
+  }
+
+  ScenePtr scene = engine->CreateScene("scene");
+  ASSERT_TRUE(scene != nullptr);
+
+  VisualPtr root = scene->RootVisual();
+
+  // Create gpu rays
+  ignition::math::Pose3d testPose(ignition::math::Vector3d(0, 0, 0.1),
+      ignition::math::Quaterniond::Identity);
+
+  GpuRaysPtr gpuRays = scene->CreateGpuRays("gpu_rays_1");
+  gpuRays->SetWorldPosition(testPose.Pos());
+  gpuRays->SetWorldRotation(testPose.Rot());
+  gpuRays->SetNearClipPlane(minRange);
+  gpuRays->SetFarClipPlane(maxRange);
+  gpuRays->SetAngleMin(hMinAngle);
+  gpuRays->SetAngleMax(hMaxAngle);
+  gpuRays->SetRayCount(hRayCount);
+  gpuRays->SetVerticalRayCount(vRayCount);
+  gpuRays->SetVisibilityMask(0x00000001u);
+  root->AddChild(gpuRays);
+
+  // Create testing boxes
+  // box in the center
+  ignition::math::Pose3d box01Pose(ignition::math::Vector3d(3, 0, 0.5),
+                                   ignition::math::Quaterniond::Identity);
+  VisualPtr visualBox1 = scene->CreateVisual("UnitBox1");
+  visualBox1->AddGeometry(scene->CreateBox());
+  visualBox1->SetWorldPosition(box01Pose.Pos());
+  visualBox1->SetWorldRotation(box01Pose.Rot());
+  visualBox1->SetVisibilityFlags(0x0000001);
+  root->AddChild(visualBox1);
+
+  // box on the right
+  ignition::math::Pose3d box02Pose(ignition::math::Vector3d(0, -5, 0.5),
+                                   ignition::math::Quaterniond::Identity);
+  VisualPtr visualBox2 = scene->CreateVisual("UnitBox2");
+  visualBox2->AddGeometry(scene->CreateBox());
+  visualBox2->SetWorldPosition(box02Pose.Pos());
+  visualBox2->SetWorldRotation(box02Pose.Rot());
+  visualBox1->SetVisibilityFlags(0x0000010);
+  root->AddChild(visualBox2);
+
+  // Verify range readings
+  // listen to new gpu rays frames
+  unsigned int channels = gpuRays->Channels();
+  float *scan = new float[hRayCount * vRayCount * channels];
+  common::ConnectionPtr c =
+    gpuRays->ConnectNewGpuRaysFrame(
+        std::bind(&::OnNewGpuRaysFrame, scan,
+          std::placeholders::_1, std::placeholders::_2, std::placeholders::_3,
+          std::placeholders::_4, std::placeholders::_5));
+
+  gpuRays->Update();
+
+  int mid = static_cast<int>(hRayCount/2) * channels;
+  int last = (hRayCount - 1) * channels;
+  double unitBoxSize = 1.0;
+  double expectedRangeAtMidPointBox1 = abs(box01Pose.Pos().X()) - unitBoxSize/2;
+
+  // rays caster 1 should only see box01
+  EXPECT_NEAR(scan[mid], expectedRangeAtMidPointBox1, LASER_TOL);
+  EXPECT_DOUBLE_EQ(scan[0], ignition::math::INF_D);
+
+  c.reset();
+
+  delete [] scan;
+
+  scan = nullptr;
+
+  // Clean up
+  engine->DestroyScene(scene);
+  rendering::unloadEngine(engine->Name());
+}
+
+
+/////////////////////////////////////////////////
 TEST_P(GpuRaysTest, Configure)
 {
   Configure(GetParam());
@@ -458,6 +578,12 @@ TEST_P(GpuRaysTest, Configure)
 TEST_P(GpuRaysTest, RaysUnitBox)
 {
   RaysUnitBox(GetParam());
+}
+
+/////////////////////////////////////////////////
+TEST_P(GpuRaysTest, VisibilityMask)
+{
+  VisibilityMask(GetParam());
 }
 
 /////////////////////////////////////////////////

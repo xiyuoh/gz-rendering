@@ -78,6 +78,7 @@ void buildScene(ScenePtr _scene)
   meshPBRGeom->SetMaterial(matPBR);
   meshPBR->AddGeometry(meshPBRGeom);
   root->AddChild(meshPBR);
+  meshPBR->SetVisibilityFlags(0x00000001);
 
   // create green material
   MaterialPtr green = _scene->CreateMaterial();
@@ -85,7 +86,7 @@ void buildScene(ScenePtr _scene)
   green->SetSpecular(0.2, 0.4, 0.2);
   green->SetMetalness(0.5);
   green->SetRoughness(0.8);
-
+/*
   // create cylinder visual
   VisualPtr cylinder = _scene->CreateVisual("cylinder");
   cylinder->AddGeometry(_scene->CreateCylinder());
@@ -161,6 +162,7 @@ void buildScene(ScenePtr _scene)
   backpackMeshGeom->SetMaterial(backpackMat);
   backpack->AddGeometry(backpackMeshGeom);
   root->AddChild(backpack);
+*/
 
   // create white material
   MaterialPtr white = _scene->CreateMaterial();
@@ -249,6 +251,7 @@ void buildScene(ScenePtr _scene)
   camera->SetAspectRatio(1.333);
   camera->SetHFOV(IGN_PI / 2);
   root->AddChild(camera);
+  camera->SetVisibilityMask(0x00000010);
 }
 
 //////////////////////////////////////////////////

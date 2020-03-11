@@ -89,6 +89,9 @@ namespace ignition
       // Documentation inherited.
       public: virtual RenderTargetPtr RenderTarget() const override;
 
+      // Documentation inherited
+      public: virtual void SetVisibilityMask(uint32_t _mask) override;
+
       /// \brief Set the number of samples in the width and height for the
       /// first pass texture.
       /// \param[in] _w Number of samples in the horizontal sweep

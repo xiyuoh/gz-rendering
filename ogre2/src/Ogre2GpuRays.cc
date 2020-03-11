@@ -500,8 +500,7 @@ void Ogre2GpuRays::Setup1stPass()
       Ogre::CompositorPassSceneDef *passScene =
           static_cast<Ogre::CompositorPassSceneDef *>(
           depthTargetDef->addPass(Ogre::PASS_SCENE));
-      passScene->mVisibilityMask = IGN_VISIBILITY_ALL
-          & ~(IGN_VISIBILITY_GUI | IGN_VISIBILITY_SELECTABLE);
+      passScene->mVisibilityMask = this->visibilityMask;
     }
     // rt_input target - converts depth to range
     Ogre::CompositorTargetDef *inputTargetDef =
@@ -837,4 +836,24 @@ ignition::common::ConnectionPtr Ogre2GpuRays::ConnectNewGpuRaysFrame(
 RenderTargetPtr Ogre2GpuRays::RenderTarget() const
 {
   return this->dataPtr->renderTexture;
+}
+
+/////////////////////////////////////////////////////////
+void Ogre2GpuRays::SetVisibilityMask(uint32_t _mask)
+{
+  BaseSensor::SetVisibilityMask(_mask);
+  if (!this->dataPtr->ogreCompositorWorkspace1st[0])
+    return;
+
+  for (unsigned int i = 0; i < 6u; ++i)
+  {
+    auto nodeSeq =
+        this->dataPtr->ogreCompositorWorkspace1st[i]->getNodeSequence();
+    auto pass = nodeSeq[0]->_getPasses()[1]->getDefinition();
+    auto scenePass = dynamic_cast<const Ogre::CompositorPassSceneDef *>(pass);
+    const_cast<Ogre::CompositorPassSceneDef *>(scenePass)->mVisibilityMask =
+        _mask;
+  }
+  // no need to set 2nd pass visibility mask since that's just used to stitch
+  // readings together
 }

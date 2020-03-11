@@ -101,6 +101,9 @@ namespace ignition
       /// \brief Implementation of the render call
       public: virtual void Render() override;
 
+      // Documentation inherited
+      public: virtual void SetVisibilityMask(uint32_t _mask) override;
+
       /// \brief Set the far clip distance
       /// \param[in] _far far clip distance
       public: virtual void SetFarClipPlane(const double _far) override;

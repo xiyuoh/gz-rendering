@@ -60,6 +60,8 @@ void Ogre2RenderTarget::BuildCompositor()
       ogreCompMgr->addWorkspace(this->scene->OgreSceneManager(),
       this->RenderTarget(), this->ogreCamera,
       this->ogreCompositorWorkspaceDefName, false);
+
+  this->SetVisibilityMask(this->visibilityMask);
 }
 
 //////////////////////////////////////////////////
@@ -189,6 +191,19 @@ void Ogre2RenderTarget::Render()
   //     hlms->frameEnded();
   // }
   // engine->OgreRoot()->getRenderSystem()->_update();
+}
+
+//////////////////////////////////////////////////
+void Ogre2RenderTarget::SetVisibilityMask(uint32_t _mask)
+{
+  this->visibilityMask = _mask;
+  if (!this->ogreCompositorWorkspace)
+    return;
+  auto nodeSeq = this->ogreCompositorWorkspace->getNodeSequence();
+  auto pass = nodeSeq[0]->_getPasses()[1]->getDefinition();
+  auto scenePass = dynamic_cast<const Ogre::CompositorPassSceneDef *>(pass);
+  const_cast<Ogre::CompositorPassSceneDef *>(scenePass)->mVisibilityMask =
+      this->visibilityMask;
 }
 
 //////////////////////////////////////////////////

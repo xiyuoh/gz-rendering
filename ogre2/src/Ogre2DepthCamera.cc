@@ -390,8 +390,7 @@ void Ogre2DepthCamera::CreateDepthTexture()
       Ogre::CompositorPassSceneDef *passScene =
           static_cast<Ogre::CompositorPassSceneDef *>(
           colorTargetDef->addPass(Ogre::PASS_SCENE));
-      passScene->mVisibilityMask = IGN_VISIBILITY_ALL
-          & ~(IGN_VISIBILITY_GUI | IGN_VISIBILITY_SELECTABLE);
+      passScene->mVisibilityMask = this->visibilityMask;
     }
 
     // rt_input target - converts depth to xyz
@@ -618,4 +617,17 @@ double Ogre2DepthCamera::NearClipPlane() const
 double Ogre2DepthCamera::FarClipPlane() const
 {
   return BaseDepthCamera::FarClipPlane();
+}
+
+/////////////////////////////////////////////////////////
+void Ogre2DepthCamera::SetVisibilityMask(uint32_t _mask)
+{
+  BaseSensor::SetVisibilityMask(_mask);
+  if (!this->dataPtr->ogreCompositorWorkspace)
+    return;
+  auto nodeSeq = this->dataPtr->ogreCompositorWorkspace->getNodeSequence();
+  auto pass = nodeSeq[0]->_getPasses()[1]->getDefinition();
+  auto scenePass = dynamic_cast<const Ogre::CompositorPassSceneDef *>(pass);
+  const_cast<Ogre::CompositorPassSceneDef *>(scenePass)->mVisibilityMask =
+      _mask;
 }

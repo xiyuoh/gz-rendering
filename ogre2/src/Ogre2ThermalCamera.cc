@@ -42,6 +42,8 @@ namespace ignition
 {
 namespace rendering
 {
+inline namespace IGNITION_RENDERING_VERSION_NAMESPACE {
+//
 /// \brief Helper class for switching the ogre item's material to heat source
 /// material when a thermal camera is being rendered.
 class Ogre2ThermalCameraMaterialSwitcher : public Ogre::RenderTargetListener
@@ -52,6 +54,11 @@ class Ogre2ThermalCameraMaterialSwitcher : public Ogre::RenderTargetListener
 
   /// \brief destructor
   public: ~Ogre2ThermalCameraMaterialSwitcher() = default;
+
+  /// \brief Set the visiblity mask to use when checking to see if a
+  /// heat source should be visible
+  /// \param[in] _mask Visibility mask
+  public: void SetVisibilityMask(uint32_t _mask);
 
   /// \brief Callback when a render target is about to be rendered
   /// \param[in] _evt Ogre render target event containing information about
@@ -78,7 +85,11 @@ class Ogre2ThermalCameraMaterialSwitcher : public Ogre::RenderTargetListener
 
   /// \brief A map of ogre sub item pointer to their original hlms material
   private: std::map<Ogre::SubItem *, Ogre::HlmsDatablock *> datablockMap;
+
+  /// \brief Visibility mask associated with the thermal camera viewport
+  private: uint32_t visibilityMask = IGN_VISIBILITY_ALL;
 };
+}
 }
 }
 
@@ -206,7 +217,12 @@ void Ogre2ThermalCameraMaterialSwitcher::preRenderTargetUpdate(
         }
 
         // only accept positive temperature (in kelvin)
-        if (temp >= 0.0)
+        if (temp >= 0.0 &&
+            // visibility mask/flag is already used for identifying heat sources
+            // (0x10000000) so the viewport visibility mask was not set when
+            // creating the compositor (see colorTexture target in compositor).
+            // Here we need to manually check visibility
+            this->visibilityMask & item->getVisibilityFlags())
         {
           // set visibility flag so thermal camera can see it
           item->addVisibilityFlags(0x10000000);
@@ -243,6 +259,12 @@ void Ogre2ThermalCameraMaterialSwitcher::postRenderTargetUpdate(
     Ogre::SubItem *subItem = it.first;
     subItem->setDatablock(it.second);
   }
+}
+
+//////////////////////////////////////////////////
+void Ogre2ThermalCameraMaterialSwitcher::SetVisibilityMask(uint32_t _mask)
+{
+  this->visibilityMask = _mask;
 }
 
 //////////////////////////////////////////////////
@@ -549,8 +571,7 @@ void Ogre2ThermalCamera::CreateThermalTexture()
       Ogre::CompositorPassSceneDef *passScene =
           static_cast<Ogre::CompositorPassSceneDef *>(
           depthTargetDef->addPass(Ogre::PASS_SCENE));
-      passScene->mVisibilityMask = IGN_VISIBILITY_ALL
-          & ~(IGN_VISIBILITY_GUI | IGN_VISIBILITY_SELECTABLE);
+      passScene->mVisibilityMask = this->visibilityMask;
     }
 
     Ogre::CompositorTargetDef *colorTargetDef =
@@ -632,6 +653,8 @@ void Ogre2ThermalCamera::CreateThermalTexture()
       this->dataPtr->thermalMaterialSwitcher.reset(
           new Ogre2ThermalCameraMaterialSwitcher(this->scene));
       c.target->addListener(this->dataPtr->thermalMaterialSwitcher.get());
+      this->dataPtr->thermalMaterialSwitcher->SetVisibilityMask(
+          this->visibilityMask);
       break;
     }
   }
@@ -717,4 +740,17 @@ common::ConnectionPtr Ogre2ThermalCamera::ConnectNewThermalFrame(
 RenderTargetPtr Ogre2ThermalCamera::RenderTarget() const
 {
   return this->dataPtr->thermalTexture;
+}
+
+/////////////////////////////////////////////////////////
+void Ogre2ThermalCamera::SetVisibilityMask(uint32_t _mask)
+{
+  BaseSensor::SetVisibilityMask(_mask);
+  if (!this->dataPtr->ogreCompositorWorkspace)
+    return;
+  auto nodeSeq = this->dataPtr->ogreCompositorWorkspace->getNodeSequence();
+  auto pass = nodeSeq[0]->_getPasses()[1]->getDefinition();
+  auto scenePass = dynamic_cast<const Ogre::CompositorPassSceneDef *>(pass);
+  const_cast<Ogre::CompositorPassSceneDef *>(scenePass)->mVisibilityMask =
+      _mask;
 }

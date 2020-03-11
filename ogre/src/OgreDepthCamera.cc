@@ -37,9 +37,6 @@ class ignition::rendering::OgreDepthCameraPrivate
   /// \brief Point cloud xyz data buffer
   public: float *pcdBuffer = nullptr;
 
-  /// \brief Point cloud view port
-  public: Ogre::Viewport *pcdViewport = nullptr;
-
   /// \brief Point cloud material
   public: MaterialPtr pcdMaterial = nullptr;
 
@@ -579,4 +576,14 @@ double OgreDepthCamera::FarClipPlane() const
     return this->ogreCamera->getFarClipDistance();
   else
     return 0;
+}
+
+//////////////////////////////////////////////////
+void OgreDepthCamera::SetVisibilityMask(uint32_t _mask)
+{
+  BaseSensor::SetVisibilityMask(_mask);
+  if (this->dataPtr->colorTexture)
+    this->dataPtr->colorTexture->SetVisibilityMask(_mask);
+  if (this->dataPtr->pcdTexture)
+    this->dataPtr->pcdTexture->SetVisibilityMask(_mask);
 }

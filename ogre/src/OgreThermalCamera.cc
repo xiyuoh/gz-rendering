@@ -33,6 +33,8 @@ namespace ignition
 {
 namespace rendering
 {
+inline namespace IGNITION_RENDERING_VERSION_NAMESPACE {
+//
 /// \brief Helper class for switching the ogre item's material to heat source
 /// material when a thermal camera is being rendered.
 class OgreThermalCameraMaterialSwitcher : public Ogre::RenderTargetListener,
@@ -82,6 +84,7 @@ class OgreThermalCameraMaterialSwitcher : public Ogre::RenderTargetListener,
 };
 }
 }
+}
 
 /// \internal
 /// \brief Private data for the OgreThermalCamera class
@@ -102,7 +105,7 @@ class ignition::rendering::OgreThermalCameraPrivate
   /// \brief Point cloud texture
   public: OgreRenderTexturePtr colorTexture;
 
-  /// \brief Lens distortion compositor
+  /// \brief thermal camera compositor
   public: Ogre::CompositorInstance *thermalInstance = nullptr;
 
   /// \brief The thermal buffer
@@ -125,6 +128,12 @@ class ignition::rendering::OgreThermalCameraPrivate
   /// \brief Pointer to material switcher
   public: std::unique_ptr<OgreThermalCameraMaterialSwitcher>
       thermalMaterialSwitcher;
+
+  /// \brief ogre thermal camera viewport
+  public: Ogre::Viewport *ogreThermalViewport = nullptr;
+
+  /// \brief ogre heat source viewport
+  public: Ogre::Viewport *ogreHeatSourceViewport = nullptr;
 };
 
 using namespace ignition;
@@ -391,6 +400,8 @@ void OgreThermalCamera::CreateThermalTexture()
     vp->setClearEveryFrame(true);
     vp->setShadowsEnabled(false);
     vp->setOverlaysEnabled(false);
+    vp->setVisibilityMask(this->visibilityMask);
+    this->dataPtr->ogreThermalViewport = vp;
   }
 
   double ratio = static_cast<double>(this->ImageWidth()) /
@@ -460,6 +471,8 @@ void OgreThermalCamera::CreateThermalTexture()
     vp->setClearEveryFrame(true);
     vp->setShadowsEnabled(false);
     vp->setOverlaysEnabled(false);
+    vp->setVisibilityMask(this->visibilityMask);
+    this->dataPtr->ogreHeatSourceViewport = vp;
     rt->setAutoUpdated(false);
 
     vp->setMaterialScheme("thermal");
@@ -563,4 +576,14 @@ common::ConnectionPtr OgreThermalCamera::ConnectNewThermalFrame(
 RenderTargetPtr OgreThermalCamera::RenderTarget() const
 {
   return this->dataPtr->thermalTexture;
+}
+
+//////////////////////////////////////////////////
+void OgreThermalCamera::SetVisibilityMask(uint32_t _mask)
+{
+  BaseSensor::SetVisibilityMask(_mask);
+  if (this->dataPtr->ogreThermalViewport)
+    this->dataPtr->ogreThermalViewport->setVisibilityMask(_mask);
+  if (this->dataPtr->ogreHeatSourceViewport)
+    this->dataPtr->ogreHeatSourceViewport->setVisibilityMask(_mask);
 }

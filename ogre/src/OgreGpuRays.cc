@@ -59,8 +59,14 @@ class ignition::rendering::OgreGpuRaysPrivate
   /// \brief An array of first pass textures.
   public: Ogre::Texture *firstPassTextures[3];
 
+  /// \brief An array of first pass viewports.
+  public: Ogre::Viewport *firstPassViewports[3];
+
   /// \brief Second pass texture.
   public: Ogre::Texture *secondPassTexture = nullptr;
+
+  /// \brief Second pass viewport.
+  public: Ogre::Viewport *secondPassViewport = nullptr;
 
   /// \brief Temporary pointer to the current render target.
   public: Ogre::Texture *currentTexture = nullptr;
@@ -428,8 +434,8 @@ void OgreGpuRays::CreateGpuRaysTextures()
     vp->setSkiesEnabled(false);
     vp->setBackgroundColour(
         Ogre::ColourValue(this->dataMaxVal, 0.0, 1.0));
-    vp->setVisibilityMask(IGN_VISIBILITY_ALL &
-        ~(IGN_VISIBILITY_GUI | IGN_VISIBILITY_SELECTABLE));
+    vp->setVisibilityMask(this->visibilityMask);
+    this->dataPtr->firstPassViewports[i] = vp;
   }
 
   this->dataPtr->matFirstPass = dynamic_cast<Ogre::Material *>(
@@ -462,8 +468,8 @@ void OgreGpuRays::CreateGpuRaysTextures()
   vp->setShadowsEnabled(false);
   vp->setSkiesEnabled(false);
   vp->setBackgroundColour(Ogre::ColourValue(0.0, 1.0, 0.0));
-  vp->setVisibilityMask(
-      IGN_VISIBILITY_ALL & ~(IGN_VISIBILITY_GUI | IGN_VISIBILITY_SELECTABLE));
+  vp->setVisibilityMask(this->visibilityMask);
+  this->dataPtr->secondPassViewport = vp;
 
   Ogre::Matrix4 p = this->BuildScaledOrthoMatrix(
       0, static_cast<float>(this->dataPtr->w2nd / 10.0),
@@ -1034,4 +1040,16 @@ double OgreGpuRays::HorzHalfAngle() const
 double OgreGpuRays::VertHalfAngle() const
 {
   return this->dataPtr->vertHalfAngle;
+}
+
+//////////////////////////////////////////////////
+void OgreGpuRays::SetVisibilityMask(uint32_t _mask)
+{
+  BaseSensor::SetVisibilityMask(_mask);
+  if (this->dataPtr->textureCount > 0)
+  {
+    for (unsigned int i = 0; i < 3u; ++i)
+      this->dataPtr->firstPassViewports[i]->setVisibilityMask(_mask);
+    this->dataPtr->secondPassViewport->setVisibilityMask(_mask);
+  }
 }

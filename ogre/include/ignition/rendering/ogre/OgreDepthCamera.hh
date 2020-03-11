@@ -125,6 +125,9 @@ namespace ignition
       // Documentation inherited
       public: virtual void Destroy() override;
 
+      // Documentation inherited
+      public: virtual void SetVisibilityMask(uint32_t _mask) override;
+
       /// \brief Update a render target
       /// \param[in] _target Render target to update
       /// \param[in] _material Material to use

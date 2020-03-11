@@ -84,6 +84,9 @@ namespace ignition
       /// \brief Implementation of the render call
       public: virtual void Render() override;
 
+      // Documentation inherited
+      public: virtual void SetVisibilityMask(uint32_t _mask) override;
+
       /// \brief Get a pointer to the render target.
       /// \return Pointer to the render target
       protected: virtual RenderTargetPtr RenderTarget() const override;

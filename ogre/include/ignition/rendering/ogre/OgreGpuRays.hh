@@ -83,6 +83,9 @@ namespace ignition
       public: virtual void Copy(float *_data) override;
 
       // Documentation inherited.
+      public: virtual void SetVisibilityMask(uint32_t _mask) override;
+
+      // Documentation inherited.
       public: virtual common::ConnectionPtr ConnectNewGpuRaysFrame(
                   std::function<void(const float *_frame, unsigned int _width,
                   unsigned int _height, unsigned int _channels,

@@ -19,6 +19,7 @@
 
 #include <ignition/common/Console.hh>
 #include <ignition/common/Image.hh>
+#include <ignition/utilities/ExtraTestMacros.hh>
 
 #include "test_config.h"  // NOLINT(build/include)
 

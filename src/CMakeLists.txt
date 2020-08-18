@@ -34,6 +34,11 @@ if (UNIX AND NOT APPLE)
   target_link_libraries(${PROJECT_LIBRARY_TARGET_NAME} PRIVATE X11)
 endif()
 
+target_include_directories(${PROJECT_LIBRARY_TARGET_NAME}
+  PUBLIC
+  $<BUILD_INTERFACE:${CMAKE_CURRENT_BINARY_DIR}>
+)
+
 # Build the unit tests.
 ign_build_tests(TYPE UNIT SOURCES ${gtest_sources})
 

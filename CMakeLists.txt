@@ -10,6 +10,11 @@ project(ignition-rendering2 VERSION 2.5.0)
 #============================================================================
 # If you get an error at this line, you need to install ignition-cmake
 find_package(ignition-cmake2 2.3 REQUIRED)
+set(IGN_CMAKE_VER ${ignition-cmake2_VERSION_MAJOR})
+
+include_directories(
+  ${ignition-cmake${IGN_CMAKE_VER}_INCLUDE_DIRS}
+)
 
 #============================================================================
 # Set up the project

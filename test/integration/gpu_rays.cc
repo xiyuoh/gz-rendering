@@ -39,6 +39,7 @@
 using namespace ignition;
 using namespace rendering;
 
+/////////////////////////////////////////////////
 void OnNewGpuRaysFrame(float *_scanDest, const float *_scan,
                   unsigned int _width, unsigned int _height,
                   unsigned int _channels,
@@ -49,6 +50,7 @@ void OnNewGpuRaysFrame(float *_scanDest, const float *_scan,
   memcpy(_scanDest, _scan, size * sizeof(f));
 }
 
+/////////////////////////////////////////////////
 class GpuRaysTest: public testing::Test,
                   public testing::WithParamInterface<const char *>
 {
@@ -455,13 +457,13 @@ TEST_P(GpuRaysTest, Configure)
 }
 
 /////////////////////////////////////////////////
-TEST_P(GpuRaysTest, RaysUnitBox)
+TEST_P(GpuRaysTest, IGN_UTILS_TEST_DISABLED_ON_WIN32(RaysUnitBox))
 {
   RaysUnitBox(GetParam());
 }
 
 /////////////////////////////////////////////////
-TEST_P(GpuRaysTest, LaserVertical)
+TEST_P(GpuRaysTest, IGN_UTILS_TEST_DISABLED_ON_WIN32(LaserVertical))
 {
   LaserVertical(GetParam());
 }
@@ -470,6 +472,7 @@ INSTANTIATE_TEST_CASE_P(GpuRays, GpuRaysTest,
     RENDER_ENGINE_VALUES,
     ignition::rendering::PrintToStringParam());
 
+/////////////////////////////////////////////////
 int main(int argc, char **argv)
 {
   ::testing::InitGoogleTest(&argc, argv);

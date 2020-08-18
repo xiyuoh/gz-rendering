@@ -33,6 +33,7 @@
 
 unsigned int g_depthCounter = 0;
 
+//////////////////////////////////////////////////
 void OnNewDepthFrame(float *_scanDest, const float *_scan,
                   unsigned int _width, unsigned int _height,
                   unsigned int _channels,
@@ -43,6 +44,7 @@ void OnNewDepthFrame(float *_scanDest, const float *_scan,
   memcpy(_scanDest, _scan, size * sizeof(f));
 }
 
+//////////////////////////////////////////////////
 void OnNewRgbPointCloud(float *_scanDest, const float *_scan,
                   unsigned int _width, unsigned int _height,
                   unsigned int _channels,
@@ -53,8 +55,7 @@ void OnNewRgbPointCloud(float *_scanDest, const float *_scan,
   memcpy(_scanDest, _scan, size * sizeof(f));
 }
 
-
-
+//////////////////////////////////////////////////
 class DepthCameraTest: public testing::Test,
   public testing::WithParamInterface<const char *>
 {
@@ -62,6 +63,7 @@ class DepthCameraTest: public testing::Test,
   public: void DepthCameraBoxes(const std::string &_renderEngine);
 };
 
+//////////////////////////////////////////////////
 void DepthCameraTest::DepthCameraBoxes(
     const std::string &_renderEngine)
 {
@@ -435,7 +437,8 @@ void DepthCameraTest::DepthCameraBoxes(
   ignition::rendering::unloadEngine(engine->Name());
 }
 
-TEST_P(DepthCameraTest, DepthCameraBoxes)
+//////////////////////////////////////////////////
+TEST_P(DepthCameraTest, IGN_UTILS_TEST_DISABLED_ON_WIN32(DepthCameraBoxes))
 {
   DepthCameraBoxes(GetParam());
 }

@@ -179,13 +179,13 @@ void SceneFactoryTest::VisualMemoryLeak(const std::string &_renderEngine)
 }
 
 /////////////////////////////////////////////////
-TEST_P(SceneFactoryTest, MaterialMemoryLeak)
+TEST_P(SceneFactoryTest, IGN_UTILS_TEST_DISABLED_ON_WIN32(MaterialMemoryLeak))
 {
   MaterialMemoryLeak(GetParam());
 }
 
 /////////////////////////////////////////////////
-TEST_P(SceneFactoryTest, VisualMemoryLeak)
+TEST_P(SceneFactoryTest, IGN_UTILS_TEST_DISABLED_ON_WIN32(VisualMemoryLeak))
 {
   VisualMemoryLeak(GetParam());
 }
@@ -194,6 +194,7 @@ INSTANTIATE_TEST_CASE_P(SceneFactory, SceneFactoryTest,
     RENDER_ENGINE_VALUES,
     ignition::rendering::PrintToStringParam());
 
+/////////////////////////////////////////////////
 int main(int argc, char **argv)
 {
   ::testing::InitGoogleTest(&argc, argv);

@@ -35,6 +35,7 @@
 #define DOUBLE_TOL 1e-6
 unsigned int g_depthCounter = 0;
 
+/////////////////////////////////////////////////
 void OnNewRgbPointCloud(float *_scanDest, const float *_scan,
                   unsigned int _width, unsigned int _height,
                   unsigned int _channels,
@@ -47,6 +48,7 @@ void OnNewRgbPointCloud(float *_scanDest, const float *_scan,
 using namespace ignition;
 using namespace rendering;
 
+/////////////////////////////////////////////////
 class RenderPassTest: public testing::Test,
                       public testing::WithParamInterface<const char *>
 {
@@ -389,7 +391,7 @@ void RenderPassTest::DepthGaussianNoise(const std::string &_renderEngine)
 }
 
 /////////////////////////////////////////////////
-TEST_P(RenderPassTest, GaussianNoise)
+TEST_P(RenderPassTest, IGN_UTILS_TEST_DISABLED_ON_WIN32(GaussianNoise))
 {
   GaussianNoise(GetParam());
 }
@@ -404,6 +406,7 @@ INSTANTIATE_TEST_CASE_P(GaussianNoise, RenderPassTest,
     RENDER_ENGINE_VALUES,
     ignition::rendering::PrintToStringParam());
 
+/////////////////////////////////////////////////
 int main(int argc, char **argv)
 {
   ::testing::InitGoogleTest(&argc, argv);

@@ -134,7 +134,7 @@ void RenderEngineTest::RenderEngine(const std::string &_renderEngine)
 }
 
 /////////////////////////////////////////////////
-TEST_P(RenderEngineTest, RenderEngine)
+TEST_P(RenderEngineTest, IGN_UTILS_TEST_DISABLED_ON_WIN32(RenderEngine))
 {
   RenderEngine(GetParam());
 }
@@ -143,6 +143,7 @@ INSTANTIATE_TEST_CASE_P(RenderEngine, RenderEngineTest,
     RENDER_ENGINE_VALUES,
     ignition::rendering::PrintToStringParam());
 
+/////////////////////////////////////////////////
 int main(int argc, char **argv)
 {
   ::testing::InitGoogleTest(&argc, argv);

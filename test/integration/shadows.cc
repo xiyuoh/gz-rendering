@@ -203,7 +203,7 @@ void ShadowsTest::Shadows(const std::string &_renderEngine)
 }
 
 /////////////////////////////////////////////////
-TEST_P(ShadowsTest, Shadows)
+TEST_P(ShadowsTest, IGN_UTILS_TEST_DISABLED_ON_WIN32(Shadows))
 {
   Shadows(GetParam());
 }
@@ -212,6 +212,7 @@ INSTANTIATE_TEST_CASE_P(Shadows, ShadowsTest,
     RENDER_ENGINE_VALUES,
     ignition::rendering::PrintToStringParam());
 
+/////////////////////////////////////////////////
 int main(int argc, char **argv)
 {
   ::testing::InitGoogleTest(&argc, argv);

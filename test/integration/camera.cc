@@ -381,19 +381,19 @@ void CameraTest::Follow(const std::string &_renderEngine)
 }
 
 /////////////////////////////////////////////////
-TEST_P(CameraTest, Track)
+TEST_P(CameraTest, IGN_UTILS_TEST_DISABLED_ON_WIN32(Track))
 {
   Track(GetParam());
 }
 
 /////////////////////////////////////////////////
-TEST_P(CameraTest, Follow)
+TEST_P(CameraTest, IGN_UTILS_TEST_DISABLED_ON_WIN32(Follow))
 {
   Follow(GetParam());
 }
 
 /////////////////////////////////////////////////
-TEST_P(CameraTest, VisualAt)
+TEST_P(CameraTest, IGN_UTILS_TEST_DISABLED_ON_WIN32(VisualAt))
 {
   VisualAt(GetParam());
 }

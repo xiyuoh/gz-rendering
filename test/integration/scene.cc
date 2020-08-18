@@ -29,6 +29,7 @@
 using namespace ignition;
 using namespace rendering;
 
+/////////////////////////////////////////////////
 class SceneTest: public testing::Test,
                  public testing::WithParamInterface<const char *>
 {
@@ -221,13 +222,13 @@ void SceneTest::VisualAt(const std::string &_renderEngine)
 }
 
 /////////////////////////////////////////////////
-TEST_P(SceneTest, AddRemoveVisuals)
+TEST_P(SceneTest, IGN_UTILS_TEST_DISABLED_ON_WIN32(AddRemoveVisuals))
 {
   AddRemoveVisuals(GetParam());
 }
 
 /////////////////////////////////////////////////
-TEST_P(SceneTest, VisualAt)
+TEST_P(SceneTest, IGN_UTILS_TEST_DISABLED_ON_WIN32(VisualAt))
 {
   VisualAt(GetParam());
 }
@@ -237,6 +238,7 @@ INSTANTIATE_TEST_CASE_P(Scene, SceneTest,
     RENDER_ENGINE_VALUES,
     ignition::rendering::PrintToStringParam());
 
+/////////////////////////////////////////////////
 int main(int argc, char **argv)
 {
   ::testing::InitGoogleTest(&argc, argv);

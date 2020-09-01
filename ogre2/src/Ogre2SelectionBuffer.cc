@@ -117,7 +117,7 @@ void Ogre2SelectionBuffer::Update()
   this->dataPtr->ogreCompositorWorkspace->setEnabled(false);
 
   this->dataPtr->renderTexture->copyContentsToMemory(*this->dataPtr->pixelBox,
-      Ogre::RenderTarget::FB_FRONT);
+      Ogre::RenderTarget::FB_AUTO);
 }
 
 /////////////////////////////////////////////////

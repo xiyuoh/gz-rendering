@@ -86,6 +86,41 @@ void buildScene(ScenePtr _scene)
   root->AddChild(grid);
 //! [create grid visual]
 
+
+  // create white material
+  MaterialPtr white = _scene->CreateMaterial("white");
+  white->SetAmbient(0.5, 0.5, 0.5);
+  white->SetDiffuse(0.8, 0.8, 0.8);
+  white->SetReceiveShadows(false);
+  white->SetReflectivity(0);
+
+  // create red material
+  MaterialPtr red = _scene->CreateMaterial("red");
+  red->SetAmbient(1.0, 0.0, 0.0);
+  red->SetDiffuse(1.0, 0.0, 0.0);
+  red->SetReflectivity(0);
+
+  // create plane visual
+  VisualPtr plane = _scene->CreateVisual();
+  plane->SetQueueOrder(50);
+  plane->AddGeometry(_scene->CreatePlane());
+  plane->SetLocalScale(5, 8, 1);
+  plane->SetLocalPosition(3, 0, -0.5);
+  plane->Scale(0.2, 0.2, 1);
+  plane->SetMaterial(white);
+  root->AddChild(plane);
+
+  // create plane visual
+  VisualPtr plane2 = _scene->CreateVisual();
+  plane2->SetQueueOrder(50);
+  plane2->AddGeometry(_scene->CreatePlane());
+  plane2->SetLocalScale(5, 8, 1);
+  plane2->SetLocalPosition(3, 0, -0.5);
+  plane2->Scale(0.1, 0.1, 1);
+  plane2->SetMaterial(red);
+  root->AddChild(plane2);
+
+
 //! [create camera]
   CameraPtr camera = _scene->CreateCamera("camera");
   camera->SetLocalPosition(0.0, 0.0, 0.5);

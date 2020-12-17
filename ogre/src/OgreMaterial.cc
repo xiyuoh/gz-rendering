@@ -122,6 +122,12 @@ math::Color OgreMaterial::Diffuse() const
 void OgreMaterial::SetDiffuse(const math::Color &_color)
 {
   this->ogrePass->setDiffuse(OgreConversions::Convert(_color));
+
+  if (_color == math::Color(1.0, 0.0, 0.0))
+  {
+    this->ogrePass->setDepthBias(3);
+    std::cerr << "setting depth bias to 1 " << std::endl;
+  }
 }
 
 //////////////////////////////////////////////////

@@ -210,7 +210,7 @@ void buildScene(ScenePtr _scene)
   root->AddChild(light3);
 
   // spot light test
-  int n = 3;
+  int n = 6;
   for (int i = 0; i < n; ++i)
   {
     for (int j = 0; j < n; ++j)

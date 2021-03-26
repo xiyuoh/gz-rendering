@@ -433,7 +433,8 @@ void Ogre2RenderTarget::UpdateShadowNode()
   // the number of shadow maps exceeds certain number. The error seems to
   // suggest that the number of uniform variables has exceeded the max number
   // allowed
-  unsigned int maxShadowMaps = 25u;
+  // unsigned int maxShadowMaps = 25u;
+  unsigned int maxShadowMaps = 100u;
   if (dirLightCount * 3 + spotPointLightCount > maxShadowMaps)
   {
     dirLightCount = std::min(static_cast<unsigned int>(maxShadowMaps / 3),

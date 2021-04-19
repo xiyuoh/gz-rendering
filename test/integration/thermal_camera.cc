@@ -200,7 +200,8 @@ void ThermalCameraTest::ThermalCameraBoxes(
       for (unsigned int j = 0; j < thermalCamera->ImageWidth(); ++j)
       {
         float temp = thermalData[step + j] * linearResolution;
-        EXPECT_NEAR(boxTemp, temp, boxTempRange);
+        EXPECT_NEAR(boxTemp, temp, boxTempRange) << "i: " << i << " j: " << j
+            << " index: " << step + j;
       }
     }
 

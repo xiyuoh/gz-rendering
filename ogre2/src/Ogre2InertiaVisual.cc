@@ -69,8 +69,20 @@ void Ogre2InertiaVisual::Destroy()
   if (this->dataPtr->boxVis != nullptr)
   {
     this->dataPtr->boxVis->Destroy();
+    this->dataPtr->boxVis.reset();
   }
-  BaseInertiaVisual::Destroy();
+
+  if (this->dataPtr->crossLines)
+  {
+    this->dataPtr->crossLines->Destroy();
+    this->dataPtr->crossLines.reset();
+  }
+
+  if (this->dataPtr->material && this->Scene())
+  {
+    this->Scene()->DestroyMaterial(this->dataPtr->material);
+    this->dataPtr->material.reset();
+  }
 }
 
 //////////////////////////////////////////////////

@@ -68,7 +68,7 @@ void screenScalingFactor(float &_xScale, float &_yScale)
     XrmDatabase db = XrmGetStringDatabase(resourceString);
 
     // Debug:
-    // printf("Entire DB:\n%s\n", resourceString);
+    printf("Entire DB:\n%s\n", resourceString);
 
     if (XrmGetResource(db, "Xft.dpi", "String", &type, &value) == True)
     {
@@ -108,8 +108,19 @@ void screenScalingFactor(float &_xScale, float &_yScale)
     if (_yScale < 1) _yScale = 1;
 
     // Debug:
-    // printf("DPI Desktop: %f, DPI XY: [%f, %f], Scale XY: [%f, %f]\n",
-    //   dpiDesktop, xDpiRes, yDpiRes, _xScale, _yScale);
+    std::cout <<
+      "DPI Desktop: " << dpiDesktop << std::endl <<
+      "xPixels: " << xPixels << std::endl <<
+      "xMM: " << xMM << std::endl <<
+      "xIn: " << xIn << std::endl <<
+      "xDpiRes: " << xDpiRes << std::endl <<
+      "xScale: " << _xScale << std::endl <<
+      "yPixels: " << yPixels << std::endl <<
+      "yMM: " << yMM << std::endl <<
+      "yIn: " << yIn << std::endl <<
+      "yDpiRes: " << yDpiRes << std::endl <<
+      "yScale: " << _yScale << std::endl <<
+      std::endl;
   }
 #endif
 }

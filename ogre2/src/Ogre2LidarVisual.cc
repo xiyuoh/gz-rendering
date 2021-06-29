@@ -17,6 +17,8 @@
 
 
 #include <ignition/common/Console.hh>
+
+#include "ignition/rendering/ogre2/Ogre2RenderEngine.hh"
 #include "ignition/rendering/ogre2/Ogre2DynamicRenderable.hh"
 #include "ignition/rendering/ogre2/Ogre2LidarVisual.hh"
 #include "ignition/rendering/ogre2/Ogre2Scene.hh"
@@ -285,6 +287,9 @@ void Ogre2LidarVisual::Update()
     else if (this->dataPtr->lidarVisType ==
                   LidarVisualType::LVT_POINTS)
     {
+      auto engine = Ogre2RenderEngine::Instance();
+      engine->OgreRoot()->getRenderSystem()->_setPointParameters(10, false, 1, 1, 1, 10, 10);
+
       if (j+1 > this->dataPtr->points.size())
       {
         std::shared_ptr<Ogre2DynamicRenderable> renderable =
@@ -292,16 +297,16 @@ void Ogre2LidarVisual::Update()
                                     new Ogre2DynamicRenderable(this->Scene()));
 
         renderable->SetOperationType(MT_POINTS);
-//        MaterialPtr mat = this->Scene()->Material("Lidar/BlueRay");
-//        renderable->SetMaterial(mat, false);
+        MaterialPtr mat = this->Scene()->Material("Lidar/BlueRay");
+        renderable->SetMaterial(mat, false);
 
 
-        Ogre::MaterialPtr pointsMat =
-            Ogre::MaterialManager::getSingleton().getByName("PointCloudPoint");
-        if (!pointsMat)
-          std::cerr << "Unable to find PointCloud material" << std::endl;
-        auto item = dynamic_cast<Ogre::Item *>(renderable->OgreObject());
-        item->getSubItem(0)->setMaterial(pointsMat);
+//        Ogre::MaterialPtr pointsMat =
+//            Ogre::MaterialManager::getSingleton().getByName("PointCloudPoint");
+//        if (!pointsMat)
+//          std::cerr << "Unable to find PointCloud material" << std::endl;
+//        auto item = dynamic_cast<Ogre::Item *>(renderable->OgreObject());
+//        item->getSubItem(0)->setMaterial(pointsMat);
 
 
         this->ogreNode->attachObject(renderable->OgreObject());

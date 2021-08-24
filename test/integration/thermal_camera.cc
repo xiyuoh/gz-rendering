@@ -47,6 +47,8 @@ void OnNewThermalFrame(uint16_t *_scanDest, const uint16_t *_scan,
   uint16_t u;
   int size =  _width * _height * _channels;
   memcpy(_scanDest, _scan, size * sizeof(u));
+
+  g_thermalCounter++;
 }
 
 //////////////////////////////////////////////////
@@ -168,7 +170,9 @@ void ThermalCameraTest::ThermalCameraBoxes(
     EXPECT_NE(nullptr, connection);
 
     // Update once to create image
+    EXPECT_EQ(0u, g_thermalCounter);
     thermalCamera->Update();
+    EXPECT_EQ(1u, g_thermalCounter);
 
     // thermal image indices
     int midWidth = static_cast<int>(thermalCamera->ImageWidth() * 0.5);
@@ -192,7 +196,10 @@ void ThermalCameraTest::ThermalCameraBoxes(
     ignition::math::Vector3d boxPositionNear(
         unitBoxSize * 0.5 + nearDist * 0.5, 0.0, 0.0);
     box->SetLocalPosition(boxPositionNear);
+
+    EXPECT_EQ(1u, g_thermalCounter);
     thermalCamera->Update();
+    EXPECT_EQ(2u, g_thermalCounter);
 
     for (unsigned int i = 0; i < thermalCamera->ImageHeight(); ++i)
     {
@@ -200,7 +207,8 @@ void ThermalCameraTest::ThermalCameraBoxes(
       for (unsigned int j = 0; j < thermalCamera->ImageWidth(); ++j)
       {
         float temp = thermalData[step + j] * linearResolution;
-        EXPECT_NEAR(boxTemp, temp, boxTempRange);
+        EXPECT_NEAR(boxTemp, temp, boxTempRange)
+            << "i: " << i << " j: " << j;
       }
     }
 
@@ -209,7 +217,10 @@ void ThermalCameraTest::ThermalCameraBoxes(
     ignition::math::Vector3d boxPositionFar(
         unitBoxSize * 0.5 + farDist * 1.5, 0.0, 0.0);
     box->SetLocalPosition(boxPositionFar);
+
+    EXPECT_EQ(2u, g_thermalCounter);
     thermalCamera->Update();
+    EXPECT_EQ(3u, g_thermalCounter);
 
     for (unsigned int i = 0; i < thermalCamera->ImageHeight(); ++i)
     {
@@ -217,7 +228,8 @@ void ThermalCameraTest::ThermalCameraBoxes(
       for (unsigned int j = 0; j < thermalCamera->ImageWidth(); ++j)
       {
         float temp = thermalData[step + j] * linearResolution;
-        EXPECT_NEAR(ambientTemp, temp, ambientTempRange);
+        EXPECT_NEAR(ambientTemp, temp, ambientTempRange)
+            << "i: " << i << " j: " << j;
       }
     }
 

@@ -272,7 +272,7 @@ void Ogre2BoundingBoxMaterialSwitcher::cameraPreRenderScene(
       float ogreId2 = (ogreId % 256) / 255.0;
 
       // Material color
-      auto customParameter = Ogre::Vector4(labelColor, ogreId1, ogreId2, 1.0);
+      auto customParameter = Ogre::Vector4(ogreId2, ogreId1, labelColor, 1.0);
 
       // Multi-links models handeling
       auto itemName = visual->Name();

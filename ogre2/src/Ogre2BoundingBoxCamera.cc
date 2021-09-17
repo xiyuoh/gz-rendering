@@ -418,6 +418,9 @@ void Ogre2BoundingBoxCamera::Destroy()
       this->ogreCamera = nullptr;
     }
   }
+
+  if (this->dataPtr->materialSwitcher)
+    this->dataPtr->materialSwitcher.reset();
 }
 
 /////////////////////////////////////////////////

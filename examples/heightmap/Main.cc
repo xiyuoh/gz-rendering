@@ -49,6 +49,7 @@ void buildScene(ScenePtr _scene)
   _scene->SetBackgroundColor(0.3, 0.3, 0.3);
   VisualPtr root = _scene->RootVisual();
 
+/*
   // create directional light
   DirectionalLightPtr light0 = _scene->CreateDirectionalLight();
   light0->SetDirection(0.5, 0.5, -1);
@@ -67,6 +68,24 @@ void buildScene(ScenePtr _scene)
   light1->SetAttenuationRange(80);
   light1->SetCastShadows(true);
   root->AddChild(light1);
+*/
+
+  // create spot light
+  SpotLightPtr light2 = _scene->CreateSpotLight();
+  light2->SetLocalPosition(35, -3, 4);
+  light2->SetDirection(1, 0, 0);
+  light2->SetDiffuseColor(0.8, 0.8, 0.8);
+  light2->SetSpecularColor(0.2, 0.2, 0.2);
+  light2->SetLocalPosition(30, -3, 6);
+  light2->SetAttenuationConstant(0);
+  light2->SetAttenuationLinear(0.1);
+  light2->SetAttenuationQuadratic(0.0025);
+  light2->SetAttenuationRange(50);
+  light2->SetFalloff(1.0);
+  light2->SetInnerAngle(1.0);
+  light2->SetOuterAngle(2.0);
+  light2->SetCastShadows(true);
+  root->AddChild(light2);
 
 //! [create a heightmap]
   auto data = std::make_shared<common::ImageHeightmap>();

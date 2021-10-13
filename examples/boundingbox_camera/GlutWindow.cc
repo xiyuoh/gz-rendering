@@ -34,6 +34,7 @@
 
 #include <ignition/common/Console.hh>
 #include <ignition/common/Image.hh>
+#include <ignition/rendering/BoundingBox.hh>
 #include <ignition/rendering/BoundingBoxCamera.hh>
 #include <ignition/rendering/Camera.hh>
 #include <ignition/rendering/Image.hh>
@@ -349,7 +350,7 @@ void OnNewBoundingBoxes(const std::vector<ir::BoundingBox> &_boxes)
   std::lock_guard<std::mutex> lock(g_boxesMutex);
   unsigned char *data = g_image->Data<unsigned char>();
   for (const auto &box : _boxes)
-    g_camera_bbox->DrawBoundingBox(data, box);
+    g_camera_bbox->DrawBoundingBox(data, ignition::math::Color::Green, box);
 
   g_boxes = _boxes;
 }

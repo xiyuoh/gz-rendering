@@ -20,6 +20,7 @@
 #include <ignition/common/Console.hh>
 
 #include "test_config.h"  // NOLINT(build/include)
+#include "ignition/rendering/BoundingBox.hh"
 #include "ignition/rendering/BoundingBoxCamera.hh"
 #include "ignition/rendering/RenderEngine.hh"
 #include "ignition/rendering/RenderingIface.hh"
@@ -60,7 +61,8 @@ void BoundingBoxCameraTest::BoundingBoxCamera(const std::string &_renderEngine)
 
   unsigned char *data = new unsigned char[width * height * channels];
 
-  BoundingBox box(BoundingBoxType::BBT_VISIBLEBOX2D);
+  BoundingBox box;
+  box.type = BoundingBoxType::BBT_VISIBLEBOX2D;
   box.center.X() = 125;
   box.center.Y() = 125;
   box.size.X() = 50;
@@ -68,7 +70,7 @@ void BoundingBoxCameraTest::BoundingBoxCamera(const std::string &_renderEngine)
 
   camera->SetImageWidth(width);
   camera->SetImageHeight(height);
-  camera->DrawBoundingBox(data, box);
+  camera->DrawBoundingBox(data, math::Color::Green, box);
 
   // test the boundaries (min & max box's points) color
   uint32_t minX = uint32_t(box.center.X() - box.size.X() / 2);

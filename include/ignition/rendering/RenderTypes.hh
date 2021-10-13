@@ -116,6 +116,7 @@ namespace ignition
     /// \typedef BoundingBoxCameraPtr
     /// \brief Shared pointer to BoundingBoxCamera
     typedef shared_ptr<BoundingBoxCamera> BoundingBoxCameraPtr;
+
     /// \typedef SegmentationCameraPtr
     /// \brief Shared pointer to Segmentation Camera
     typedef shared_ptr<SegmentationCamera> SegmentationCameraPtr;
@@ -289,6 +290,7 @@ namespace ignition
     /// \typedef const BoundingBoxCameraPtr
     /// \brief Shared pointer to const BoundingBox Camera
     typedef shared_ptr<const BoundingBoxCamera> ConstBoundingBoxCameraPtr;
+
     /// \typedef const SegmentationCameraPtr
     /// \brief Shared pointer to const Segmentation Camera
     typedef shared_ptr<const SegmentationCamera> ConstSegmentationCameraPtr;

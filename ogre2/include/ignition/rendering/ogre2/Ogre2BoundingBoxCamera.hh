@@ -75,7 +75,8 @@ namespace ignition
       public: virtual void PostRender() override;
 
       // Documentation inherited
-      public: virtual std::vector<BoundingBox> BoundingBoxData() const override;
+      public: virtual const std::vector<BoundingBox> &BoundingBoxData() const
+          override;
 
       // Documentation inherited
       public: virtual ignition::common::ConnectionPtr
@@ -135,7 +136,7 @@ namespace ignition
 
       // Documentation inherited
       public: virtual void DrawBoundingBox(unsigned char *_data,
-        const BoundingBox &_box) override;
+        const math::Color &_color, const BoundingBox &_box) const override;
 
       /// \brief Draw line between any 2 points in the image data buffer
       /// Algorithm: https://en.wikipedia.org/wiki/Bresenham%27s_line_algorithm
@@ -143,7 +144,7 @@ namespace ignition
       /// \param[in] _point1 The 1st 2D point in screen coordinates
       /// \param[in] _point2 The 2nd 2D point in screen coordinates
       public: void DrawLine(unsigned char *_data,
-        const math::Vector2i &_point1, const math::Vector2i &_point2);
+        const math::Vector2i &_point1, const math::Vector2i &_point2) const;
 
       /// \brief Convert from clip coord (after projection) to screen coord.
       /// \param[in, out] _minVertex min vertex in clip coord to screen coord

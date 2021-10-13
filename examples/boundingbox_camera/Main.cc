@@ -244,6 +244,7 @@ std::vector<CameraPtr> createCameras(const std::string &_engineName,
 //////////////////////////////////////////////////
 int main(int _argc, char** _argv)
 {
+  common::Console::SetVerbosity(4);
   glutInit(&_argc, _argv);
 
   // default to 3D boxes unless user specifies otherwise
@@ -271,7 +272,6 @@ int main(int _argc, char** _argv)
     }
   }
 
-  common::Console::SetVerbosity(4);
   std::vector<std::string> engineNames;
   std::vector<CameraPtr> cameras;
 

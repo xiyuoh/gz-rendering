@@ -37,7 +37,7 @@ const char *PixelUtil::names[PF_COUNT] =
       "FLOAT32_RGBA",
       "FLOAT32_RGB",
       "L16",
-      "R8G8B8A8",
+      "R8G8B8A8"
     };
 
 //////////////////////////////////////////////////
@@ -67,7 +67,7 @@ const unsigned char PixelUtil::channelCounts[PF_COUNT] =
       3,
       // PF_L16
       1,
-      // PF_R8G8B8A8
+      // PG_R8G8B8A8
       4
     };
 

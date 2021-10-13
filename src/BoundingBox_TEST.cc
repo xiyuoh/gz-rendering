@@ -13,38 +13,29 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  *
- */
+*/
 
-vertex_program PointCloudVS glsl
+#include <gtest/gtest.h>
+
+#include "test_config.h"  // NOLINT(build/include)
+#include "ignition/rendering/BoundingBox.hh"
+
+using namespace ignition;
+using namespace rendering;
+
+class BoundingBoxTest : public testing::Test
 {
-  source point_vs.glsl
+};
 
-  default_params
-  {
-    param_named_auto worldViewProj worldviewproj_matrix
-    param_named size float 1.0
-  }
+/////////////////////////////////////////////////
+TEST(BoundingBoxTest, BoundingBox)
+{
+  BoundingBox box;
 }
 
-fragment_program PointCloudFS glsl
+/////////////////////////////////////////////////
+int main(int argc, char **argv)
 {
-  source point_fs.glsl
-  default_params
-  {
-    param_named color float4 1.0 1.0 1.0 1.0
-  }
-}
-
-material PointCloudPoint
-{
-  technique
-  {
-    pass
-    {
-      point_size_attenuation on
-      point_sprites on
-      vertex_program_ref   PointCloudVS {}
-      fragment_program_ref PointCloudFS {}
-    }
-  }
+  ::testing::InitGoogleTest(&argc, argv);
+  return RUN_ALL_TESTS();
 }

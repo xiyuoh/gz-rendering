@@ -736,7 +736,8 @@ void Ogre2BoundingBoxCamera::MergeMultiLinksModels3D()
         vertices);
 
       // convert to rendering::BoundingBox format
-      BoundingBox box(BoundingBoxType::BBT_BOX3D);
+      BoundingBox box;
+      box.type = BoundingBoxType::BBT_BOX3D;
       auto pose = mergedBox.Pose();
       box.center = pose.Pos();
       box.orientation = pose.Rot();
@@ -784,7 +785,8 @@ BoundingBox Ogre2BoundingBoxCamera::MergeBoxes2D(
   if (_boxes.size() == 1)
     return *_boxes[0];
 
-  BoundingBox mergedBox(this->dataPtr->type);
+  BoundingBox mergedBox;
+  mergedBox.type = this->dataPtr->type;
   uint32_t minX = UINT32_MAX;
   uint32_t maxX = 0;
   uint32_t minY = UINT32_MAX;
@@ -859,7 +861,8 @@ void Ogre2BoundingBoxCamera::BoundingBoxes3D()
     // Keep track of mesh, useful in multi-links models
     this->dataPtr->ogreIdToItem[ogreId] = item;
 
-    BoundingBox *box = new BoundingBox(BoundingBoxType::BBT_BOX3D);
+    BoundingBox *box = new BoundingBox();
+    box->type = BoundingBoxType::BBT_BOX3D;
 
     // Position in world coord
     Ogre::Vector3 position = worldAabb.getCenter();
@@ -936,7 +939,8 @@ void Ogre2BoundingBoxCamera::VisibleBoundingBoxes()
         // create new boxes when its first pixel appears
         if (!this->dataPtr->boundingboxes.count(ogreId))
         {
-          box = new BoundingBox(BoundingBoxType::BBT_VISIBLEBOX2D);
+          box = new BoundingBox();
+          box->type = BoundingBoxType::BBT_VISIBLEBOX2D;
           box->label = label;
 
           boundary = new BoxBoundary();
@@ -1053,7 +1057,8 @@ void Ogre2BoundingBoxCamera::FullBoundingBoxes()
 
     this->ConvertToScreenCoord(minVertex, maxVertex);
 
-    BoundingBox *box = new BoundingBox(BoundingBoxType::BBT_FULLBOX2D);
+    BoundingBox *box = new BoundingBox();
+    box->type = BoundingBoxType::BBT_FULLBOX2D;
     auto boxWidth = maxVertex.x - minVertex.x;
     auto boxHeight = minVertex.y - maxVertex.y;
     box->center.X() = minVertex.x + boxWidth / 2;
@@ -1170,7 +1175,7 @@ void Ogre2BoundingBoxCamera::MeshMinimalBox(
 
 /////////////////////////////////////////////////
 void Ogre2BoundingBoxCamera::DrawLine(unsigned char *_data,
-  const math::Vector2i &_point1, const math::Vector2i &_point2)
+  const math::Vector2i &_point1, const math::Vector2i &_point2) const
 {
   int x0, y0, x1, y1;
 
@@ -1272,8 +1277,11 @@ void Ogre2BoundingBoxCamera::DrawLine(unsigned char *_data,
 
 /////////////////////////////////////////////////
 void Ogre2BoundingBoxCamera::DrawBoundingBox(
-  unsigned char *_data, const BoundingBox &_box)
+    unsigned char *_data, const math::Color &_color, const BoundingBox &_box)
+    const
 {
+  // TODO(anyone) Use _color
+
   // 3D box
   if (_box.type == BoundingBoxType::BBT_BOX3D)
   {
@@ -1431,9 +1439,9 @@ void Ogre2BoundingBoxCamera::ConvertToScreenCoord(
 }
 
 /////////////////////////////////////////////////
-std::vector<BoundingBox> Ogre2BoundingBoxCamera::BoundingBoxData() const
+const std::vector<BoundingBox> &Ogre2BoundingBoxCamera::BoundingBoxData() const
 {
-    return this->dataPtr->outputBoxes;
+  return this->dataPtr->outputBoxes;
 }
 
 /////////////////////////////////////////////////

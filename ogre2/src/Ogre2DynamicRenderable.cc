@@ -452,7 +452,7 @@ void Ogre2DynamicRenderable::AddPoint(const ignition::math::Vector3d &_pt,
   this->dataPtr->vertices.push_back(_pt);
 
   // todo(anyone)
-  // setting material works but vertex coloring does not work yet.
+  // setting material works but vertex coloring only works for points
   // It requires using an unlit datablock:
   // https://forums.ogre3d.org/viewtopic.php?t=93627#p539276
   this->dataPtr->colors.push_back(_color);
@@ -496,12 +496,12 @@ void Ogre2DynamicRenderable::SetColor(unsigned int _index,
 
 
   // todo(anyone)
-  // vertex coloring does not work yet. It requires using an unlit datablock:
+  // vertex coloring only works for points.
+  // Full implementation requires using an unlit datablock:
   // https://forums.ogre3d.org/viewtopic.php?t=93627#p539276
   this->dataPtr->colors[_index] = _color;
 
-  // uncomment this line when colors are working
-  // this->dataPtr->dirty = true;
+  this->dataPtr->dirty = true;
 }
 
 /////////////////////////////////////////////////
@@ -740,9 +740,6 @@ void Ogre2DynamicRenderable::GenerateColors(Ogre::OperationType _opType,
   {
     case Ogre::OperationType::OT_POINT_LIST:
     {
-      if (vertexCount < 3)
-        return;
-
       for (unsigned int i = 0; i < vertexCount; ++i)
       {
         auto color = this->dataPtr->colors[i];

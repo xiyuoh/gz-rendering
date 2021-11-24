@@ -25,5 +25,6 @@ out vec4 fragColor;
 void main()
 {
   // TODO(louise) Use `color` if per-point coloring isn't used.
+  // TODO(louise) It looks like the last point is always blue (and duplicated?)
   fragColor = vec4(ptColor.x, ptColor.y, ptColor.z, 1);
 }

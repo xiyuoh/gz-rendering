@@ -332,6 +332,10 @@ void Ogre2DynamicRenderable::UpdateBuffer()
   this->GenerateNormals(this->dataPtr->operationType, this->dataPtr->vertices,
       vertices);
 
+  // fill colors for points
+  this->GenerateColors(this->dataPtr->operationType, this->dataPtr->vertices,
+      vertices);
+
   // unmap buffer
   this->dataPtr->vertexBuffer->unmap(Ogre::UO_KEEP_PERSISTENT);
 
@@ -705,6 +709,48 @@ void Ogre2DynamicRenderable::GenerateNormals(Ogre::OperationType _opType,
         _vbuffer[idx3+3] = n3a.X();
         _vbuffer[idx3+4] = n3a.Y();
         _vbuffer[idx3+5] = n3a.Z();
+      }
+
+      break;
+    }
+    default:
+      break;
+  }
+}
+
+//////////////////////////////////////////////////
+void Ogre2DynamicRenderable::GenerateColors(Ogre::OperationType _opType,
+  const std::vector<math::Vector3d> &_vertices, float *_vbuffer)
+{
+  unsigned int vertexCount = _vertices.size();
+  // Skip if colors haven't been setup per-vertex correctly.
+  if (vertexCount != this->dataPtr->colors.size())
+    return;
+
+  // Each vertex occupies 6 elements in the vbuffer float array. Normally,
+  // the last 3 are reserved for normals. But for types that don't use normals,
+  // we use them for per-vertex coloring.
+  // vbuffer[i]   : position x
+  // vbuffer[i+1] : position y
+  // vbuffer[i+2] : position z
+  // vbuffer[i+3] : color r
+  // vbuffer[i+4] : color g
+  // vbuffer[i+5] : color b
+  switch (_opType)
+  {
+    case Ogre::OperationType::OT_POINT_LIST:
+    {
+      if (vertexCount < 3)
+        return;
+
+      for (unsigned int i = 0; i < vertexCount; ++i)
+      {
+        auto color = this->dataPtr->colors[i];
+
+        unsigned int idx = i * 6;
+        _vbuffer[idx+3] = color.R();
+        _vbuffer[idx+4] = color.G();
+        _vbuffer[idx+5] = color.B();
       }
 
       break;

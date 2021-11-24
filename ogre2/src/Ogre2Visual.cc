@@ -153,6 +153,7 @@ bool Ogre2Visual::AttachGeometry(GeometryPtr _geometry)
     return false;
   }
 
+// Each geometry must have one ogre object. Markers are geometries. I'd like them to hold multiple ogre objects (i.e. Axis / Arrow).
   Ogre::MovableObject *ogreObj = derived->OgreObject();
   if (!ogreObj)
   {

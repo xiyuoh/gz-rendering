@@ -25,11 +25,15 @@
 #endif
 #endif
 
+#include <set>
+
 #include <ignition/common/Console.hh>
 
 #include <ignition/common/Mesh.hh>
 #include <ignition/common/MeshManager.hh>
 
+#include "ignition/rendering/ogre2/Ogre2ArrowVisual.hh"
+#include "ignition/rendering/ogre2/Ogre2AxisVisual.hh"
 #include "ignition/rendering/ogre2/Ogre2Capsule.hh"
 #include "ignition/rendering/ogre2/Ogre2Conversions.hh"
 #include "ignition/rendering/ogre2/Ogre2DynamicRenderable.hh"
@@ -60,6 +64,7 @@ class ignition::rendering::Ogre2MarkerPrivate
 
   /// \brief Geometry Object for primitive shapes
   public: Ogre2GeometryPtr geom{nullptr};
+  public: std::set<Ogre2GeometryPtr> geoms{nullptr};
 
   /// \brief DynamicLines Object to display
   public: std::shared_ptr<Ogre2DynamicRenderable> dynamicRenderable;
@@ -134,6 +139,15 @@ void Ogre2Marker::Destroy()
     this->dataPtr->geom.reset();
   }
 
+  for (auto &geom : this->dataPtr->geoms)
+  {
+    if (nullptr == geom)
+      continue;
+
+    geom->Destroy();
+  }
+  this->dataPtr->geoms.clear();
+
   if (this->dataPtr->dynamicRenderable)
   {
     this->dataPtr->dynamicRenderable->Destroy();
@@ -154,6 +168,18 @@ Ogre::MovableObject *Ogre2Marker::OgreObject() const
   {
     case MT_NONE:
       return nullptr;
+    case MT_ARROW:
+    case MT_AXIS:
+    {
+      if (!this->dataPtr->geoms.empty())
+      {
+        // TODO(chapulina) Other geometries are being left behind
+        auto geom = *this->dataPtr->geoms.begin();
+        if (nullptr != geom)
+          return geom->OgreObject();
+      }
+      return nullptr;
+    }
     case MT_BOX:
     case MT_CAPSULE:
     case MT_CYLINDER:
@@ -235,6 +261,22 @@ void Ogre2Marker::SetMaterial(MaterialPtr _material, bool _unique)
   {
     case MT_NONE:
       break;
+    case MT_ARROW:
+    case MT_AXIS:
+    {
+      for (auto &geom : this->dataPtr->geoms)
+      {
+        if (nullptr != geom)
+        {
+          geom->SetMaterial(derived, false);
+        }
+        else
+        {
+          ignerr << "Failed to set material, null geometry." << std::endl;
+        }
+      }
+      break;
+    }
     case MT_BOX:
     case MT_CAPSULE:
     case MT_CYLINDER:
@@ -325,12 +367,40 @@ void Ogre2Marker::SetType(MarkerType _markerType)
     }
     this->dataPtr->geom->Destroy();
   }
+  for (auto &geom : this->dataPtr->geoms)
+  {
+    if (nullptr == geom)
+      continue;
+
+    if (visual)
+    {
+      visual->RemoveGeometry(geom);
+    }
+    geom->Destroy();
+  }
+  this->dataPtr->geoms.clear();
+
+  if (visual)
+  {
+    visual->RemoveGeometry(
+        std::dynamic_pointer_cast<Geometry>(shared_from_this()));
+  }
 
   bool isGeom{false};
-  GeometryPtr newGeom;
+  bool isVis{false};
+  GeometryPtr newGeom{nullptr};
+  VisualPtr newVis{nullptr};
   switch (_markerType)
   {
     case MT_NONE:
+      break;
+    case MT_ARROW:
+      isVis = true;
+      newVis = this->scene->CreateArrowVisual();
+      break;
+    case MT_AXIS:
+      isVis = true;
+      newVis = this->scene->CreateAxisVisual();
       break;
     case MT_BOX:
       isGeom = true;
@@ -378,6 +448,60 @@ void Ogre2Marker::SetType(MarkerType _markerType)
   else if (isGeom)
   {
     ignerr << "Failed to create geometry for marker type [" << _markerType
+           << "]" << std::endl;
+  }
+
+  if (nullptr != newVis)
+  {
+    for (auto i = 0u; i < newVis->GeometryCount(); ++i)
+    {
+      auto geom = std::dynamic_pointer_cast<Ogre2Geometry>(
+          newVis->GeometryByIndex(i)->Clone());
+      if (nullptr == geom)
+      {
+        ignerr << "Failed to cast to [Ogre2Geom], type [" << _markerType << "]"
+               << std::endl;
+      }
+      else
+      {
+        this->dataPtr->geoms.insert(geom);
+        if (nullptr != visual)
+        {
+          visual->AddGeometry(geom);
+        }
+      }
+    }
+    for (auto i = 0u; i < newVis->ChildCount(); ++i)
+    {
+      auto child = std::dynamic_pointer_cast<Ogre2Visual>(
+          newVis->ChildByIndex(i));
+      if (nullptr == child)
+        continue;
+
+      for (auto j = 0u; j < child->GeometryCount(); ++j)
+      {
+        auto geom = std::dynamic_pointer_cast<Ogre2Geometry>(
+            child->GeometryByIndex(j)->Clone());
+        if (nullptr == geom)
+        {
+          ignerr << "Failed to cast to [Ogre2Geom], type [" << _markerType << "]"
+                 << std::endl;
+        }
+        else
+        {
+          this->dataPtr->geoms.insert(geom);
+          if (nullptr != visual)
+          {
+            visual->AddGeometry(geom);
+          }
+        }
+      }
+    }
+    newVis->Destroy();
+  }
+  else if (isVis)
+  {
+    ignerr << "Failed to create visual for marker type [" << _markerType
            << "]" << std::endl;
   }
 }

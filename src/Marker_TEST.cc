@@ -76,6 +76,12 @@ void MarkerTest::Marker(const std::string &_renderEngine)
   EXPECT_EQ(-2, marker->Layer());
 
   // type
+  marker->SetType(MarkerType::MT_ARROW);
+  EXPECT_EQ(MarkerType::MT_ARROW, marker->Type());
+
+  marker->SetType(MarkerType::MT_AXIS);
+  EXPECT_EQ(MarkerType::MT_AXIS, marker->Type());
+
   marker->SetType(MarkerType::MT_CAPSULE);
   EXPECT_EQ(MarkerType::MT_CAPSULE, marker->Type());
 

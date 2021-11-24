@@ -69,6 +69,12 @@ namespace ignition
 
       /// \brief Capsule geometry
       MT_CAPSULE        = 11,
+
+      /// \brief Arrow geometry
+      MT_ARROW          = 12,
+
+      /// \brief Axis geometry
+      MT_AXIS           = 13,
     };
 
     /// \class Marker Marker.hh ignition/rendering/Marker

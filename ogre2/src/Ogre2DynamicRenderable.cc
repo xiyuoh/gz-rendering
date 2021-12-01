@@ -311,7 +311,8 @@ void Ogre2DynamicRenderable::UpdateBuffer()
 
   // fill the rest of the buffer with the position of the last vertex to avoid
   // the geometry connecting back to 0, 0, 0
-  if (vertexCount > 0 && vertexCount < this->dataPtr->vertexBufferCapacity)
+  if (vertexCount > 0 && vertexCount < this->dataPtr->vertexBufferCapacity &&
+      this->dataPtr->operationType != Ogre::OperationType::OT_POINT_LIST)
   {
     math::Vector3d lastVertex = this->dataPtr->vertices[vertexCount-1];
     for (unsigned int i = vertexCount; i < this->dataPtr->vertexBufferCapacity;
@@ -363,7 +364,7 @@ void Ogre2DynamicRenderable::UpdateBuffer()
       this->dataPtr->ogreItem->setCastShadows(
           this->dataPtr->material->CastShadows());
     }
-    else if (lowLevelMat)
+    if (lowLevelMat)
     {
       // the _initialise call above resets the ogre item properties so set
       // them again

@@ -690,6 +690,12 @@ void CameraTest::ShaderSelection(const std::string &_renderEngine)
   int g2 = static_cast<int>(data2[mid+1]);
   int b2 = static_cast<int>(data2[mid+2]);
 
+  std::string home;
+  common::env("HOME", home);
+  std::ifstream file(home + "/.ignition/rendering/ogre2.log");
+  if (file.is_open())
+    ignerr << file.rdbuf() << std::endl;
+
   EXPECT_EQ(r, r2);
   EXPECT_EQ(g, g2);
   EXPECT_EQ(b, b2);

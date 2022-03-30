@@ -589,6 +589,7 @@ void Ogre2RenderEngine::CreateRenderSystem()
     ignerr << "unable to find " << targetRenderSysName << ". OGRE is probably "
             "installed incorrectly. Double check the OGRE cmake output, "
             "and make sure OpenGL is enabled." << std::endl;
+    return;
   }
 
   if (!this->Headless())

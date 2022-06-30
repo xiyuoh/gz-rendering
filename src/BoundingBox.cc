@@ -15,6 +15,7 @@
  *
  */
 
+#include <utility>
 
 #include "gz/rendering/BoundingBox.hh"
 

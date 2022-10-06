@@ -36,6 +36,15 @@ Ogre2RenderPass::~Ogre2RenderPass()
 }
 
 //////////////////////////////////////////////////
+void Ogre2RenderPass::SetCamera(Ogre::Camera *_camera)
+{
+  if (this->ogreCamera != _camera)
+  {
+    this->ogreCamera = _camera;
+  }
+}
+
+//////////////////////////////////////////////////
 void Ogre2RenderPass::Destroy()
 {
 }

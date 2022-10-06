@@ -678,6 +678,7 @@ void Ogre2RenderTarget::UpdateRenderPassChain()
       this->ogreCompositorWorkspaceDefName + "/" +
       this->dataPtr->kFinalNodeName,
       this->renderPasses,
+      this->ogreCamera,
       this->renderPassDirty,
       &this->dataPtr->ogreTexture,
       this->IsRenderWindow());
@@ -689,7 +690,7 @@ void Ogre2RenderTarget::UpdateRenderPassChain()
 void Ogre2RenderTarget::UpdateRenderPassChain(
     Ogre::CompositorWorkspace *_workspace, const std::string &_workspaceDefName,
     const std::string &_baseNode, const std::string &_finalNode,
-    const std::vector<RenderPassPtr> &_renderPasses,
+    const std::vector<RenderPassPtr> &_renderPasses, Ogre::Camera *_camera,
     bool _recreateNodes, Ogre::TextureGpu *(*_ogreTextures)[2],
     bool _isRenderWindow)
 {
@@ -765,6 +766,11 @@ void Ogre2RenderTarget::UpdateRenderPassChain(
   {
     Ogre2RenderPass *ogre2RenderPass =
         dynamic_cast<Ogre2RenderPass *>(pass.get());
+    if (_camera != nullptr)
+    {
+      std::cout << "-------- setting camera for " << _camera->getName() << std::endl;
+      ogre2RenderPass->SetCamera(_camera);
+    }
     ogre2RenderPass->CreateRenderPass();
     inNodeDefName = ogre2RenderPass->OgreCompositorNodeDefinitionName();
     // only connect passes that are enabled

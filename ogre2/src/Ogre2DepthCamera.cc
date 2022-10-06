@@ -1005,6 +1005,7 @@ void Ogre2DepthCamera::PreRender()
       this->dataPtr->ogreCompositorBaseNodeDef,
       this->dataPtr->ogreCompositorFinalNodeDef,
       this->dataPtr->renderPasses,
+      nullptr,
       this->dataPtr->renderPassDirty,
       &this->dataPtr->ogreDepthTexture,
       false);

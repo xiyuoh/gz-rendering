@@ -161,6 +161,7 @@ namespace gz
           const std::string &_workspaceDefName,
           const std::string &_baseNode, const std::string &_finalNode,
           const std::vector<RenderPassPtr> &_renderPasses,
+          Ogre::Camera *_camera,
           bool _recreateNodes,
           Ogre::TextureGpu *(*_ogreTextures)[2],
           bool _isRenderWindow);

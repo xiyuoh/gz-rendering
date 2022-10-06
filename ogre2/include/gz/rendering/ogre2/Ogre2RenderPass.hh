@@ -22,6 +22,7 @@
 
 #include "gz/rendering/base/BaseRenderPass.hh"
 #include "gz/rendering/ogre2/Export.hh"
+#include "gz/rendering/ogre2/Ogre2Includes.hh"
 #include "gz/rendering/ogre2/Ogre2Object.hh"
 
 namespace gz
@@ -58,6 +59,10 @@ namespace gz
       /// \brief Destructor
       public: virtual ~Ogre2RenderPass();
 
+      /// \brief Set the ogre camera that the render pass applies to
+      /// \param[in] _camera Pointer to the ogre camera.
+      public: virtual void SetCamera(Ogre::Camera *_camera);
+
       // Documentation inherited.
       public: void Destroy() override;
 
@@ -67,6 +72,9 @@ namespace gz
 
       /// \brief Create the render pass using ogre compositor
       public: virtual void CreateRenderPass();
+
+      /// \brief Pointer to the ogre camera
+      protected: Ogre::Camera *ogreCamera = nullptr;
 
       /// \brief Name of the ogre compositor node definition
       protected: std::string ogreCompositorNodeDefName;

@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2022 Open Source Robotics Foundation
+ * Copyright (C) 2019 Open Source Robotics Foundation
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,11 +15,32 @@
  *
  */
 
+#version ogre_glsl_ver_330
+
 // Simple vertex shader; just setting things up for the real work to be done in
-// camera_distortion_fs.glsl.
+// gaussian_noise_fs.glsl.
+
+vulkan_layout( OGRE_POSITION ) in vec4 vertex;
+vulkan_layout( OGRE_TEXCOORD0 ) in vec2 uv0;
+
+vulkan( layout( ogre_P0 ) uniform Params { )
+  uniform mat4 worldViewProj;
+vulkan( }; )
+
+out gl_PerVertex
+{
+  vec4 gl_Position;
+};
+
+vulkan_layout( location = 0 )
+out block
+{
+  vec2 uv0;
+} outVs;
+
+
 void main()
 {
-  gl_Position = gl_ModelViewProjectionMatrix * gl_Vertex;
-  gl_TexCoord[0] = gl_MultiTexCoord0;
+  gl_Position = worldViewProj * vertex;
+  outVs.uv0.xy = uv0.xy;
 }
-

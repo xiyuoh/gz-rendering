@@ -15,17 +15,65 @@
  *
  */
 
-vertex_program CameraDistortionMapVS glsl
+// GLSL shaders
+vertex_program CameraDistortionMapVS_GLSL glsl
 {
   source camera_distortion_map_vs.glsl
 }
 
-fragment_program CameraDistortionMapFS glsl
+fragment_program CameraDistortionMapFS_GLSL glsl
 {
   source camera_distortion_map_fs.glsl
   default_params
   {
     param_named RT int 0
+  }
+}
+
+// Vulkan shaders
+vertex program CameraDistortionMapVS_VK glslvk
+{
+  source camera_distortion_map_vs.glsl
+}
+
+fragment_program CameraDistortionMapFS_VK glslvk
+{
+  source camera_distortion_map_fs.glsl
+}
+
+// Metal shaders
+vertex program CameraDistortionMapVS_Metal metal
+{
+  source camera_distortion_map_vs.metal
+}
+
+fragment_program CameraDistortionMapFS_Metal metal
+{
+  source camera_distortion_map_fs.metal
+  shader_reflection_pair_hint CameraDistortionMapVS_Metal
+}
+
+// Unified shaders
+vertex_program CameraDistortionMapVS unified
+{
+  delegate CameraDistortionMapVS_GLSL
+  delegate CameraDistortionMapVS_Metal
+  delegate CameraDistortionMapVS_VK
+
+  default_params
+  {
+    param_named_auto worldViewProj worldviewproj_matrix
+  }
+}
+
+fragment_program CameraDistortionMapFS unified
+{
+  delegate CameraDistortionMapFS_GLSL
+  delegate CameraDistortionMapFS_Metal
+  delegate CameraDistortionMapFS_VK
+
+  default_params
+  {
     param_named distortionMap int 1
     param_named scale float3 1.0 1.0 1.0
   }
@@ -37,6 +85,10 @@ material Distortion
   {
     pass
     {
+      depth_check off
+      depth_write off
+      cull_hardware none
+
       vertex_program_ref CameraDistortionMapVS { }
       fragment_program_ref CameraDistortionMapFS { }
 

@@ -113,6 +113,7 @@ void Ogre2DistortionPass::CreateRenderPass()
   // The Distortion material is defined in script (distortion.material).
   // clone the material
   std::string matName = "Distortion";
+  gzmsg << "---------------- cloning the distortion.material" << std::endl;
   Ogre::MaterialPtr ogreMat =
       Ogre::MaterialManager::getSingleton().getByName(matName);
   if (!ogreMat)
@@ -125,7 +126,9 @@ void Ogre2DistortionPass::CreateRenderPass()
     ogreMat->load();
   std::string materialName = matName + "_" +
         std::to_string(distortionNodeCounter);
+  gzmsg << "---------------- getting material name: " << materialName << std::endl;
   this->dataPtr->distortionMat = ogreMat->clone(materialName).get();
+  gzmsg << "------ cloned distortion material" << std::endl;
 
 
   // -------------------------------------------------------------------
@@ -275,7 +278,6 @@ void Ogre2DistortionPass::CreateRenderPass()
       Ogre::TextureTypes::Type2D);
 
 
-
 // --------------------------------------------------------------------
   // Ogre::HardwarePixelBufferSharedPtr pixelBuffer =
   //     this->dataPtr->distortionTex->getBuffer();
@@ -386,6 +388,8 @@ void Ogre2DistortionPass::CreateRenderPass()
   this->dataPtr->distortionMat->getTechnique(0)->getPass(0)->
       createTextureUnitState(texName, 1);
 
+  gzmsg << "----------- set up distmap texture to be used in the pixel shader" << std::endl;
+
   // -------------------------------------------------------------------
   // -------------------------------------------------------------------
 
@@ -426,7 +430,7 @@ gz::math::Vector2d Ogre2DistortionPass::Distort(
     const gz::math::Vector2d &_center, double _k1, double _k2, double _k3,
     double _p1, double _p2, unsigned int _width, double _f)
 {
-  std::cout << "--- INSIDE DISTORT() YA" << std::endl;
+  // std::cout << "--- INSIDE DISTORT() YA" << std::endl;
   // apply Brown's distortion model, see
   // http://en.wikipedia.org/wiki/Distortion_%28optics%29#Software_correction
 
@@ -456,7 +460,7 @@ gz::math::Vector2d
     Ogre2DistortionPass::DistortionMapValueClamped(
     int _x, int _y) const
 {
-  std::cout << "--- INSIDE DistortionMapValueClamped" << std::endl;
+  // std::cout << "--- INSIDE DistortionMapValueClamped" << std::endl;
 
   if (_x < 0 || _x >= static_cast<int>(this->dataPtr->distortionTexWidth) ||
       _y < 0 || _y >= static_cast<int>(this->dataPtr->distortionTexHeight))

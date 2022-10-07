@@ -27,11 +27,12 @@ fragment_program CameraDistortionMapFS_GLSL glsl
   default_params
   {
     param_named RT int 0
+    param_named distortionMap int 1
   }
 }
 
 // Vulkan shaders
-vertex program CameraDistortionMapVS_VK glslvk
+vertex_program CameraDistortionMapVS_VK glslvk
 {
   source camera_distortion_map_vs.glsl
 }
@@ -42,7 +43,7 @@ fragment_program CameraDistortionMapFS_VK glslvk
 }
 
 // Metal shaders
-vertex program CameraDistortionMapVS_Metal metal
+vertex_program CameraDistortionMapVS_Metal metal
 {
   source camera_distortion_map_vs.metal
 }
@@ -74,7 +75,6 @@ fragment_program CameraDistortionMapFS unified
 
   default_params
   {
-    param_named distortionMap int 1
     param_named scale float3 1.0 1.0 1.0
   }
 }

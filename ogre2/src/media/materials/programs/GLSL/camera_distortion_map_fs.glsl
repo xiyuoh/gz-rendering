@@ -19,11 +19,11 @@
 
 // The input texture, which is set up by the Ogre Compositor infrastructure.
 vulkan_layout( ogre_t0 ) uniform texture2D RT;
+vulkan_layout( ogre_t1 ) uniform texture2D distortionMap;
+
 vulkan( layout( ogre_s0 ) uniform sampler texSampler );
 
 vulkan( layout( ogre_P0 ) uniform Params { )
-	// Mapping of undistorted to distorted uv coordinates.
-	uniform sampler2D distortionMap;
 	// Scale the input texture if necessary to crop black border
 	uniform vec3 scale;
 vulkan( }; )
@@ -32,7 +32,7 @@ vulkan( }; )
 vulkan_layout( location = 0 )
 in block
 {
-vec2 uv0;
+  vec2 uv0;
 } inPs;
 
 // final output color
@@ -41,13 +41,14 @@ out vec4 fragColor;
 
 void main()
 {
-  vec2 scaleCenter = vec2(0.5, 0.5);
-  vec2 inputUV = (gl_TexCoord[0].xy - scaleCenter) / scale.xy + scaleCenter;
-  vec4 mapUV = texture2D(distortionMap, inputUV);
+  vec2 scaleCenter = vec2(0.5, 0.5); 
+  vec2 inputUV = (inPs.uv0.xy - scaleCenter) / scale.xy + scaleCenter;
+  vec4 mapUV = texture(vkSampler2D(distortionMap,texSampler), inputUV);
 
   if (mapUV.x < 0.0 || mapUV.y < 0.0)
     fragColor = vec4(0.0, 0.0, 0.0, 1.0);
   else
-    fragColor = texture2D(RT, mapUV.xy);
+    fragColor = texture(vkSampler2D(RT,texSampler), mapUV.xy);
+    // fragColor = texture(vkSampler2D(RT,texSampler), inPs.uv0.xy);
 }
 

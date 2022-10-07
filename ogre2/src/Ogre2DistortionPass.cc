@@ -110,37 +110,13 @@ void Ogre2DistortionPass::CreateRenderPass()
   if (ogreCompMgr->hasNodeDefinition(nodeDefName))
     return;
 
-  // The Distortion material is defined in script (distortion.material).
-  // clone the material
-  std::string matName = "Distortion";
-  gzmsg << "---------------- cloning the distortion.material" << std::endl;
-  Ogre::MaterialPtr ogreMat =
-      Ogre::MaterialManager::getSingleton().getByName(matName);
-  if (!ogreMat)
-  {
-    gzerr << "Distortion material not found: '" << matName << "'"
-           << std::endl;
-    return;
-  }
-  if (!ogreMat->isLoaded())
-    ogreMat->load();
-  std::string materialName = matName + "_" +
-        std::to_string(distortionNodeCounter);
-  gzmsg << "---------------- getting material name: " << materialName << std::endl;
-  this->dataPtr->distortionMat = ogreMat->clone(materialName).get();
-  gzmsg << "------ cloned distortion material" << std::endl;
-
-
-  // -------------------------------------------------------------------
-  // -------------------------------------------------------------------
-
-  // TODO(XY): fetch width and height properly from RenderTarget
   //----------------------------------------------------------------------------------------------------------
+  // TODO(XY): fetch width and height properly from RenderTarget
   float viewportWidth = 320.0;
   float viewportHeight = 240.0;
   std::cout << "------------- did i manage to get the RenderTarget->width: " << viewportWidth << std::endl;
   std::cout << "------------- did i manage to get the RenderTarget->height: " << viewportHeight << std::endl;
-  //----------------------------------------------------------------------------------------------------------
+  //-------------------------------------------------------------------
 
   // seems to work best with a square distortion map texture
   unsigned int texSize = static_cast<unsigned int>(viewportHeight >
@@ -155,13 +131,6 @@ void Ogre2DistortionPass::CreateRenderPass()
   this->dataPtr->distortionTexHeight = texSize;
   unsigned int imageSize =
       this->dataPtr->distortionTexWidth * this->dataPtr->distortionTexHeight;
-  double colStepSize = 1.0 / this->dataPtr->distortionTexWidth;
-  double rowStepSize = 1.0 / this->dataPtr->distortionTexHeight;
-
-  // Half step-size vector to add to the value being placed in distortion map.
-  // Necessary for compositor to correctly interpolate pixel values.
-  const auto halfTexelSize =
-      0.5 * gz::math::Vector2d(rowStepSize, colStepSize);
 
   // initialize distortion map
   this->dataPtr->distortionMap.resize(imageSize);
@@ -170,102 +139,26 @@ void Ogre2DistortionPass::CreateRenderPass()
     this->dataPtr->distortionMap[i] = -1;
   }
 
-  gz::math::Vector2d distortionCenterCoordinates(
-      this->lensCenter.X() * this->dataPtr->distortionTexWidth,
-      this->lensCenter.Y() * this->dataPtr->distortionTexWidth);
+  //----------------------------------------------------------------------------------------------------------
 
-  // declare variables before the loop
-  const auto unsetPixelVector =  gz::math::Vector2d(-1, -1);
-  gz::math::Vector2d normalizedLocation,
-      distortedLocation,
-      newDistortedCoordinates,
-      currDistortedCoordinates;
-  unsigned int distortedIdx,
-      distortedCol,
-      distortedRow;
-  double normalizedColLocation, normalizedRowLocation;
-
-  // fill the distortion map
-  for (unsigned int mapRow = 0; mapRow < this->dataPtr->distortionTexHeight;
-    ++mapRow)
+  // The Distortion material is defined in script (distortion.material).
+  // clone the material
+  std::string matName = "Distortion";
+  Ogre::MaterialPtr ogreMat =
+      Ogre::MaterialManager::getSingleton().getByName(matName);
+  if (!ogreMat)
   {
-    normalizedRowLocation = mapRow*rowStepSize;
-    for (unsigned int mapCol = 0; mapCol < this->dataPtr->distortionTexWidth;
-      ++mapCol)
-    {
-      normalizedColLocation = mapCol*colStepSize;
-
-      normalizedLocation[0] = normalizedColLocation;
-      normalizedLocation[1] = normalizedRowLocation;
-
-      distortedLocation = this->Distort(
-          normalizedLocation,
-          this->lensCenter,
-          this->k1, this->k2, this->k3,
-          this->p1, this->p2,
-          this->dataPtr->distortionTexWidth,
-          focalLength);
-
-      // compute the index in the distortion map
-      distortedCol = static_cast<unsigned int>(round(distortedLocation.X() *
-        this->dataPtr->distortionTexWidth));
-      distortedRow = static_cast<unsigned int>(round(distortedLocation.Y() *
-        this->dataPtr->distortionTexHeight));
-
-      // Note that the following makes sure that, for significant distortions,
-      // there is not a problem where the distorted image seems to fold over
-      // itself. This is accomplished by favoring pixels closer to the center
-      // of distortion, and this change applies to both the legacy and
-      // nonlegacy distortion modes.
-
-      // Make sure the distorted pixel is within the texture dimensions
-      if (distortedCol < this->dataPtr->distortionTexWidth &&
-          distortedRow < this->dataPtr->distortionTexHeight)
-      {
-        distortedIdx = distortedRow * this->dataPtr->distortionTexWidth +
-          distortedCol;
-
-        // check if the index has already been set
-        if (this->dataPtr->distortionMap[distortedIdx] != unsetPixelVector)
-        {
-          // grab current coordinates that map to this destination
-          currDistortedCoordinates =
-            this->dataPtr->distortionMap[distortedIdx] *
-            this->dataPtr->distortionTexWidth;
-
-          // grab new coordinates to map to
-          newDistortedCoordinates[0] = mapCol;
-          newDistortedCoordinates[1] = mapRow;
-
-          // use the new mapping if it is closer to the center of the distortion
-          if (newDistortedCoordinates.Distance(distortionCenterCoordinates) <
-              currDistortedCoordinates.Distance(distortionCenterCoordinates))
-          {
-            this->dataPtr->distortionMap[distortedIdx] = normalizedLocation +
-              halfTexelSize;
-          }
-        }
-        else
-        {
-          this->dataPtr->distortionMap[distortedIdx] = normalizedLocation +
-            halfTexelSize;
-        }
-      }
-      // else: mapping is outside of the image bounds.
-      // This is expected and normal to ensure
-      // no black borders; carry on
-    }
+    gzerr << "Distortion material not found: '" << matName << "'"
+          << std::endl;
+    return;
   }
+  if (!ogreMat->isLoaded())
+    ogreMat->load();
+  std::string materialName = matName + "_" +
+        std::to_string(distortionNodeCounter);
+  this->dataPtr->distortionMat = ogreMat->clone(materialName).get();
 
-  // // set up the distortion instance
-  // this->dataPtr->distortionMat =
-  //   Ogre::MaterialManager::getSingleton().getByName(
-  //       "Distortion");
-  // this->dataPtr->distortionMat =
-  //   this->dataPtr->distortionMat->clone(
-  //       this->ogreCamera->getName() + "_Distortion");
-
-  // create the distortion map texture for the distortion instance
+  //----------------------------------------------------------------------------------------------------------
   std::string texName = this->ogreCamera->getName() + "_distortionTex";
   Ogre::TextureGpuManager *textureMgr =
     ogreRoot->getRenderSystem()->getTextureGpuManager();
@@ -277,121 +170,15 @@ void Ogre2DistortionPass::CreateRenderPass()
       Ogre::TextureFlags::RenderToTexture,
       Ogre::TextureTypes::Type2D);
 
-
-// --------------------------------------------------------------------
-  // Ogre::HardwarePixelBufferSharedPtr pixelBuffer =
-  //     this->dataPtr->distortionTex->getBuffer();
-// --------------------------------------------------------------------
-
-  // fill the distortion map, while interpolating to fill dead pixels
-  // pixelBuffer->lock(Ogre::HardwareBuffer::HBL_NORMAL);
-  // const Ogre::PixelBox &pixelBox = pixelBuffer->getCurrentLock();
-
-  for (unsigned int i = 0; i < this->dataPtr->distortionTexHeight; ++i)
-  {
-    for (unsigned int j = 0; j < this->dataPtr->distortionTexWidth; ++j)
-    {
-      gz::math::Vector2d vec =
-          this->dataPtr->distortionMap[i *
-              this->dataPtr->distortionTexWidth + j];
-
-      // perform interpolation on-the-fly:
-      // check for empty mapping within the region and correct it by
-      // interpolating the eight neighboring distortion map values.
-
-      if (vec.X() < -0.5 && vec.Y() < -0.5)
-      {
-        gz::math::Vector2d left =
-            this->DistortionMapValueClamped(j - 1, i);
-        gz::math::Vector2d right =
-            this->DistortionMapValueClamped(j + 1, i);
-        gz::math::Vector2d bottom =
-            this->DistortionMapValueClamped(j, i + 1);
-        gz::math::Vector2d top =
-            this->DistortionMapValueClamped(j, i - 1);
-
-        gz::math::Vector2d topLeft =
-            this->DistortionMapValueClamped(j - 1, i - 1);
-        gz::math::Vector2d topRight =
-            this->DistortionMapValueClamped(j + 1, i - 1);
-        gz::math::Vector2d bottomLeft =
-            this->DistortionMapValueClamped(j - 1, i + 1);
-        gz::math::Vector2d bottomRight =
-            this->DistortionMapValueClamped(j + 1, i + 1);
-
-        gz::math::Vector2d interpolated;
-        double divisor = 0;
-        if (right.X() > -0.5)
-        {
-          divisor++;
-          interpolated += right;
-        }
-        if (left.X() > -0.5)
-        {
-          divisor++;
-          interpolated += left;
-        }
-        if (top.X() > -0.5)
-        {
-          divisor++;
-          interpolated += top;
-        }
-        if (bottom.X() > -0.5)
-        {
-          divisor++;
-          interpolated += bottom;
-        }
-
-        if (bottomRight.X() > -0.5)
-        {
-          divisor += 0.707;
-          interpolated += bottomRight * 0.707;
-        }
-        if (bottomLeft.X() > -0.5)
-        {
-          divisor += 0.707;
-          interpolated += bottomLeft * 0.707;
-        }
-        if (topRight.X() > -0.5)
-        {
-          divisor += 0.707;
-          interpolated += topRight * 0.707;
-        }
-        if (topLeft.X() > -0.5)
-        {
-          divisor += 0.707;
-          interpolated += topLeft * 0.707;
-        }
-
-        if (divisor > 0.5)
-        {
-          interpolated /= divisor;
-        }
-        // *pDest++ = gz::math::clamp(interpolated.X(), 0.0, 1.0);
-        // *pDest++ = gz::math::clamp(interpolated.Y(), 0.0, 1.0);
-      }
-      else
-      {
-        // *pDest++ = vec.X();
-        // *pDest++ = vec.Y();
-      }
-
-      // Z coordinate
-      // *pDest++ = 0;
-    }
-  }
-  // pixelBuffer->unlock();
-
-  this->CalculateAndApplyDistortionScale();
-
-  // set up the distortion map texture to be used in the pixel shader.
   this->dataPtr->distortionMat->getTechnique(0)->getPass(0)->
       createTextureUnitState(texName, 1);
 
-  gzmsg << "----------- set up distmap texture to be used in the pixel shader" << std::endl;
+  auto nn = this->dataPtr->distortionMat->getTechnique(0)->getPass(0)->getNumTextureUnitStates();
+  gzmsg << "--------------- NUM TEXTURE UNIT STATES: " << nn << std::endl;
 
-  // -------------------------------------------------------------------
-  // -------------------------------------------------------------------
+  //----------------------------------------------------------------------------------------------------------
+
+  // create the compositor node definition
 
   this->ogreCompositorNodeDefName = nodeDefName;
   distortionNodeCounter++;
@@ -430,7 +217,6 @@ gz::math::Vector2d Ogre2DistortionPass::Distort(
     const gz::math::Vector2d &_center, double _k1, double _k2, double _k3,
     double _p1, double _p2, unsigned int _width, double _f)
 {
-  // std::cout << "--- INSIDE DISTORT() YA" << std::endl;
   // apply Brown's distortion model, see
   // http://en.wikipedia.org/wiki/Distortion_%28optics%29#Software_correction
 
@@ -460,8 +246,6 @@ gz::math::Vector2d
     Ogre2DistortionPass::DistortionMapValueClamped(
     int _x, int _y) const
 {
-  // std::cout << "--- INSIDE DistortionMapValueClamped" << std::endl;
-
   if (_x < 0 || _x >= static_cast<int>(this->dataPtr->distortionTexWidth) ||
       _y < 0 || _y >= static_cast<int>(this->dataPtr->distortionTexHeight))
   {
@@ -476,13 +260,7 @@ gz::math::Vector2d
 void Ogre2DistortionPass::CalculateAndApplyDistortionScale()
 {
   if (this->dataPtr->distortionMat == nullptr)
-  {
-    std::cout << "--- EH NO DISTORTION MAT YA" << std::endl;
     return;
-  }
-    // return;
-
-  std::cout << "--------- CALCULATE AND APPLY DISTORTION SCALE" << std::endl;
 
   // Scale up image if cropping enabled and valid
   if (this->dataPtr->distortionCrop && this->k1 < 0)

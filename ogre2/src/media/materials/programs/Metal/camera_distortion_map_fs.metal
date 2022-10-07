@@ -27,8 +27,6 @@ struct PS_INPUT
 
 struct Params
 {
-  // Mapping of undistorted to distorted uv coordinates.
-  sampler2D distortionMap;
   // Scale the input texture if necessary to crop black border
   vec3 scale;
 };
@@ -37,18 +35,19 @@ fragment float4 main_metal
 (
   PS_INPUT inPs [[stage_in]],
   texture2d<float> RT [[texture(0)]],
+  texture2d<float> distortionMap [[texture(0)]],
   sampler rtSampler [[sampler(0)]],
   constant Params &p [[buffer(PARAMETER_SLOT)]]
 )
 {
   vec2 scaleCenter = vec2(0.5, 0.5);
-  vec2 inputUV = (gl_TexCoord[0].xy - scaleCenter) / scale.xy + scaleCenter;
-  vec4 mapUV = texture2D(distortionMap, inputUV);
+  vec2 inputUV = (inPs.uv0.xy - scaleCenter) / scale.xy + scaleCenter;
+  vec4 mapUV = texture(distortionMap, inputUV);
 
   if (mapUV.x < 0.0 || mapUV.y < 0.0)
     fragColor = vec4(0.0, 0.0, 0.0, 1.0);
   else
-    fragColor = texture2D(RT, mapUV.xy);
+    fragColor = RT.sampler(rtSampler, mapUV.xy);
 
   return fragColor;
 }

@@ -171,13 +171,13 @@ void OgreDistortionPass::CreateRenderPass()
   this->dataPtr->distortionTexHeight = texSize;
   unsigned int imageSize =
       this->dataPtr->distortionTexWidth * this->dataPtr->distortionTexHeight;
-  // double colStepSize = 1.0 / this->dataPtr->distortionTexWidth;
-  // double rowStepSize = 1.0 / this->dataPtr->distortionTexHeight;
+  double colStepSize = 1.0 / this->dataPtr->distortionTexWidth;
+  double rowStepSize = 1.0 / this->dataPtr->distortionTexHeight;
 
-  // // Half step-size vector to add to the value being placed in distortion map.
-  // // Necessary for compositor to correctly interpolate pixel values.
-  // const auto halfTexelSize =
-  //     0.5 * gz::math::Vector2d(rowStepSize, colStepSize);
+  // Half step-size vector to add to the value being placed in distortion map.
+  // Necessary for compositor to correctly interpolate pixel values.
+  const auto halfTexelSize =
+      0.5 * gz::math::Vector2d(rowStepSize, colStepSize);
 
   // initialize distortion map
   this->dataPtr->distortionMap.resize(imageSize);
@@ -186,92 +186,92 @@ void OgreDistortionPass::CreateRenderPass()
     this->dataPtr->distortionMap[i] = -1;
   }
 
-  // gz::math::Vector2d distortionCenterCoordinates(
-  //     this->lensCenter.X() * this->dataPtr->distortionTexWidth,
-  //     this->lensCenter.Y() * this->dataPtr->distortionTexWidth);
+  gz::math::Vector2d distortionCenterCoordinates(
+      this->lensCenter.X() * this->dataPtr->distortionTexWidth,
+      this->lensCenter.Y() * this->dataPtr->distortionTexWidth);
 
-  // // declare variables before the loop
-  // const auto unsetPixelVector =  gz::math::Vector2d(-1, -1);
-  // gz::math::Vector2d normalizedLocation,
-  //     distortedLocation,
-  //     newDistortedCoordinates,
-  //     currDistortedCoordinates;
-  // unsigned int distortedIdx,
-  //     distortedCol,
-  //     distortedRow;
-  // double normalizedColLocation, normalizedRowLocation;
+  // declare variables before the loop
+  const auto unsetPixelVector =  gz::math::Vector2d(-1, -1);
+  gz::math::Vector2d normalizedLocation,
+      distortedLocation,
+      newDistortedCoordinates,
+      currDistortedCoordinates;
+  unsigned int distortedIdx,
+      distortedCol,
+      distortedRow;
+  double normalizedColLocation, normalizedRowLocation;
 
-  // // fill the distortion map
-  // for (unsigned int mapRow = 0; mapRow < this->dataPtr->distortionTexHeight;
-  //   ++mapRow)
-  // {
-  //   normalizedRowLocation = mapRow*rowStepSize;
-  //   for (unsigned int mapCol = 0; mapCol < this->dataPtr->distortionTexWidth;
-  //     ++mapCol)
-  //   {
-  //     normalizedColLocation = mapCol*colStepSize;
+  // fill the distortion map
+  for (unsigned int mapRow = 0; mapRow < this->dataPtr->distortionTexHeight;
+    ++mapRow)
+  {
+    normalizedRowLocation = mapRow*rowStepSize;
+    for (unsigned int mapCol = 0; mapCol < this->dataPtr->distortionTexWidth;
+      ++mapCol)
+    {
+      normalizedColLocation = mapCol*colStepSize;
 
-  //     normalizedLocation[0] = normalizedColLocation;
-  //     normalizedLocation[1] = normalizedRowLocation;
+      normalizedLocation[0] = normalizedColLocation;
+      normalizedLocation[1] = normalizedRowLocation;
 
-  //     distortedLocation = this->Distort(
-  //         normalizedLocation,
-  //         this->lensCenter,
-  //         this->k1, this->k2, this->k3,
-  //         this->p1, this->p2,
-  //         this->dataPtr->distortionTexWidth,
-  //         focalLength);
+      distortedLocation = this->Distort(
+          normalizedLocation,
+          this->lensCenter,
+          this->k1, this->k2, this->k3,
+          this->p1, this->p2,
+          this->dataPtr->distortionTexWidth,
+          focalLength);
 
-  //     // compute the index in the distortion map
-  //     distortedCol = static_cast<unsigned int>(round(distortedLocation.X() *
-  //       this->dataPtr->distortionTexWidth));
-  //     distortedRow = static_cast<unsigned int>(round(distortedLocation.Y() *
-  //       this->dataPtr->distortionTexHeight));
+      // compute the index in the distortion map
+      distortedCol = static_cast<unsigned int>(round(distortedLocation.X() *
+        this->dataPtr->distortionTexWidth));
+      distortedRow = static_cast<unsigned int>(round(distortedLocation.Y() *
+        this->dataPtr->distortionTexHeight));
 
-  //     // Note that the following makes sure that, for significant distortions,
-  //     // there is not a problem where the distorted image seems to fold over
-  //     // itself. This is accomplished by favoring pixels closer to the center
-  //     // of distortion, and this change applies to both the legacy and
-  //     // nonlegacy distortion modes.
+      // Note that the following makes sure that, for significant distortions,
+      // there is not a problem where the distorted image seems to fold over
+      // itself. This is accomplished by favoring pixels closer to the center
+      // of distortion, and this change applies to both the legacy and
+      // nonlegacy distortion modes.
 
-  //     // Make sure the distorted pixel is within the texture dimensions
-  //     if (distortedCol < this->dataPtr->distortionTexWidth &&
-  //         distortedRow < this->dataPtr->distortionTexHeight)
-  //     {
-  //       distortedIdx = distortedRow * this->dataPtr->distortionTexWidth +
-  //         distortedCol;
+      // Make sure the distorted pixel is within the texture dimensions
+      if (distortedCol < this->dataPtr->distortionTexWidth &&
+          distortedRow < this->dataPtr->distortionTexHeight)
+      {
+        distortedIdx = distortedRow * this->dataPtr->distortionTexWidth +
+          distortedCol;
 
-  //       // check if the index has already been set
-  //       if (this->dataPtr->distortionMap[distortedIdx] != unsetPixelVector)
-  //       {
-  //         // grab current coordinates that map to this destination
-  //         currDistortedCoordinates =
-  //           this->dataPtr->distortionMap[distortedIdx] *
-  //           this->dataPtr->distortionTexWidth;
+        // check if the index has already been set
+        if (this->dataPtr->distortionMap[distortedIdx] != unsetPixelVector)
+        {
+          // grab current coordinates that map to this destination
+          currDistortedCoordinates =
+            this->dataPtr->distortionMap[distortedIdx] *
+            this->dataPtr->distortionTexWidth;
 
-  //         // grab new coordinates to map to
-  //         newDistortedCoordinates[0] = mapCol;
-  //         newDistortedCoordinates[1] = mapRow;
+          // grab new coordinates to map to
+          newDistortedCoordinates[0] = mapCol;
+          newDistortedCoordinates[1] = mapRow;
 
-  //         // use the new mapping if it is closer to the center of the distortion
-  //         if (newDistortedCoordinates.Distance(distortionCenterCoordinates) <
-  //             currDistortedCoordinates.Distance(distortionCenterCoordinates))
-  //         {
-  //           this->dataPtr->distortionMap[distortedIdx] = normalizedLocation +
-  //             halfTexelSize;
-  //         }
-  //       }
-  //       else
-  //       {
-  //         this->dataPtr->distortionMap[distortedIdx] = normalizedLocation +
-  //           halfTexelSize;
-  //       }
-  //     }
-  //     // else: mapping is outside of the image bounds.
-  //     // This is expected and normal to ensure
-  //     // no black borders; carry on
-  //   }
-  // }
+          // use the new mapping if it is closer to the center of the distortion
+          if (newDistortedCoordinates.Distance(distortionCenterCoordinates) <
+              currDistortedCoordinates.Distance(distortionCenterCoordinates))
+          {
+            this->dataPtr->distortionMap[distortedIdx] = normalizedLocation +
+              halfTexelSize;
+          }
+        }
+        else
+        {
+          this->dataPtr->distortionMap[distortedIdx] = normalizedLocation +
+            halfTexelSize;
+        }
+      }
+      // else: mapping is outside of the image bounds.
+      // This is expected and normal to ensure
+      // no black borders; carry on
+    }
+  }
 
   // set up the distortion instance
   this->dataPtr->distortionMaterial =
@@ -292,119 +292,119 @@ void OgreDistortionPass::CreateRenderPass()
           this->dataPtr->distortionTexHeight,
           0,
           Ogre::PF_FLOAT32_RGB);
-//   Ogre::HardwarePixelBufferSharedPtr pixelBuffer =
-//       this->dataPtr->distortionTexture->getBuffer();
+  Ogre::HardwarePixelBufferSharedPtr pixelBuffer =
+      this->dataPtr->distortionTexture->getBuffer();
 
-//   // fill the distortion map, while interpolating to fill dead pixels
-//   pixelBuffer->lock(Ogre::HardwareBuffer::HBL_NORMAL);
-//   const Ogre::PixelBox &pixelBox = pixelBuffer->getCurrentLock();
+  // fill the distortion map, while interpolating to fill dead pixels
+  pixelBuffer->lock(Ogre::HardwareBuffer::HBL_NORMAL);
+  const Ogre::PixelBox &pixelBox = pixelBuffer->getCurrentLock();
 
-// #if OGRE_VERSION_MAJOR > 1 || OGRE_VERSION_MINOR >= 11
-//   // Ogre 1.11 changed Ogre::PixelBox::data from void* to uchar*, hence
-//   // reinterpret_cast is required here. static_cast is not allowed between
-//   // pointers of unrelated types (see, for instance, Standard § 3.9.1
-//   // Fundamental types)
-//   float *pDest = reinterpret_cast<float *>(pixelBox.data);
-// #else
-//   float *pDest = static_cast<float *>(pixelBox.data);
-// #endif
+#if OGRE_VERSION_MAJOR > 1 || OGRE_VERSION_MINOR >= 11
+  // Ogre 1.11 changed Ogre::PixelBox::data from void* to uchar*, hence
+  // reinterpret_cast is required here. static_cast is not allowed between
+  // pointers of unrelated types (see, for instance, Standard § 3.9.1
+  // Fundamental types)
+  float *pDest = reinterpret_cast<float *>(pixelBox.data);
+#else
+  float *pDest = static_cast<float *>(pixelBox.data);
+#endif
 
-//   for (unsigned int i = 0; i < this->dataPtr->distortionTexHeight; ++i)
-//   {
-//     for (unsigned int j = 0; j < this->dataPtr->distortionTexWidth; ++j)
-//     {
-//       gz::math::Vector2d vec =
-//           this->dataPtr->distortionMap[i *
-//               this->dataPtr->distortionTexWidth + j];
+  for (unsigned int i = 0; i < this->dataPtr->distortionTexHeight; ++i)
+  {
+    for (unsigned int j = 0; j < this->dataPtr->distortionTexWidth; ++j)
+    {
+      gz::math::Vector2d vec =
+          this->dataPtr->distortionMap[i *
+              this->dataPtr->distortionTexWidth + j];
 
-//       // perform interpolation on-the-fly:
-//       // check for empty mapping within the region and correct it by
-//       // interpolating the eight neighboring distortion map values.
+      // perform interpolation on-the-fly:
+      // check for empty mapping within the region and correct it by
+      // interpolating the eight neighboring distortion map values.
 
-//       if (vec.X() < -0.5 && vec.Y() < -0.5)
-//       {
-//         gz::math::Vector2d left =
-//             this->DistortionMapValueClamped(j - 1, i);
-//         gz::math::Vector2d right =
-//             this->DistortionMapValueClamped(j + 1, i);
-//         gz::math::Vector2d bottom =
-//             this->DistortionMapValueClamped(j, i + 1);
-//         gz::math::Vector2d top =
-//             this->DistortionMapValueClamped(j, i - 1);
+      if (vec.X() < -0.5 && vec.Y() < -0.5)
+      {
+        gz::math::Vector2d left =
+            this->DistortionMapValueClamped(j - 1, i);
+        gz::math::Vector2d right =
+            this->DistortionMapValueClamped(j + 1, i);
+        gz::math::Vector2d bottom =
+            this->DistortionMapValueClamped(j, i + 1);
+        gz::math::Vector2d top =
+            this->DistortionMapValueClamped(j, i - 1);
 
-//         gz::math::Vector2d topLeft =
-//             this->DistortionMapValueClamped(j - 1, i - 1);
-//         gz::math::Vector2d topRight =
-//             this->DistortionMapValueClamped(j + 1, i - 1);
-//         gz::math::Vector2d bottomLeft =
-//             this->DistortionMapValueClamped(j - 1, i + 1);
-//         gz::math::Vector2d bottomRight =
-//             this->DistortionMapValueClamped(j + 1, i + 1);
+        gz::math::Vector2d topLeft =
+            this->DistortionMapValueClamped(j - 1, i - 1);
+        gz::math::Vector2d topRight =
+            this->DistortionMapValueClamped(j + 1, i - 1);
+        gz::math::Vector2d bottomLeft =
+            this->DistortionMapValueClamped(j - 1, i + 1);
+        gz::math::Vector2d bottomRight =
+            this->DistortionMapValueClamped(j + 1, i + 1);
 
-//         gz::math::Vector2d interpolated;
-//         double divisor = 0;
-//         if (right.X() > -0.5)
-//         {
-//           divisor++;
-//           interpolated += right;
-//         }
-//         if (left.X() > -0.5)
-//         {
-//           divisor++;
-//           interpolated += left;
-//         }
-//         if (top.X() > -0.5)
-//         {
-//           divisor++;
-//           interpolated += top;
-//         }
-//         if (bottom.X() > -0.5)
-//         {
-//           divisor++;
-//           interpolated += bottom;
-//         }
+        gz::math::Vector2d interpolated;
+        double divisor = 0;
+        if (right.X() > -0.5)
+        {
+          divisor++;
+          interpolated += right;
+        }
+        if (left.X() > -0.5)
+        {
+          divisor++;
+          interpolated += left;
+        }
+        if (top.X() > -0.5)
+        {
+          divisor++;
+          interpolated += top;
+        }
+        if (bottom.X() > -0.5)
+        {
+          divisor++;
+          interpolated += bottom;
+        }
 
-//         if (bottomRight.X() > -0.5)
-//         {
-//           divisor += 0.707;
-//           interpolated += bottomRight * 0.707;
-//         }
-//         if (bottomLeft.X() > -0.5)
-//         {
-//           divisor += 0.707;
-//           interpolated += bottomLeft * 0.707;
-//         }
-//         if (topRight.X() > -0.5)
-//         {
-//           divisor += 0.707;
-//           interpolated += topRight * 0.707;
-//         }
-//         if (topLeft.X() > -0.5)
-//         {
-//           divisor += 0.707;
-//           interpolated += topLeft * 0.707;
-//         }
+        if (bottomRight.X() > -0.5)
+        {
+          divisor += 0.707;
+          interpolated += bottomRight * 0.707;
+        }
+        if (bottomLeft.X() > -0.5)
+        {
+          divisor += 0.707;
+          interpolated += bottomLeft * 0.707;
+        }
+        if (topRight.X() > -0.5)
+        {
+          divisor += 0.707;
+          interpolated += topRight * 0.707;
+        }
+        if (topLeft.X() > -0.5)
+        {
+          divisor += 0.707;
+          interpolated += topLeft * 0.707;
+        }
 
-//         if (divisor > 0.5)
-//         {
-//           interpolated /= divisor;
-//         }
-//         *pDest++ = gz::math::clamp(interpolated.X(), 0.0, 1.0);
-//         *pDest++ = gz::math::clamp(interpolated.Y(), 0.0, 1.0);
-//       }
-//       else
-//       {
-//         *pDest++ = vec.X();
-//         *pDest++ = vec.Y();
-//       }
+        if (divisor > 0.5)
+        {
+          interpolated /= divisor;
+        }
+        *pDest++ = gz::math::clamp(interpolated.X(), 0.0, 1.0);
+        *pDest++ = gz::math::clamp(interpolated.Y(), 0.0, 1.0);
+      }
+      else
+      {
+        *pDest++ = vec.X();
+        *pDest++ = vec.Y();
+      }
 
-//       // Z coordinate
-//       *pDest++ = 0;
-//     }
-//   }
-//   pixelBuffer->unlock();
+      // Z coordinate
+      *pDest++ = 0;
+    }
+  }
+  pixelBuffer->unlock();
 
-//   this->CalculateAndApplyDistortionScale();
+  this->CalculateAndApplyDistortionScale();
 
   // set up the distortion map texture to be used in the pixel shader.
   this->dataPtr->distortionMaterial->getTechnique(0)->getPass(0)->

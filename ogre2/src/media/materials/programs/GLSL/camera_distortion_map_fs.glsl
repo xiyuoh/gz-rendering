@@ -49,6 +49,5 @@ void main()
     fragColor = vec4(0.0, 0.0, 0.0, 1.0);
   else
     fragColor = texture(vkSampler2D(RT,texSampler), mapUV.xy);
-    // fragColor = texture(vkSampler2D(RT,texSampler), inPs.uv0.xy);
 }
 

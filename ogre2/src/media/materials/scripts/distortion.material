@@ -98,6 +98,13 @@ material Distortion
         tex_address_mode border
         filtering linear linear linear
       }
+
+      texture_unit distortionMap
+      {
+        tex_coord_set 0
+        tex_address_mode border
+        filtering linear linear linear
+      }
     }
   }
 }
